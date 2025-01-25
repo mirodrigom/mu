@@ -1,0 +1,453 @@
+2025-01-25 05:22:30,642 - INFO - Screen size: 1920x1080
+2025-01-25 05:22:36,745 - INFO - Open Stats
+2025-01-25 05:22:36,846 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:22:38,163 - INFO - ======== RESET: 66 ========
+2025-01-25 05:22:38,163 - INFO - ======== LEVEL: 1 ========
+2025-01-25 05:22:38,163 - INFO - Treshold: 280
+2025-01-25 05:22:38,163 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:22:38,163 - INFO - Treshold: 150
+2025-01-25 05:22:38,163 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:22:38,163 - INFO - Treshold: 0
+2025-01-25 05:22:38,163 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:22:38,163 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:22:39,239 - INFO - Distributing 28380 total points
+2025-01-25 05:22:39,239 - INFO - Allocating 5676 points to strenght
+2025-01-25 05:22:39,239 - INFO - Relative coords for button PlusPlus of strenght: 1131, 428
+2025-01-25 05:22:39,846 - DEBUG - Need 5 clicks on 1000 button for strenght
+2025-01-25 05:22:39,846 - DEBUG - Click position: X=971 Y=476
+2025-01-25 05:22:39,954 - DEBUG - Click 1/5 for 1000
+2025-01-25 05:22:40,257 - DEBUG - Click 2/5 for 1000
+2025-01-25 05:22:40,558 - DEBUG - Click 3/5 for 1000
+2025-01-25 05:22:40,860 - DEBUG - Click 4/5 for 1000
+2025-01-25 05:22:41,161 - DEBUG - Click 5/5 for 1000
+2025-01-25 05:22:41,862 - DEBUG - Need 6 clicks on 100 button for strenght
+2025-01-25 05:22:41,862 - DEBUG - Click position: X=1040 Y=475
+2025-01-25 05:22:41,971 - DEBUG - Click 1/6 for 100
+2025-01-25 05:22:42,273 - DEBUG - Click 2/6 for 100
+2025-01-25 05:22:42,575 - DEBUG - Click 3/6 for 100
+2025-01-25 05:22:42,876 - DEBUG - Click 4/6 for 100
+2025-01-25 05:22:43,177 - DEBUG - Click 5/6 for 100
+2025-01-25 05:22:43,479 - DEBUG - Click 6/6 for 100
+2025-01-25 05:22:44,180 - DEBUG - Need 7 clicks on 10 button for strenght
+2025-01-25 05:22:44,180 - DEBUG - Click position: X=1112 Y=476
+2025-01-25 05:22:44,287 - DEBUG - Click 1/7 for 10
+2025-01-25 05:22:44,589 - DEBUG - Click 2/7 for 10
+2025-01-25 05:22:44,890 - DEBUG - Click 3/7 for 10
+2025-01-25 05:22:45,191 - DEBUG - Click 4/7 for 10
+2025-01-25 05:22:45,492 - DEBUG - Click 5/7 for 10
+2025-01-25 05:22:45,795 - DEBUG - Click 6/7 for 10
+2025-01-25 05:22:46,097 - DEBUG - Click 7/7 for 10
+2025-01-25 05:22:47,405 - INFO - Allocating 0 points to agility
+2025-01-25 05:22:47,405 - INFO - Relative coords for button PlusPlus of agility: 1132, 485
+2025-01-25 05:22:48,607 - INFO - Allocating 0 points to vitality
+2025-01-25 05:22:48,607 - INFO - Relative coords for button PlusPlus of vitality: 1133, 569
+2025-01-25 05:22:49,814 - INFO - Allocating 25542 points to energy
+2025-01-25 05:22:49,814 - INFO - Relative coords for button PlusPlus of energy: 1132, 620
+2025-01-25 05:22:50,415 - DEBUG - Need 25 clicks on 1000 button for energy
+2025-01-25 05:22:50,416 - DEBUG - Click position: X=976 Y=671
+2025-01-25 05:22:50,520 - DEBUG - Click 1/25 for 1000
+2025-01-25 05:22:50,823 - DEBUG - Click 2/25 for 1000
+2025-01-25 05:22:51,124 - DEBUG - Click 3/25 for 1000
+2025-01-25 05:22:51,425 - DEBUG - Click 4/25 for 1000
+2025-01-25 05:22:51,727 - DEBUG - Click 5/25 for 1000
+2025-01-25 05:22:52,028 - DEBUG - Click 6/25 for 1000
+2025-01-25 05:22:52,337 - DEBUG - Click 7/25 for 1000
+2025-01-25 05:22:52,639 - DEBUG - Click 8/25 for 1000
+2025-01-25 05:22:52,945 - DEBUG - Click 9/25 for 1000
+2025-01-25 05:22:53,253 - DEBUG - Click 10/25 for 1000
+2025-01-25 05:22:53,555 - DEBUG - Click 11/25 for 1000
+2025-01-25 05:22:53,856 - DEBUG - Click 12/25 for 1000
+2025-01-25 05:22:54,157 - DEBUG - Click 13/25 for 1000
+2025-01-25 05:22:54,462 - DEBUG - Click 14/25 for 1000
+2025-01-25 05:22:54,763 - DEBUG - Click 15/25 for 1000
+2025-01-25 05:22:55,071 - DEBUG - Click 16/25 for 1000
+2025-01-25 05:22:55,373 - DEBUG - Click 17/25 for 1000
+2025-01-25 05:22:55,674 - DEBUG - Click 18/25 for 1000
+2025-01-25 05:22:55,976 - DEBUG - Click 19/25 for 1000
+2025-01-25 05:22:56,278 - DEBUG - Click 20/25 for 1000
+2025-01-25 05:22:56,580 - DEBUG - Click 21/25 for 1000
+2025-01-25 05:22:56,881 - DEBUG - Click 22/25 for 1000
+2025-01-25 05:22:57,182 - DEBUG - Click 23/25 for 1000
+2025-01-25 05:22:57,486 - DEBUG - Click 24/25 for 1000
+2025-01-25 05:22:57,787 - DEBUG - Click 25/25 for 1000
+2025-01-25 05:22:58,488 - DEBUG - Need 5 clicks on 100 button for energy
+2025-01-25 05:22:58,488 - DEBUG - Click position: X=1041 Y=670
+2025-01-25 05:22:58,595 - DEBUG - Click 1/5 for 100
+2025-01-25 05:22:58,896 - DEBUG - Click 2/5 for 100
+2025-01-25 05:22:59,198 - DEBUG - Click 3/5 for 100
+2025-01-25 05:22:59,503 - DEBUG - Click 4/5 for 100
+2025-01-25 05:22:59,806 - DEBUG - Click 5/5 for 100
+2025-01-25 05:23:00,507 - DEBUG - Need 4 clicks on 10 button for energy
+2025-01-25 05:23:00,507 - DEBUG - Click position: X=1108 Y=667
+2025-01-25 05:23:00,612 - DEBUG - Click 1/4 for 10
+2025-01-25 05:23:00,913 - DEBUG - Click 2/4 for 10
+2025-01-25 05:23:01,214 - DEBUG - Click 3/4 for 10
+2025-01-25 05:23:01,515 - DEBUG - Click 4/4 for 10
+2025-01-25 05:23:04,459 - DEBUG - Movement detail: {'time': 9.5367431640625e-07, 'position': (151, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -23, 'dy': 80}
+2025-01-25 05:23:04,459 - INFO - Current: (151, 120), Target: (128, 200), Distance: 83.24, dx: -23, dy: 80
+2025-01-25 05:23:04,459 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:23:04,459 - DEBUG - Pressing left key (dx=-23)
+2025-01-25 05:23:04,660 - DEBUG - Pressing up key (dy=80)
+2025-01-25 05:23:05,077 - DEBUG - Movement detail: {'time': 0.6154468059539795, 'position': (150, 120), 'target': (128, 200), 'stuck_count': 1, 'dx': -22, 'dy': 80}
+2025-01-25 05:23:05,077 - INFO - Current: (150, 120), Target: (128, 200), Distance: 82.97, dx: -22, dy: 80
+2025-01-25 05:23:05,077 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:05,077 - DEBUG - Pressing left key (dx=-22)
+2025-01-25 05:23:05,279 - DEBUG - Pressing up key (dy=80)
+2025-01-25 05:23:05,695 - DEBUG - Movement detail: {'time': 1.2335660457611084, 'position': (148, 120), 'target': (128, 200), 'stuck_count': 2, 'dx': -20, 'dy': 80}
+2025-01-25 05:23:05,695 - INFO - Current: (148, 120), Target: (128, 200), Distance: 82.46, dx: -20, dy: 80
+2025-01-25 05:23:05,695 - WARNING - Potential stuck detection: count=3, position_change=2
+2025-01-25 05:23:05,695 - ERROR - Stuck detected! Last movements: [{'time': 9.5367431640625e-07, 'position': (151, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -23, 'dy': 80}, {'time': 0.6154468059539795, 'position': (150, 120), 'target': (128, 200), 'stuck_count': 1, 'dx': -22, 'dy': 80}, {'time': 1.2335660457611084, 'position': (148, 120), 'target': (128, 200), 'stuck_count': 2, 'dx': -20, 'dy': 80}]
+2025-01-25 05:23:07,812 - DEBUG - Movement detail: {'time': 3.348484754562378, 'position': (145, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -17, 'dy': 80}
+2025-01-25 05:23:07,812 - INFO - Current: (145, 120), Target: (128, 200), Distance: 81.79, dx: -17, dy: 80
+2025-01-25 05:23:07,812 - DEBUG - Pressing left key (dx=-17)
+2025-01-25 05:23:08,014 - DEBUG - Pressing up key (dy=80)
+2025-01-25 05:23:08,427 - DEBUG - Movement detail: {'time': 3.968043088912964, 'position': (143, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -15, 'dy': 80}
+2025-01-25 05:23:08,427 - INFO - Current: (143, 120), Target: (128, 200), Distance: 81.39, dx: -15, dy: 80
+2025-01-25 05:23:08,427 - WARNING - Potential stuck detection: count=1, position_change=2
+2025-01-25 05:23:08,428 - DEBUG - Pressing left key (dx=-15)
+2025-01-25 05:23:08,629 - DEBUG - Pressing up key (dy=80)
+2025-01-25 05:23:09,046 - DEBUG - Movement detail: {'time': 4.584506511688232, 'position': (142, 119), 'target': (128, 200), 'stuck_count': 1, 'dx': -14, 'dy': 81}
+2025-01-25 05:23:09,046 - INFO - Current: (142, 119), Target: (128, 200), Distance: 82.20, dx: -14, dy: 81
+2025-01-25 05:23:09,046 - WARNING - Potential stuck detection: count=2, position_change=2
+2025-01-25 05:23:09,046 - DEBUG - Pressing left key (dx=-14)
+2025-01-25 05:23:09,247 - DEBUG - Pressing up key (dy=81)
+2025-01-25 05:23:09,664 - DEBUG - Movement detail: {'time': 5.202408790588379, 'position': (140, 119), 'target': (128, 200), 'stuck_count': 2, 'dx': -12, 'dy': 81}
+2025-01-25 05:23:09,664 - INFO - Current: (140, 119), Target: (128, 200), Distance: 81.88, dx: -12, dy: 81
+2025-01-25 05:23:09,664 - WARNING - Potential stuck detection: count=3, position_change=2
+2025-01-25 05:23:09,664 - ERROR - Stuck detected! Last movements: [{'time': 1.2335660457611084, 'position': (148, 120), 'target': (128, 200), 'stuck_count': 2, 'dx': -20, 'dy': 80}, {'time': 3.348484754562378, 'position': (145, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -17, 'dy': 80}, {'time': 3.968043088912964, 'position': (143, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -15, 'dy': 80}, {'time': 4.584506511688232, 'position': (142, 119), 'target': (128, 200), 'stuck_count': 1, 'dx': -14, 'dy': 81}, {'time': 5.202408790588379, 'position': (140, 119), 'target': (128, 200), 'stuck_count': 2, 'dx': -12, 'dy': 81}]
+2025-01-25 05:23:11,784 - DEBUG - Movement detail: {'time': 7.317989826202393, 'position': (138, 9), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 191}
+2025-01-25 05:23:11,784 - INFO - Current: (138, 9), Target: (128, 200), Distance: 191.26, dx: -10, dy: 191
+2025-01-25 05:23:11,784 - DEBUG - Pressing up key (dy=191)
+2025-01-25 05:23:12,199 - DEBUG - Movement detail: {'time': 7.7381813526153564, 'position': (138, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 80}
+2025-01-25 05:23:12,199 - INFO - Current: (138, 120), Target: (128, 200), Distance: 80.62, dx: -10, dy: 80
+2025-01-25 05:23:12,199 - DEBUG - Pressing up key (dy=80)
+2025-01-25 05:23:12,613 - DEBUG - Movement detail: {'time': 8.15443754196167, 'position': (138, 121), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 79}
+2025-01-25 05:23:12,613 - INFO - Current: (138, 121), Target: (128, 200), Distance: 79.63, dx: -10, dy: 79
+2025-01-25 05:23:12,613 - WARNING - Potential stuck detection: count=1, position_change=1
+2025-01-25 05:23:12,613 - DEBUG - Pressing up key (dy=79)
+2025-01-25 05:23:13,027 - DEBUG - Movement detail: {'time': 8.56782054901123, 'position': (138, 122), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 78}
+2025-01-25 05:23:13,028 - INFO - Current: (138, 122), Target: (128, 200), Distance: 78.64, dx: -10, dy: 78
+2025-01-25 05:23:13,028 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:13,028 - DEBUG - Pressing up key (dy=78)
+2025-01-25 05:23:13,446 - DEBUG - Movement detail: {'time': 8.982346534729004, 'position': (138, 124), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 76}
+2025-01-25 05:23:13,446 - INFO - Current: (138, 124), Target: (128, 200), Distance: 76.66, dx: -10, dy: 76
+2025-01-25 05:23:13,446 - WARNING - Potential stuck detection: count=3, position_change=2
+2025-01-25 05:23:13,446 - ERROR - Stuck detected! Last movements: [{'time': 7.317989826202393, 'position': (138, 9), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 191}, {'time': 7.7381813526153564, 'position': (138, 120), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 80}, {'time': 8.15443754196167, 'position': (138, 121), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 79}, {'time': 8.56782054901123, 'position': (138, 122), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 78}, {'time': 8.982346534729004, 'position': (138, 124), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 76}]
+2025-01-25 05:23:15,565 - DEBUG - Movement detail: {'time': 11.099702835083008, 'position': (138, 126), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 74}
+2025-01-25 05:23:15,565 - INFO - Current: (138, 126), Target: (128, 200), Distance: 74.67, dx: -10, dy: 74
+2025-01-25 05:23:15,565 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:15,565 - DEBUG - Pressing up key (dy=74)
+2025-01-25 05:23:15,980 - DEBUG - Movement detail: {'time': 11.519182205200195, 'position': (138, 127), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 73}
+2025-01-25 05:23:15,980 - INFO - Current: (138, 127), Target: (128, 200), Distance: 73.68, dx: -10, dy: 73
+2025-01-25 05:23:15,980 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:15,980 - DEBUG - Pressing up key (dy=73)
+2025-01-25 05:23:16,393 - DEBUG - Movement detail: {'time': 11.934457778930664, 'position': (138, 128), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 72}
+2025-01-25 05:23:16,393 - INFO - Current: (138, 128), Target: (128, 200), Distance: 72.69, dx: -10, dy: 72
+2025-01-25 05:23:16,393 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:16,393 - ERROR - Stuck detected! Last movements: [{'time': 8.56782054901123, 'position': (138, 122), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 78}, {'time': 8.982346534729004, 'position': (138, 124), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 76}, {'time': 11.099702835083008, 'position': (138, 126), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 74}, {'time': 11.519182205200195, 'position': (138, 127), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 73}, {'time': 11.934457778930664, 'position': (138, 128), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 72}]
+2025-01-25 05:23:18,512 - DEBUG - Movement detail: {'time': 14.046380519866943, 'position': (138, 131), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 69}
+2025-01-25 05:23:18,513 - INFO - Current: (138, 131), Target: (128, 200), Distance: 69.72, dx: -10, dy: 69
+2025-01-25 05:23:18,513 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:18,513 - DEBUG - Pressing up key (dy=69)
+2025-01-25 05:23:18,928 - DEBUG - Movement detail: {'time': 14.467897653579712, 'position': (138, 132), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 68}
+2025-01-25 05:23:18,928 - INFO - Current: (138, 132), Target: (128, 200), Distance: 68.73, dx: -10, dy: 68
+2025-01-25 05:23:18,928 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:18,928 - DEBUG - Pressing up key (dy=68)
+2025-01-25 05:23:19,348 - DEBUG - Movement detail: {'time': 14.88276195526123, 'position': (138, 133), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 67}
+2025-01-25 05:23:19,348 - INFO - Current: (138, 133), Target: (128, 200), Distance: 67.74, dx: -10, dy: 67
+2025-01-25 05:23:19,348 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:19,348 - ERROR - Stuck detected! Last movements: [{'time': 11.519182205200195, 'position': (138, 127), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 73}, {'time': 11.934457778930664, 'position': (138, 128), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 72}, {'time': 14.046380519866943, 'position': (138, 131), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 69}, {'time': 14.467897653579712, 'position': (138, 132), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 68}, {'time': 14.88276195526123, 'position': (138, 133), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 67}]
+2025-01-25 05:23:21,462 - DEBUG - Movement detail: {'time': 17.00171995162964, 'position': (138, 136), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 64}
+2025-01-25 05:23:21,462 - INFO - Current: (138, 136), Target: (128, 200), Distance: 64.78, dx: -10, dy: 64
+2025-01-25 05:23:21,462 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:21,462 - DEBUG - Pressing up key (dy=64)
+2025-01-25 05:23:21,877 - DEBUG - Movement detail: {'time': 17.416608333587646, 'position': (138, 137), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 63}
+2025-01-25 05:23:21,877 - INFO - Current: (138, 137), Target: (128, 200), Distance: 63.79, dx: -10, dy: 63
+2025-01-25 05:23:21,877 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:21,877 - DEBUG - Pressing up key (dy=63)
+2025-01-25 05:23:22,297 - DEBUG - Movement detail: {'time': 17.831754684448242, 'position': (138, 138), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 62}
+2025-01-25 05:23:22,297 - INFO - Current: (138, 138), Target: (128, 200), Distance: 62.80, dx: -10, dy: 62
+2025-01-25 05:23:22,297 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:22,297 - ERROR - Stuck detected! Last movements: [{'time': 14.467897653579712, 'position': (138, 132), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 68}, {'time': 14.88276195526123, 'position': (138, 133), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 67}, {'time': 17.00171995162964, 'position': (138, 136), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 64}, {'time': 17.416608333587646, 'position': (138, 137), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 63}, {'time': 17.831754684448242, 'position': (138, 138), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 62}]
+2025-01-25 05:23:24,413 - DEBUG - Movement detail: {'time': 19.950427770614624, 'position': (138, 140), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 60}
+2025-01-25 05:23:24,413 - INFO - Current: (138, 140), Target: (128, 200), Distance: 60.83, dx: -10, dy: 60
+2025-01-25 05:23:24,413 - WARNING - Potential stuck detection: count=1, position_change=3
+2025-01-25 05:23:24,413 - DEBUG - Pressing up key (dy=60)
+2025-01-25 05:23:24,827 - DEBUG - Movement detail: {'time': 20.367614269256592, 'position': (137, 141), 'target': (128, 200), 'stuck_count': 1, 'dx': -9, 'dy': 59}
+2025-01-25 05:23:24,828 - INFO - Current: (137, 141), Target: (128, 200), Distance: 59.68, dx: -9, dy: 59
+2025-01-25 05:23:24,828 - WARNING - Potential stuck detection: count=2, position_change=2
+2025-01-25 05:23:24,828 - DEBUG - Pressing up key (dy=59)
+2025-01-25 05:23:25,244 - DEBUG - Movement detail: {'time': 20.782890558242798, 'position': (137, 142), 'target': (128, 200), 'stuck_count': 2, 'dx': -9, 'dy': 58}
+2025-01-25 05:23:25,244 - INFO - Current: (137, 142), Target: (128, 200), Distance: 58.69, dx: -9, dy: 58
+2025-01-25 05:23:25,244 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:25,244 - ERROR - Stuck detected! Last movements: [{'time': 17.416608333587646, 'position': (138, 137), 'target': (128, 200), 'stuck_count': 1, 'dx': -10, 'dy': 63}, {'time': 17.831754684448242, 'position': (138, 138), 'target': (128, 200), 'stuck_count': 2, 'dx': -10, 'dy': 62}, {'time': 19.950427770614624, 'position': (138, 140), 'target': (128, 200), 'stuck_count': 0, 'dx': -10, 'dy': 60}, {'time': 20.367614269256592, 'position': (137, 141), 'target': (128, 200), 'stuck_count': 1, 'dx': -9, 'dy': 59}, {'time': 20.782890558242798, 'position': (137, 142), 'target': (128, 200), 'stuck_count': 2, 'dx': -9, 'dy': 58}]
+2025-01-25 05:23:27,361 - DEBUG - Movement detail: {'time': 22.898223876953125, 'position': (137, 145), 'target': (128, 200), 'stuck_count': 0, 'dx': -9, 'dy': 55}
+2025-01-25 05:23:27,361 - INFO - Current: (137, 145), Target: (128, 200), Distance: 55.73, dx: -9, dy: 55
+2025-01-25 05:23:27,361 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:27,361 - DEBUG - Pressing up key (dy=55)
+2025-01-25 05:23:27,774 - DEBUG - Movement detail: {'time': 23.315977811813354, 'position': (137, 146), 'target': (128, 200), 'stuck_count': 1, 'dx': -9, 'dy': 54}
+2025-01-25 05:23:27,774 - INFO - Current: (137, 146), Target: (128, 200), Distance: 54.74, dx: -9, dy: 54
+2025-01-25 05:23:27,774 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:27,774 - DEBUG - Pressing up key (dy=54)
+2025-01-25 05:23:28,185 - DEBUG - Movement detail: {'time': 23.729305267333984, 'position': (137, 147), 'target': (128, 200), 'stuck_count': 2, 'dx': -9, 'dy': 53}
+2025-01-25 05:23:28,185 - INFO - Current: (137, 147), Target: (128, 200), Distance: 53.76, dx: -9, dy: 53
+2025-01-25 05:23:28,185 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:28,185 - ERROR - Stuck detected! Last movements: [{'time': 20.367614269256592, 'position': (137, 141), 'target': (128, 200), 'stuck_count': 1, 'dx': -9, 'dy': 59}, {'time': 20.782890558242798, 'position': (137, 142), 'target': (128, 200), 'stuck_count': 2, 'dx': -9, 'dy': 58}, {'time': 22.898223876953125, 'position': (137, 145), 'target': (128, 200), 'stuck_count': 0, 'dx': -9, 'dy': 55}, {'time': 23.315977811813354, 'position': (137, 146), 'target': (128, 200), 'stuck_count': 1, 'dx': -9, 'dy': 54}, {'time': 23.729305267333984, 'position': (137, 147), 'target': (128, 200), 'stuck_count': 2, 'dx': -9, 'dy': 53}]
+2025-01-25 05:23:30,296 - DEBUG - Movement detail: {'time': 25.838914155960083, 'position': (137, 148), 'target': (128, 200), 'stuck_count': 0, 'dx': -9, 'dy': 52}
+2025-01-25 05:23:30,296 - INFO - Current: (137, 148), Target: (128, 200), Distance: 52.77, dx: -9, dy: 52
+2025-01-25 05:23:30,296 - WARNING - Potential stuck detection: count=1, position_change=2
+2025-01-25 05:23:30,296 - DEBUG - Pressing up key (dy=52)
+2025-01-25 05:23:30,710 - DEBUG - Movement detail: {'time': 26.25147008895874, 'position': (136, 148), 'target': (128, 200), 'stuck_count': 1, 'dx': -8, 'dy': 52}
+2025-01-25 05:23:30,710 - INFO - Current: (136, 148), Target: (128, 200), Distance: 52.61, dx: -8, dy: 52
+2025-01-25 05:23:30,710 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:30,710 - DEBUG - Pressing up key (dy=52)
+2025-01-25 05:23:31,124 - DEBUG - Movement detail: {'time': 26.66485047340393, 'position': (135, 149), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 51}
+2025-01-25 05:23:31,124 - INFO - Current: (135, 149), Target: (128, 200), Distance: 51.48, dx: -7, dy: 51
+2025-01-25 05:23:31,124 - WARNING - Potential stuck detection: count=3, position_change=2
+2025-01-25 05:23:31,124 - ERROR - Stuck detected! Last movements: [{'time': 23.315977811813354, 'position': (137, 146), 'target': (128, 200), 'stuck_count': 1, 'dx': -9, 'dy': 54}, {'time': 23.729305267333984, 'position': (137, 147), 'target': (128, 200), 'stuck_count': 2, 'dx': -9, 'dy': 53}, {'time': 25.838914155960083, 'position': (137, 148), 'target': (128, 200), 'stuck_count': 0, 'dx': -9, 'dy': 52}, {'time': 26.25147008895874, 'position': (136, 148), 'target': (128, 200), 'stuck_count': 1, 'dx': -8, 'dy': 52}, {'time': 26.66485047340393, 'position': (135, 149), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 51}]
+2025-01-25 05:23:33,233 - DEBUG - Movement detail: {'time': 28.777703046798706, 'position': (135, 151), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 49}
+2025-01-25 05:23:33,233 - INFO - Current: (135, 151), Target: (128, 200), Distance: 49.50, dx: -7, dy: 49
+2025-01-25 05:23:33,233 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:33,233 - DEBUG - Pressing up key (dy=49)
+2025-01-25 05:23:33,643 - DEBUG - Movement detail: {'time': 29.187504291534424, 'position': (135, 152), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 48}
+2025-01-25 05:23:33,643 - INFO - Current: (135, 152), Target: (128, 200), Distance: 48.51, dx: -7, dy: 48
+2025-01-25 05:23:33,643 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:33,643 - DEBUG - Pressing up key (dy=48)
+2025-01-25 05:23:34,058 - DEBUG - Movement detail: {'time': 29.598074913024902, 'position': (135, 153), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 47}
+2025-01-25 05:23:34,058 - INFO - Current: (135, 153), Target: (128, 200), Distance: 47.52, dx: -7, dy: 47
+2025-01-25 05:23:34,058 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:34,058 - ERROR - Stuck detected! Last movements: [{'time': 26.25147008895874, 'position': (136, 148), 'target': (128, 200), 'stuck_count': 1, 'dx': -8, 'dy': 52}, {'time': 26.66485047340393, 'position': (135, 149), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 51}, {'time': 28.777703046798706, 'position': (135, 151), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 49}, {'time': 29.187504291534424, 'position': (135, 152), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 48}, {'time': 29.598074913024902, 'position': (135, 153), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 47}]
+2025-01-25 05:23:36,166 - DEBUG - Movement detail: {'time': 31.711164474487305, 'position': (135, 156), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 44}
+2025-01-25 05:23:36,166 - INFO - Current: (135, 156), Target: (128, 200), Distance: 44.55, dx: -7, dy: 44
+2025-01-25 05:23:36,166 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:36,166 - DEBUG - Pressing up key (dy=44)
+2025-01-25 05:23:36,574 - DEBUG - Movement detail: {'time': 32.12114715576172, 'position': (135, 157), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 43}
+2025-01-25 05:23:36,574 - INFO - Current: (135, 157), Target: (128, 200), Distance: 43.57, dx: -7, dy: 43
+2025-01-25 05:23:36,574 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:36,574 - DEBUG - Pressing up key (dy=43)
+2025-01-25 05:23:36,985 - DEBUG - Movement detail: {'time': 32.52877449989319, 'position': (135, 158), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 42}
+2025-01-25 05:23:36,985 - INFO - Current: (135, 158), Target: (128, 200), Distance: 42.58, dx: -7, dy: 42
+2025-01-25 05:23:36,985 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:36,985 - ERROR - Stuck detected! Last movements: [{'time': 29.187504291534424, 'position': (135, 152), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 48}, {'time': 29.598074913024902, 'position': (135, 153), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 47}, {'time': 31.711164474487305, 'position': (135, 156), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 44}, {'time': 32.12114715576172, 'position': (135, 157), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 43}, {'time': 32.52877449989319, 'position': (135, 158), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 42}]
+2025-01-25 05:23:39,098 - DEBUG - Movement detail: {'time': 34.63862872123718, 'position': (135, 161), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 39}
+2025-01-25 05:23:39,098 - INFO - Current: (135, 161), Target: (128, 200), Distance: 39.62, dx: -7, dy: 39
+2025-01-25 05:23:39,098 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:39,098 - DEBUG - Pressing up key (dy=39)
+2025-01-25 05:23:39,509 - DEBUG - Movement detail: {'time': 35.05282807350159, 'position': (135, 162), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 38}
+2025-01-25 05:23:39,509 - INFO - Current: (135, 162), Target: (128, 200), Distance: 38.64, dx: -7, dy: 38
+2025-01-25 05:23:39,509 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:39,509 - DEBUG - Pressing up key (dy=38)
+2025-01-25 05:23:39,925 - DEBUG - Movement detail: {'time': 35.46385741233826, 'position': (135, 163), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 37}
+2025-01-25 05:23:39,925 - INFO - Current: (135, 163), Target: (128, 200), Distance: 37.66, dx: -7, dy: 37
+2025-01-25 05:23:39,925 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:39,925 - ERROR - Stuck detected! Last movements: [{'time': 32.12114715576172, 'position': (135, 157), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 43}, {'time': 32.52877449989319, 'position': (135, 158), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 42}, {'time': 34.63862872123718, 'position': (135, 161), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 39}, {'time': 35.05282807350159, 'position': (135, 162), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 38}, {'time': 35.46385741233826, 'position': (135, 163), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 37}]
+2025-01-25 05:23:42,043 - DEBUG - Movement detail: {'time': 37.57869052886963, 'position': (135, 166), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 34}
+2025-01-25 05:23:42,043 - INFO - Current: (135, 166), Target: (128, 200), Distance: 34.71, dx: -7, dy: 34
+2025-01-25 05:23:42,043 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:42,043 - DEBUG - Pressing up key (dy=34)
+2025-01-25 05:23:42,457 - DEBUG - Movement detail: {'time': 37.99804210662842, 'position': (135, 167), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 33}
+2025-01-25 05:23:42,457 - INFO - Current: (135, 167), Target: (128, 200), Distance: 33.73, dx: -7, dy: 33
+2025-01-25 05:23:42,457 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:42,457 - DEBUG - Pressing up key (dy=33)
+2025-01-25 05:23:42,875 - DEBUG - Movement detail: {'time': 38.41201448440552, 'position': (135, 168), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 32}
+2025-01-25 05:23:42,875 - INFO - Current: (135, 168), Target: (128, 200), Distance: 32.76, dx: -7, dy: 32
+2025-01-25 05:23:42,875 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:42,875 - ERROR - Stuck detected! Last movements: [{'time': 35.05282807350159, 'position': (135, 162), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 38}, {'time': 35.46385741233826, 'position': (135, 163), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 37}, {'time': 37.57869052886963, 'position': (135, 166), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 34}, {'time': 37.99804210662842, 'position': (135, 167), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 33}, {'time': 38.41201448440552, 'position': (135, 168), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 32}]
+2025-01-25 05:23:44,995 - DEBUG - Movement detail: {'time': 40.528544664382935, 'position': (135, 171), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 29}
+2025-01-25 05:23:44,995 - INFO - Current: (135, 171), Target: (128, 200), Distance: 29.83, dx: -7, dy: 29
+2025-01-25 05:23:44,995 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:44,995 - DEBUG - Pressing up key (dy=29)
+2025-01-25 05:23:45,407 - DEBUG - Movement detail: {'time': 40.950273513793945, 'position': (135, 172), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 28}
+2025-01-25 05:23:45,408 - INFO - Current: (135, 172), Target: (128, 200), Distance: 28.86, dx: -7, dy: 28
+2025-01-25 05:23:45,408 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:45,408 - DEBUG - Pressing up key (dy=28)
+2025-01-25 05:23:45,820 - DEBUG - Movement detail: {'time': 41.362353801727295, 'position': (135, 173), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 27}
+2025-01-25 05:23:45,820 - INFO - Current: (135, 173), Target: (128, 200), Distance: 27.89, dx: -7, dy: 27
+2025-01-25 05:23:45,820 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:45,820 - ERROR - Stuck detected! Last movements: [{'time': 37.99804210662842, 'position': (135, 167), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 33}, {'time': 38.41201448440552, 'position': (135, 168), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 32}, {'time': 40.528544664382935, 'position': (135, 171), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 29}, {'time': 40.950273513793945, 'position': (135, 172), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 28}, {'time': 41.362353801727295, 'position': (135, 173), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 27}]
+2025-01-25 05:23:47,932 - DEBUG - Movement detail: {'time': 43.47414708137512, 'position': (135, 176), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 24}
+2025-01-25 05:23:47,932 - INFO - Current: (135, 176), Target: (128, 200), Distance: 25.00, dx: -7, dy: 24
+2025-01-25 05:23:47,933 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:47,933 - DEBUG - Pressing up key (dy=24)
+2025-01-25 05:23:48,346 - DEBUG - Movement detail: {'time': 43.88786721229553, 'position': (135, 177), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 23}
+2025-01-25 05:23:48,346 - INFO - Current: (135, 177), Target: (128, 200), Distance: 24.04, dx: -7, dy: 23
+2025-01-25 05:23:48,347 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:48,347 - DEBUG - Pressing up key (dy=23)
+2025-01-25 05:23:48,756 - DEBUG - Movement detail: {'time': 44.301528215408325, 'position': (135, 177), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 23}
+2025-01-25 05:23:48,757 - INFO - Current: (135, 177), Target: (128, 200), Distance: 24.04, dx: -7, dy: 23
+2025-01-25 05:23:48,757 - WARNING - Potential stuck detection: count=3, position_change=0
+2025-01-25 05:23:48,757 - ERROR - Stuck detected! Last movements: [{'time': 40.950273513793945, 'position': (135, 172), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 28}, {'time': 41.362353801727295, 'position': (135, 173), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 27}, {'time': 43.47414708137512, 'position': (135, 176), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 24}, {'time': 43.88786721229553, 'position': (135, 177), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 23}, {'time': 44.301528215408325, 'position': (135, 177), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 23}]
+2025-01-25 05:23:50,866 - DEBUG - Movement detail: {'time': 46.41039323806763, 'position': (135, 181), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 19}
+2025-01-25 05:23:50,866 - INFO - Current: (135, 181), Target: (128, 200), Distance: 20.25, dx: -7, dy: 19
+2025-01-25 05:23:50,866 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:50,866 - DEBUG - Pressing up key (dy=19)
+2025-01-25 05:23:51,274 - DEBUG - Movement detail: {'time': 46.82094717025757, 'position': (135, 182), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 18}
+2025-01-25 05:23:51,274 - INFO - Current: (135, 182), Target: (128, 200), Distance: 19.31, dx: -7, dy: 18
+2025-01-25 05:23:51,274 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:51,274 - DEBUG - Pressing up key (dy=18)
+2025-01-25 05:23:51,692 - DEBUG - Movement detail: {'time': 47.22929668426514, 'position': (135, 183), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 17}
+2025-01-25 05:23:51,692 - INFO - Current: (135, 183), Target: (128, 200), Distance: 18.38, dx: -7, dy: 17
+2025-01-25 05:23:51,692 - WARNING - Potential stuck detection: count=3, position_change=1
+2025-01-25 05:23:51,692 - ERROR - Stuck detected! Last movements: [{'time': 43.88786721229553, 'position': (135, 177), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 23}, {'time': 44.301528215408325, 'position': (135, 177), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 23}, {'time': 46.41039323806763, 'position': (135, 181), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 19}, {'time': 46.82094717025757, 'position': (135, 182), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 18}, {'time': 47.22929668426514, 'position': (135, 183), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 17}]
+2025-01-25 05:23:53,809 - DEBUG - Movement detail: {'time': 49.345284938812256, 'position': (135, 186), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 14}
+2025-01-25 05:23:53,809 - INFO - Current: (135, 186), Target: (128, 200), Distance: 15.65, dx: -7, dy: 14
+2025-01-25 05:23:53,809 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:53,809 - DEBUG - Pressing up key (dy=14)
+2025-01-25 05:23:54,223 - DEBUG - Movement detail: {'time': 49.76342582702637, 'position': (135, 187), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 13}
+2025-01-25 05:23:54,223 - INFO - Current: (135, 187), Target: (128, 200), Distance: 14.76, dx: -7, dy: 13
+2025-01-25 05:23:54,223 - WARNING - Potential stuck detection: count=2, position_change=1
+2025-01-25 05:23:54,223 - DEBUG - Pressing up key (dy=13)
+2025-01-25 05:23:54,639 - DEBUG - Movement detail: {'time': 50.17824101448059, 'position': (135, 187), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 13}
+2025-01-25 05:23:54,639 - INFO - Current: (135, 187), Target: (128, 200), Distance: 14.76, dx: -7, dy: 13
+2025-01-25 05:23:54,639 - WARNING - Potential stuck detection: count=3, position_change=0
+2025-01-25 05:23:54,639 - ERROR - Stuck detected! Last movements: [{'time': 46.82094717025757, 'position': (135, 182), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 18}, {'time': 47.22929668426514, 'position': (135, 183), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 17}, {'time': 49.345284938812256, 'position': (135, 186), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 14}, {'time': 49.76342582702637, 'position': (135, 187), 'target': (128, 200), 'stuck_count': 1, 'dx': -7, 'dy': 13}, {'time': 50.17824101448059, 'position': (135, 187), 'target': (128, 200), 'stuck_count': 2, 'dx': -7, 'dy': 13}]
+2025-01-25 05:23:56,750 - DEBUG - Movement detail: {'time': 52.2930109500885, 'position': (135, 191), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 9}
+2025-01-25 05:23:56,750 - INFO - Current: (135, 191), Target: (128, 200), Distance: 11.40, dx: -7, dy: 9
+2025-01-25 05:23:56,750 - WARNING - Potential stuck detection: count=1, position_change=4
+2025-01-25 05:23:56,851 - INFO - Target reached: (135, 191)
+2025-01-25 05:23:56,977 - INFO - Play button clicked - was inactive (green)
+2025-01-25 05:23:56,999 - INFO - Play already active (red) - skipping click
+2025-01-25 05:24:13,103 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:24:14,398 - INFO - ======== RESET: 68 ========
+2025-01-25 05:24:14,398 - INFO - ======== LEVEL: 6 ========
+2025-01-25 05:24:14,398 - INFO - Treshold: 280
+2025-01-25 05:24:14,398 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:24:14,398 - INFO - Treshold: 150
+2025-01-25 05:24:14,398 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:24:14,398 - INFO - Treshold: 0
+2025-01-25 05:24:14,399 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:24:14,614 - DEBUG - Movement detail: {'time': 9.5367431640625e-07, 'position': (135, 191), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 9}
+2025-01-25 05:24:14,614 - INFO - Current: (135, 191), Target: (128, 200), Distance: 11.40, dx: -7, dy: 9
+2025-01-25 05:24:14,614 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:24:14,714 - INFO - Target reached: (135, 191)
+2025-01-25 05:24:14,733 - INFO - Play already active (red) - skipping click
+2025-01-25 05:24:14,751 - INFO - Play already active (red) - skipping click
+2025-01-25 05:24:30,858 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:24:32,051 - WARNING - Failed to extract numeric value from text: ''
+2025-01-25 05:24:32,051 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:24:33,236 - WARNING - Failed to extract numeric value from text: ''
+2025-01-25 05:24:33,236 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:24:34,521 - INFO - ======== RESET: 68 ========
+2025-01-25 05:24:34,521 - INFO - ======== LEVEL: 6 ========
+2025-01-25 05:24:34,521 - INFO - Treshold: 280
+2025-01-25 05:24:34,521 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:24:34,521 - INFO - Treshold: 150
+2025-01-25 05:24:34,521 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:24:34,521 - INFO - Treshold: 0
+2025-01-25 05:24:34,521 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:24:34,739 - DEBUG - Movement detail: {'time': 7.152557373046875e-07, 'position': (135, 192), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 8}
+2025-01-25 05:24:34,739 - INFO - Current: (135, 192), Target: (128, 200), Distance: 10.63, dx: -7, dy: 8
+2025-01-25 05:24:34,739 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:24:34,840 - INFO - Target reached: (135, 192)
+2025-01-25 05:24:34,866 - INFO - Play already active (red) - skipping click
+2025-01-25 05:24:34,883 - INFO - Play already active (red) - skipping click
+2025-01-25 05:24:50,991 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:24:52,296 - INFO - ======== RESET: 68 ========
+2025-01-25 05:24:52,297 - INFO - ======== LEVEL: 11 ========
+2025-01-25 05:24:52,297 - INFO - Treshold: 280
+2025-01-25 05:24:52,297 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:24:52,297 - INFO - Treshold: 150
+2025-01-25 05:24:52,297 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:24:52,297 - INFO - Treshold: 0
+2025-01-25 05:24:52,297 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:24:52,514 - DEBUG - Movement detail: {'time': 4.76837158203125e-07, 'position': (135, 201), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': -1}
+2025-01-25 05:24:52,515 - INFO - Current: (135, 201), Target: (128, 200), Distance: 7.07, dx: -7, dy: -1
+2025-01-25 05:24:52,515 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:24:52,615 - INFO - Target reached: (135, 201)
+2025-01-25 05:24:52,632 - INFO - Play already active (red) - skipping click
+2025-01-25 05:24:52,650 - INFO - Play already active (red) - skipping click
+2025-01-25 05:25:08,757 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:25:10,055 - INFO - ======== RESET: 68 ========
+2025-01-25 05:25:10,055 - INFO - ======== LEVEL: 12 ========
+2025-01-25 05:25:10,055 - INFO - Treshold: 280
+2025-01-25 05:25:10,055 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:25:10,055 - INFO - Treshold: 150
+2025-01-25 05:25:10,055 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:25:10,055 - INFO - Treshold: 0
+2025-01-25 05:25:10,055 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:25:10,278 - DEBUG - Movement detail: {'time': 4.76837158203125e-07, 'position': (135, 201), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': -1}
+2025-01-25 05:25:10,278 - INFO - Current: (135, 201), Target: (128, 200), Distance: 7.07, dx: -7, dy: -1
+2025-01-25 05:25:10,278 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:25:10,378 - INFO - Target reached: (135, 201)
+2025-01-25 05:25:10,397 - INFO - Play already active (red) - skipping click
+2025-01-25 05:25:10,415 - INFO - Play already active (red) - skipping click
+2025-01-25 05:25:26,523 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:25:27,818 - INFO - ======== RESET: 68 ========
+2025-01-25 05:25:27,818 - INFO - ======== LEVEL: 13 ========
+2025-01-25 05:25:27,818 - INFO - Treshold: 280
+2025-01-25 05:25:27,818 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:25:27,818 - INFO - Treshold: 150
+2025-01-25 05:25:27,818 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:25:27,818 - INFO - Treshold: 0
+2025-01-25 05:25:27,818 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:25:28,036 - DEBUG - Movement detail: {'time': 7.152557373046875e-07, 'position': (135, 200), 'target': (128, 200), 'stuck_count': 0, 'dx': -7, 'dy': 0}
+2025-01-25 05:25:28,036 - INFO - Current: (135, 200), Target: (128, 200), Distance: 7.00, dx: -7, dy: 0
+2025-01-25 05:25:28,036 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:25:28,136 - INFO - Target reached: (135, 200)
+2025-01-25 05:25:28,154 - INFO - Play already active (red) - skipping click
+2025-01-25 05:25:28,170 - INFO - Play already active (red) - skipping click
+2025-01-25 05:25:44,274 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:25:45,569 - INFO - ======== RESET: 68 ========
+2025-01-25 05:25:45,569 - INFO - ======== LEVEL: 15 ========
+2025-01-25 05:25:45,569 - INFO - Treshold: 280
+2025-01-25 05:25:45,569 - INFO - Location: {'command': '/move losttower5', 'location': [130, 39]}
+2025-01-25 05:25:45,569 - INFO - Treshold: 150
+2025-01-25 05:25:45,569 - INFO - Location: {'command': '/move losttower', 'location': [221, 82]}
+2025-01-25 05:25:45,569 - INFO - Treshold: 0
+2025-01-25 05:25:45,569 - INFO - Location: {'command': '/move lorencia', 'location': [128, 200]}
+2025-01-25 05:25:45,786 - DEBUG - Movement detail: {'time': 7.152557373046875e-07, 'position': (136, 200), 'target': (128, 200), 'stuck_count': 0, 'dx': -8, 'dy': 0}
+2025-01-25 05:25:45,786 - INFO - Current: (136, 200), Target: (128, 200), Distance: 8.00, dx: -8, dy: 0
+2025-01-25 05:25:45,786 - WARNING - Potential stuck detection: count=1, position_change=0
+2025-01-25 05:25:45,887 - INFO - Target reached: (136, 200)
+2025-01-25 05:25:45,904 - INFO - Play already active (red) - skipping click
+2025-01-25 05:25:45,921 - INFO - Play already active (red) - skipping click
+2025-01-25 05:26:02,023 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:03,212 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:04,400 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:05,589 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:06,775 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:07,966 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:09,156 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:10,344 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:11,414 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:12,489 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:13,564 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:13,565 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:14,641 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:15,724 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:16,798 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:16,800 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:17,869 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:18,960 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:20,037 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:20,038 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:21,113 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:22,186 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:23,263 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:23,264 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:24,336 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:25,415 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:26,488 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:26,489 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:27,564 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:28,635 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:29,717 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:29,718 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:30,785 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:31,860 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:32,931 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:32,933 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:34,008 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:35,078 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:36,152 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:36,153 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:37,231 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:38,301 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:39,381 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:39,382 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:40,452 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:41,530 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-25 05:26:42,601 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-25 05:26:42,602 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-25 05:26:43,682 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-25 05:26:44,755 - ERROR - Error finding elemental reference on attempt 2: 

@@ -1,0 +1,71 @@
+{
+    "level_thresholds": {
+        "280": {
+            "command": "/move losttower5",
+            "location": [130,39]
+        },
+        "150": {
+            "command": "/move losttower",
+            "location": [221,82]
+        },
+        "0": {
+            "command": "/move lorencia",
+            "location": [128, 200]
+        }
+    },
+    "stat_distribution": {
+        "strenght": 0.2,
+        "agility": 0.0,
+        "vitality": 0.0,
+        "energy": 0.9
+    },
+    "not_used_relative_one": [1102,162],
+    "max_level": 400,
+    "reset_level": 380,
+    "coordinate_samples": 3,
+    "error_threshold": 3,
+    "check_interval": 15,
+    "ocr_coordinates": {
+        "position": [255, 26, 329, 48],
+        "reset": [5, 137, 48, 167],
+        "level": [42, 112, 84, 135],
+        "play": [300, 65, 307, 71],
+        "attributes": {
+            "strenght": {
+                "first_button": [33, 245, 59, 271],
+                "10": [14, 293, 49, 312],
+                "100": [-58, 292, -14, 313],
+                "1000": [-127, 293, -80, 310],
+                "custom": [-299, 295, -243, 312]
+            },
+            "agility": {
+                "first_button": [34, 302, 57, 323],
+                "10": [6, 346, 51, 365],
+                "100": [-60, 346, -14, 366],
+                "1000": [-126, 349, -81, 366],
+                "custom": [-299, 348, -232, 365]
+            },
+            "vitality": {
+                "first_button": [35, 386, 57, 407],
+                "10": [10, 433, 48, 450],
+                "100": [-59, 431, -15, 449],
+                "1000": [-127, 432, -81, 449],
+                "custom": [-298, 433, -232, 450]
+            },
+            "energy": {
+                "first_button": [34, 437, 58, 460],
+                "10": [10, 484, 45, 503],
+                "100": [-57, 487, -16, 503],
+                "1000": [-122, 488, -84, 502],
+                "custom": [-295, 486, -228, 506]
+            },
+            "command": {
+                "first_button": [],
+                "10": [],
+                "100": [],
+                "1000": [],
+                "custom": []
+            }
+        }
+    }
+}
