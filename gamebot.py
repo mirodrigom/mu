@@ -16,19 +16,42 @@ class GameBot:
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
     def __init__(self):
-        pyautogui.FAILSAFE = False
-        self.running = True
-        self.current_location = None
-        self.play = False
+        self.setup_screen()
+        self.setup_directories()
         self.setup_keyboard_listener()
         self.setup_logging()
         self.load_config('config.json')
         self.initialize_game_state()
-        self.setup_screen()
+        pyautogui.FAILSAFE = False
+        self.running = True
+        self.current_location = None
+        self.play = False
         self.path_learner = PathLearner()
         self.record_good_path = False
         self.reference_point = None
         self.first_time = True
+        self.load_game_state()
+
+    def setup_directories(self):
+        """Creates necessary directories for organizing files"""
+        self.dirs = {
+            'images': 'images',
+            'json': 'json',
+            'logs': 'logs'
+        }
+
+        for directory in self.dirs.values():
+            os.makedirs(directory, exist_ok=True)
+
+    def load_game_state(self):
+        """Loads the current game state from path_history.json"""
+        state_file = os.path.join(self.dirs['json'], 'path_history.json')
+        try:
+            if os.path.exists(state_file):
+                with open(state_file, 'r') as f:
+                    self.game_state = json.load(f)
+        except Exception as e:
+            logging.error(f"Error loading game state: {e}")
 
     def setup_keyboard_listener(self):
         """Configura un listener para detectar la tecla F9 que detiene el bot"""
@@ -36,28 +59,46 @@ class GameBot:
             if key == keyboard.Key.f9:
                 logging.info("Bot stopped")
                 os._exit(0)  # Force exit the entire program
-                    
+
         listener = keyboard.Listener(on_press=on_press)
         listener.start()
 
+    def save_game_state(self):
+        """Saves the current game state to path_history.json"""
+        state_file = os.path.join(self.dirs['json'], 'path_history.json')
+        try:
+            with open(state_file, 'w') as f:
+                json.dump(self.game_state, f, indent=4)
+        except Exception as e:
+            logging.error(f"Error saving game state: {e}")
+
     def setup_logging(self):
         """Configura el sistema de logging y limpia logs anteriores"""
-        with open('bot_debug.log', 'w') as f:
-            f.write('')
-            
+        log_file = os.path.join(self.dirs['logs'], 'bot_debug.log')
+        
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        
+        # Reset root logger
+        for handler in logging.root.handlers[:]:
+            logging.root.removeHandler(handler)
+        
+        # Configure file-only logging
         logging.basicConfig(
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s',
-            filename='bot_debug.log'
+            filename=log_file,
+            filemode='w'
         )
-        
+
         # Suppress PIL and Tesseract debug logs
         logging.getLogger('PIL').setLevel(logging.WARNING)
         logging.getLogger('pytesseract').setLevel(logging.WARNING)
-
+        
     def load_config(self, config_path: str):
         """Carga la configuración del bot desde un archivo JSON"""
-        with open(config_path) as f:
+        config_file = os.path.join(self.dirs['json'], config_path)
+        with open(config_file) as f:
             self.config = json.load(f)
 
     def initialize_game_state(self):
@@ -68,7 +109,7 @@ class GameBot:
         self.current_y = 0
         self.consecutive_errors = 0
         pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-        
+
     def setup_screen(self):
         """Configura los parámetros de la pantalla del juego"""
         monitor = screeninfo.get_monitors()[1]
@@ -85,6 +126,8 @@ class GameBot:
         try:
             adjusted_position = self.adjust_coordinates(self.config['ocr_coordinates']['position'])
             coord_area = ImageGrab.grab(bbox=tuple(adjusted_position))
+            coord_area_path = os.path.join(self.dirs['images'], 'coord_area_path.png')
+            coord_area.save(coord_area_path)
             config = r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789,'
             return pytesseract.image_to_string(coord_area, config=config).strip()
         except Exception as e:
@@ -129,15 +172,15 @@ class GameBot:
         """
         # Clean the string
         coord_str = ''.join(filter(str.isdigit, coord_str))
-        
+
         # Handle 7-digit case
         if len(coord_str) == 7:
             coord_str = self.fix_7_digit_coordinate(coord_str)
-        
+
         # Extract coordinates
         if len(coord_str) == 6:
             return int(coord_str[:3]), int(coord_str[3:])
-        
+
         return None
 
     # Update _fetch_position in GameBot class:
@@ -177,52 +220,63 @@ class GameBot:
                     time.sleep(delay)
         return False
 
-    def _preprocess_image(self, img_path):
-        """
-        Preprocesa una imagen para mejorar el OCR.
-        Args:
-            img_path: Ruta de la imagen
-        Returns:
-            np.array: Imagen procesada o None si hay error
-        """
+    def get_game_state(self):
+        """Read current state from file with default values"""
         try:
-            # Open image
-            img = Image.open(img_path)
-            img_array = np.array(img)
-
-            # Convert to grayscale
-            gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-
-            # Apply Gaussian Blur to reduce noise
-            blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-
-            # Apply adaptive thresholding for better contrast
-            thresh = cv2.adaptiveThreshold(
-                blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-            )
-
-            # Refine image with morphological operations
-            kernel = np.ones((2, 2), np.uint8)
-            thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-
-            return thresh
+            state_file = os.path.join(self.dirs['json'], 'current_status.json')
+            if os.path.exists(state_file):
+                with open(state_file, 'r') as f:
+                    return json.load(f)
+            return {
+                "current_reset": 0,
+                "current_level": 0,
+                "current_map": "Lorencia",
+                "current_location": [],
+                "current_strenght": 0,
+                "current_agility": 0,
+                "current_vitality": 0,
+                "current_energy": 0,
+                "current_command": 0,
+                "available_points": 0
+            }
         except Exception as e:
-            logging.error(f"Image preprocessing error: {e}")
+            logging.error(f"Error reading game state: {e}")
             return None
 
-    def _extract_numeric_value(self, text):
-        """
-        Extrae valores numéricos de un texto.
-        Args:
-            text: Texto a procesar
-        Returns:
-            int: Valor numérico o 0 si hay error
-        """
+    def update_game_state(self, updates):
+        """Update state file with validation"""
         try:
-            return int(''.join(filter(str.isdigit, text.strip())))
-        except ValueError:
-            logging.warning(f"Failed to extract numeric value from text: '{text}'")
-            return 0
+            current_state = self.get_game_state() or {}
+            current_state.update(updates)
+
+            state_file = os.path.join(self.dirs['json'], 'current_status.json')
+            with open(state_file, 'w') as f:
+                json.dump(current_state, f, indent=4)
+            return True
+        except Exception as e:
+            logging.error(f"Error writing game state: {e}")
+            return False
+
+    def _preprocess_image(self, img_path):
+        """Enhanced image preprocessing for better number recognition"""
+        img = cv2.imread(img_path)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        
+        # Scale the image
+        scale = 2
+        scaled = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
+        
+        # Enhance contrast
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+        contrast = clahe.apply(scaled)
+        
+        # Denoise
+        denoised = cv2.fastNlMeansDenoising(contrast)
+        
+        # Thresholding
+        _, binary = cv2.threshold(denoised, 127, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        return binary
 
     def get_relative_coords(self, base_coords, ref_point):
         """
@@ -241,51 +295,110 @@ class GameBot:
         ]
 
     def get_elemental_reference(self):
-        """
-        Localiza el punto de referencia elemental en la pantalla.
-        Returns:
-            tuple: Coordenadas del punto de referencia o None
-        """
+        """Localiza el punto de referencia elemental en la pantalla."""
         logging.debug("Attempting to locate elemental reference on the screen")
-        for attempt in range(3):  # Retry logic
+        
+        image_path = os.path.join(self.dirs['images'], 'tofind', 'elemental_reference.png')
+        if not os.path.exists(image_path):
+            logging.error(f"Reference image not found at: {image_path}")
+            return None
+            
+        for attempt in range(3):
             time.sleep(1)
             try:
-                elemental_loc = pyautogui.locateOnScreen("elemental_reference.png", confidence=0.7)
-                if not elemental_loc:
-                    logging.warning(f"Attempt {attempt + 1}: Elemental reference not found")
-                    continue
-                return pyautogui.center(elemental_loc)
+                elemental_loc = pyautogui.locateOnScreen(image_path, confidence=0.7)
+                if elemental_loc:
+                    logging.debug(f"Found elemental reference at: {elemental_loc}")
+                    return pyautogui.center(elemental_loc)
+                logging.warning(f"Attempt {attempt + 1}: Reference not found")
             except Exception as e:
-                logging.error(f"Error finding elemental reference on attempt {attempt + 1}: {e}")
+                logging.error(f"Error finding elemental reference on attempt {attempt + 1}: {str(e)}")
         return None
 
+        def get_toolbar_reference(self):
+            """
+            Localiza el punto de referencia toolbar en la pantalla.
+            Returns:
+                tuple: Coordenadas del punto de referencia o None
+            """
+            logging.debug("Attempting to locate toolbar reference on the screen")
+            for attempt in range(3):  # Retry logic
+                time.sleep(1)
+                try:
+                    toolbar_loc = pyautogui.locateOnScreen("./images/tofind/toolbar_reference.png", confidence=0.7)
+                    if not toolbar_loc:
+                        logging.warning(f"Attempt {attempt + 1}: toolbar reference not found")
+                        continue
+                    return pyautogui.center(toolbar_loc)
+                except Exception as e:
+                    logging.error(f"Error finding toolbar reference on attempt {attempt + 1}: {e}")
+            return None
+
     def distribute_attributes(self):
-        """
-        Distribuye puntos de atributos según la configuración.
-        Returns:
-            bool: True si tuvo éxito, False si no
-        """
+        """Distribuye puntos de atributos disponibles según la configuración."""
         ref_point = self.get_elemental_reference()
         if not ref_point:
             logging.error("Cannot distribute attributes - reference point not found")
             return False
-                
-        points = self.resets * 430
-        logging.info(f"Distributing {points} total points")
+
+        logging.info(f"Reference point found at: {ref_point}")
+
+        # First read all stats
+        self.read_all_stats()
+        current_state = self.get_game_state()
+
+        # Log current state
+        logging.info("Current stats:")
+        logging.info(f"Available Points: {current_state['available_points']}")
+        logging.info(f"Strength: {current_state['current_strenght']}")
+        logging.info(f"Agility: {current_state['current_agility']}")
+        logging.info(f"Vitality: {current_state['current_vitality']}")
+        logging.info(f"Command: {current_state['current_command']}")
+
+        # Take screenshot of stats area for debugging
+        try:
+            stats_area = ImageGrab.grab()
+            stats_path = os.path.join(self.dirs['images'], 'stats_area_debug.png')
+            stats_area.save(stats_path)
+            logging.info(f"Saved stats area screenshot to {stats_path}")
+        except Exception as e:
+            logging.error(f"Failed to save debug screenshot: {e}")
+        
+        # Check if we have read stats correctly
+        if (current_state['available_points'] == -1 or
+            current_state['current_strenght'] == -1 or
+            current_state['current_agility'] == -1 or
+            current_state['current_vitality'] == -1 or
+            current_state['current_command'] == -1):
+            logging.error("Stats not properly read, values still at -1")
+            return False
+
+        available_points = current_state['available_points']
+        if available_points <= 0:
+            logging.info("No points available to distribute")
+            return False
+
+        logging.info(f"Starting distribution of {available_points} available points")
+        logging.info(f"Stat distribution config: {self.config['stat_distribution']}")
 
         for stat, ratio in self.config['stat_distribution'].items():
-            stat_points = int(points * ratio)
+            stat_points = int(available_points * ratio)
+            if stat_points <= 0:
+                logging.info(f"Skipping {stat} - no points to allocate (ratio: {ratio})")
+                continue
+
             logging.info(f"Allocating {stat_points} points to {stat}")
-            
+
             try:
                 stat_coords = self.config['ocr_coordinates']['attributes'][stat]
-                
+                logging.info(f"Base coordinates for {stat}: {stat_coords}")
+
                 if 'first_button' in stat_coords:
                     first_coords = self.get_relative_coords(stat_coords['first_button'], ref_point)
-                    logging.info(f"Relative coords for button PlusPlus of {stat}: {first_coords[0]}, {first_coords[1]}")
+                    logging.info(f"Clicking first button at relative coords: {first_coords}")
                     pyautogui.click(first_coords[0], first_coords[1])
                     time.sleep(0.5)
-                
+
                 denominations = ['1000', '100', '10']
                 for denom in denominations:
                     if denom in stat_coords:
@@ -293,94 +406,182 @@ class GameBot:
                         clicks = stat_points // denom_value
                         if clicks > 0:
                             coords = self.get_relative_coords(stat_coords[denom], ref_point)
-                            logging.debug(f"Need {clicks} clicks on {denom} button for {stat}")
-                            logging.debug(f"Click position: X={coords[0]} Y={coords[1]}")
-                            
+                            logging.info(f"Will click {clicks} times on {denom} button at coords {coords}")
                             for click in range(clicks):
+                                logging.debug(f"Click {click + 1}/{clicks} for {denom} on {stat}")
                                 pyautogui.click(coords[0], coords[1])
-                                logging.debug(f"Click {click + 1}/{clicks} for {denom}")
                                 time.sleep(0.2)
-                                
                             stat_points %= denom_value
                             time.sleep(0.5)
-                            
-                # Hide plus info after completing attribute
-                pyautogui.click(first_coords[0], first_coords[1])
-                time.sleep(0.5)
-                                
+
+                    # Log remaining points after this denomination
+                    logging.debug(f"Remaining points for {stat} after {denom}: {stat_points}")
+
+                # Hide plus info
+                if 'first_button' in stat_coords:
+                    logging.info(f"Hiding plus info for {stat}")
+                    pyautogui.click(first_coords[0], first_coords[1])
+                    time.sleep(0.5)
+
             except Exception as e:
                 logging.error(f"Error distributing points for {stat}: {e}")
+                logging.error(f"Stat coordinates: {stat_coords}")
                 continue
-        
+
+        # Read stats again after distribution
+        logging.info("Distribution complete, reading final stats")
+        self.read_all_stats()
+        final_state = self.get_game_state()
+        logging.info("Final stats:")
+        logging.info(f"Available Points: {final_state['available_points']}")
+        logging.info(f"Strength: {final_state['current_strenght']}")
+        logging.info(f"Agility: {final_state['current_agility']}")
+        logging.info(f"Vitality: {final_state['current_vitality']}")
+        logging.info(f"Command: {final_state['current_command']}")
         return True
 
-    def read_stats(self, max_retries=1000):
-        """
-        Lee las estadísticas del personaje (nivel y resets).
-        Args:
-            max_retries: Máximo número de reintentos
-        Returns:
-            tuple: (nivel, resets)
-        """
-        if max_retries <= 0:
-            logging.error("Failed to read stats after maximum retries")
-            return self.level, self.resets
-
+    def read_attribute(self, attribute_name, ref_point):
+        """Read attribute with validation based on config settings"""
         try:
+            attribute_coords = self.config['ocr_coordinates']['attributes'][attribute_name]['points']
+            relative_coords = self.get_relative_coords(attribute_coords, ref_point)
+
+            attr_area = ImageGrab.grab(bbox=tuple(relative_coords))
+            attr_path = os.path.join(self.dirs['images'], f'{attribute_name}_value.png')
+            attr_area.save(attr_path)
+
+            preprocessed = self._preprocess_image(attr_path)
+            text = pytesseract.image_to_string(
+                preprocessed,
+                config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
+            )
+
+            value = self._extract_numeric_value(text)
+
+            # Get validation rules from config
+            if 'validation' in self.config and attribute_name in self.config['validation']:
+                min_val = self.config['validation'][attribute_name].get('min', 0)
+                max_val = self.config['validation'][attribute_name].get('max', float('inf'))
+
+                if not min_val <= value <= max_val:
+                    logging.warning(f"{attribute_name} value out of range: {value}")
+                    return self.read_attribute(attribute_name, ref_point)
+
+            return value
+
+        except Exception as e:
+            logging.error(f"Error reading {attribute_name}: {e}")
+            return 0
+
+    def _extract_numeric_value(self, text):
+        """Enhanced numeric value extraction"""
+        try:
+            # Clean the text
+            cleaned = ''.join(filter(str.isdigit, text.strip()))
+            if not cleaned:
+                return 0
+
+            # Handle common OCR mistakes
+            if len(cleaned) > 4:  # Stats shouldn't be more than 4 digits
+                cleaned = cleaned[:4]
+
+            value = int(cleaned)
+
+            # Validate reasonable ranges
+            if value > 9999:
+                return 0
+
+            return value
+        except ValueError:
+            return 0
+
+    def read_available_points(self, ref_point):
+        """Read available attribute points"""
+        try:
+            coords = self.get_relative_coords(self.config['ocr_coordinates']['available_points'], ref_point)
+            points_area = ImageGrab.grab(bbox=tuple(coords))
+            points_path = os.path.join(self.dirs['images'], 'available_points.png')
+            points_area.save(points_path)
+
+            points_thresh = self._preprocess_image(points_path)
+            if points_thresh is not None:
+                points_text = pytesseract.image_to_string(
+                    Image.fromarray(points_thresh),
+                    config=r'--oem 3 --psm 13 -c tessedit_char_whitelist=0123456789'
+                )
+                return self._extract_numeric_value(points_text)
+        except Exception as e:
+            logging.error(f"Error reading available points: {e}")
+        return 0
+
+    def read_all_stats(self):
+        """Read and save all character stats"""
+        try:
+            self.ensure_stats_window_open()
+            
             ref_point = self.get_elemental_reference()
             if not ref_point:
-                return self.read_stats(max_retries - 1)
+                return self.read_all_stats()
 
-            # Get relative coordinates
-            level_coords = self.get_relative_coords(self.config['ocr_coordinates']['level'], ref_point)
-            reset_coords = self.get_relative_coords(self.config['ocr_coordinates']['reset'], ref_point)
+            level = self._read_numeric_area('level', ref_point)
+            reset = self._read_numeric_area('reset', ref_point)
 
-            # Level read
-            level_area = ImageGrab.grab(bbox=tuple(level_coords))
-            level_path = 'level_test.png'
-            level_area.save(level_path)
-            
-            level_thresh = self._preprocess_image(level_path)
-            if level_thresh is not None:
-                level_text = pytesseract.image_to_string(Image.fromarray(level_thresh), 
-                    config=r'--oem 3 --psm 13 -c tessedit_char_whitelist=0123456789')
-                level_numeric_value = self._extract_numeric_value(level_text)
-                
-                if level_numeric_value > 0:
-                    # Additional validation to prevent unnecessary recursion
-                    if (level_numeric_value < self.level or 
-                        level_numeric_value > self.config['max_level']):
-                        return self.read_stats(max_retries - 1)
-                    self.level = level_numeric_value
-                else:
-                    return self.read_stats(max_retries - 1)
+            strenght = self.read_attribute('strenght', ref_point)
+            agility = self.read_attribute('agility', ref_point)
+            vitality = self.read_attribute('vitality', ref_point)
+            energy = self.read_attribute('energy', ref_point)
+            command = self.read_attribute('command', ref_point)
 
-            # Reset read
-            reset_area = ImageGrab.grab(bbox=tuple(reset_coords))
-            reset_path = 'reset_test.png'
-            reset_area.save(reset_path)
-            
-            reset_thresh = self._preprocess_image(reset_path)
-            if reset_thresh is not None:
-                reset_text = pytesseract.image_to_string(Image.fromarray(reset_thresh), 
-                    config=r'--oem 3 --psm 13 -c tessedit_char_whitelist=0123456789')
-                reset_numeric_value = self._extract_numeric_value(reset_text)
-                
-                if reset_numeric_value > 0:
-                    # Additional validation to prevent unnecessary recursion
-                    if reset_numeric_value < self.resets:
-                        return self.read_stats(max_retries - 1)
-                    self.resets = reset_numeric_value
-                else:
-                    return self.read_stats(max_retries - 1)
+            available_coords = self.config['ocr_coordinates']['available_points']
+            points_coords = self.get_relative_coords(available_coords, ref_point)
+            points_area = ImageGrab.grab(bbox=tuple(points_coords))
+            points_path = os.path.join(self.dirs['images'], 'available_points.png')
+            points_area.save(points_path)
 
-            logging.info(f"======== RESET: {self.resets} ========")
-            logging.info(f"======== LEVEL: {self.level} ========")
-            return self.level, self.resets
+            preprocessed = self._preprocess_image(points_path)
+            points_text = pytesseract.image_to_string(
+                preprocessed,
+                config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
+            )
+            available_points = self._extract_numeric_value(points_text)
+
+            state = {
+                'current_level': level,
+                'current_reset': reset,
+                'current_strenght': strenght,
+                'current_agility': agility,
+                'current_vitality': vitality,
+                'current_energy': energy,
+                'current_command': command,
+                'available_points': available_points
+            }
+
+            self.update_game_state(state)
+
+            logging.info(f"======== RESET: {reset} ========")
+            logging.info(f"======== LEVEL: {level} ========")
+            logging.info(f"======== STATS: STR:{strenght} AGI:{agility} VIT:{vitality} ENE:{energy} CMD:{command} ========")
+            logging.info(f"======== AVAILABLE POINTS: {available_points} ========")
+
+            return level, reset
 
         except Exception as e:
             logging.error(f"Error reading stats: {e}")
-            return self.read_stats(max_retries - 1)
+            return self.read_all_stats()
+
+    def _read_numeric_area(self, area_name, ref_point):
+        """Read numeric value from specified area"""
+        coords = self.get_relative_coords(self.config['ocr_coordinates'][area_name], ref_point)
+        area = ImageGrab.grab(bbox=tuple(coords))
+        path = os.path.join(self.dirs['images'], f'{area_name}_test.png')
+        area.save(path)
+
+        preprocessed = self._preprocess_image(path)
+        text = pytesseract.image_to_string(
+            preprocessed,
+            config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
+        )
+        return self._extract_numeric_value(text)
 
     def adjust_coordinates(self, coordinates):
         """
@@ -393,247 +594,189 @@ class GameBot:
 
         if not self.reference_point:
             return coordinates
-            
+
         try:
             # Your config uses absolute coordinates, so we'll adjust based on the reference point directly
             offset_x = self.reference_point[0] - coordinates[0]
             offset_y = self.reference_point[1] - coordinates[1]
-            
+
             adjusted_coordinates = [
                 coordinates[0] + offset_x,
                 coordinates[1] + offset_y,
                 coordinates[2] + offset_x,
                 coordinates[3] + offset_y
             ]
-            
+
             logging.debug(f"Original coordinates: {coordinates}")
             logging.debug(f"Adjusted coordinates: {adjusted_coordinates}")
             return adjusted_coordinates
-            
+
         except Exception as e:
             logging.error(f"Error adjusting coordinates: {e}")
             return coordinates
 
-    def read_stats(self):
-        """
-        Lee las estadísticas del personaje (nivel y resets).
-        Args:
-            max_retries: Máximo número de reintentos
-        Returns:
-            tuple: (nivel, resets)
-        """
+    def ensure_stats_window_open(self):
+        """Ensures the stats window stays open without image detection"""
         try:
-            ref_point = self.get_elemental_reference()
-            if not ref_point:
-                return self.read_stats()
-
-            # Get relative coordinates
-            level_coords = self.get_relative_coords(self.config['ocr_coordinates']['level'], ref_point)
-            reset_coords = self.get_relative_coords(self.config['ocr_coordinates']['reset'], ref_point)
-
-            # Level read
-            level_area = ImageGrab.grab(bbox=tuple(level_coords))
-            level_path = 'level_test.png'
-            level_area.save(level_path)
-            
-            level_thresh = self._preprocess_image(level_path)
-            if level_thresh is not None:
-                level_text = pytesseract.image_to_string(Image.fromarray(level_thresh), 
-                    config=r'--oem 3 --psm 13 -c tessedit_char_whitelist=0123456789')
-                level_numeric_value = self._extract_numeric_value(level_text)
-                
-                if level_numeric_value > 0:
-                    if level_numeric_value < self.level or level_numeric_value > self.config['max_level']:
-                        return self.read_stats()
-                    self.level = level_numeric_value
-                else:
-                    return self.read_stats()
-
-            # Reset read
-            reset_area = ImageGrab.grab(bbox=tuple(reset_coords))
-            reset_path = 'reset_test.png'
-            reset_area.save(reset_path)
-            
-            reset_thresh = self._preprocess_image(reset_path)
-            if reset_thresh is not None:
-                reset_text = pytesseract.image_to_string(Image.fromarray(reset_thresh), 
-                    config=r'--oem 3 --psm 13 -c tessedit_char_whitelist=0123456789')
-                reset_numeric_value = self._extract_numeric_value(reset_text)
-                
-                if reset_numeric_value > 0:
-                    if reset_numeric_value < self.resets:
-                        return self.read_stats()
-                    self.resets = reset_numeric_value
-                else:
-                    return self.read_stats()
-
-            logging.info(f"======== RESET: {self.resets} ========")
-            logging.info(f"======== LEVEL: {self.level} ========")
-            return self.level, self.resets
-
-        except Exception as e:
-            logging.error(f"Error reading stats: {e}")
-            return self.read_stats()
-
-    def move_to_coordinates(self, target_x: int, target_y: int):
-        """
-        Mueve el personaje a las coordenadas especificadas.
-        Args:
-            target_x: Coordenada X objetivo
-            target_y: Coordenada Y objetivo
-        """
-        if not self.get_current_position():
-            logging.error("Failed to get initial position")
-            return
-            
-        start_time = time.time()
-        stuck_count = 0
-        last_pos = {'x': self.current_x, 'y': self.current_y}
-        movement_history = []
-        
-        while True:
-            current_time = time.time()
-            if not self.get_current_position():
-                logging.warning("Lost position tracking, resetting to location")
-                self.move_to_location(f'/move {self.current_location}')
-                time.sleep(2)
-                continue
-                
-            dx = target_x - self.current_x
-            dy = target_y - self.current_y
-            distance = (dx**2 + dy**2)**0.5
-            
-            movement = {
-                'time': current_time - start_time,
-                'position': (self.current_x, self.current_y),
-                'target': (target_x, target_y),
-                'stuck_count': stuck_count,
-                'dx': dx,
-                'dy': dy
-            }
-            movement_history.append(movement)
-            logging.debug(f"Movement detail: {movement}")
-            logging.info(f"Current: ({self.current_x}, {self.current_y}), Target: ({target_x}, {target_y}), Distance: {distance:.2f}, dx: {dx}, dy: {dy}")
-            
-            position_change = abs(self.current_x - last_pos['x']) + abs(self.current_y - last_pos['y'])
-            if position_change < 5:
-                stuck_count += 1
-                logging.warning(f"Potential stuck detection: count={stuck_count}, position_change={position_change}")
-                if stuck_count >= 3:
-                    logging.error(f"Stuck detected! Last movements: {movement_history[-5:]}")
-                    self.move_to_location(f'/move {self.current_location}')
-                    time.sleep(2)
-                    stuck_count = 0
-                    continue
-            else:
-                stuck_count = 0
-                
-            if abs(dx) > 10:
-                key = 'left' if dx < 0 else 'right'
-                logging.debug(f"Pressing {key} key (dx={dx})")
-                pyautogui.keyDown(key)
-                pyautogui.keyUp(key)
-                
-            if abs(dy) > 10:
-                key = 'down' if dy < 0 else 'up'  # Fixed direction logic here
-                logging.debug(f"Pressing {key} key (dy={dy})")
-                pyautogui.keyDown(key)
-                pyautogui.keyUp(key)
-                
+            pyautogui.press('c')
             time.sleep(0.1)
-            
-            if abs(dx) <= 10 and abs(dy) <= 10:
-                logging.info(f"Target reached: ({self.current_x}, {self.current_y})")
-                self.check_and_click_play(target_x, target_y)
-                break
-                
-            last_pos = {'x': self.current_x, 'y': self.current_y}
+        except Exception as e:
+            logging.error(f"Error pressing C key: {e}")
 
-    def move_to_location(self, command: str):
-        """
-        Mueve el personaje a una ubicación usando un comando.
-        Args:
-            command: Comando de movimiento
-        """
-        location = command.replace('/move ', '')
-        if location != self.current_location:
-            self.distribute_attributes()
-            if self.level >= self.config['reset_level']:
-                time.sleep(1)
-                
+    def move_to_location(self, command: str, avoid_checks=False):
+        """Modified to keep stats window consistently open"""
+        if not avoid_checks:
+            location = command.replace('/move ', '')
+            current_state = self.get_game_state()
+
+            if location != current_state['current_map']:
+                self.distribute_attributes()
+                if current_state['current_level'] >= self.config['reset_level']:
+                    time.sleep(0.1)
+
+                self.play = False
+                pyautogui.press('enter')
+                pyautogui.write(command)
+                pyautogui.press('enter')
+                time.sleep(0.5)
+                pyautogui.press('c')  # Reopen stats after command
+
+                self.update_game_state({'current_map': location})
+        else:
             self.play = False
             pyautogui.press('enter')
             pyautogui.write(command)
             pyautogui.press('enter')
-            time.sleep(1)
+            time.sleep(0.5)
             pyautogui.press('c')
-            self.current_location = location
+
+    def move_to_coordinates(self, target_x: int, target_y: int):
+        """Movement without stats window toggling"""
+        if not self.get_current_position():
+            logging.error("Failed to get initial position")
+            return
+
+        last_pos = {'x': self.current_x, 'y': self.current_y}
+        stuck_count = 0
+        move_delay = 0.05
+
+        while True:
+            if not self.get_current_position():
+                self.move_to_location(f'/move {self.current_location}')
+                continue
+
+            dx = target_x - self.current_x
+            dy = target_y - self.current_y
+            
+            position_change = abs(self.current_x - last_pos['x']) + abs(self.current_y - last_pos['y'])
+            if position_change < 5:
+                stuck_count += 1
+                if stuck_count >= 3:
+                    self.move_to_location(f'/move {self.current_location}')
+                    stuck_count = 0
+                    continue
+            else:
+                stuck_count = 0
+
+            if abs(dx) > 10 or abs(dy) > 10:
+                if abs(dx) > 10:
+                    key = 'left' if dx < 0 else 'right'
+                    pyautogui.keyDown(key)
+                    pyautogui.keyUp(key)
+                
+                if abs(dy) > 10:
+                    key = 'down' if dy < 0 else 'up'
+                    pyautogui.keyDown(key)
+                    pyautogui.keyUp(key)
+
+                time.sleep(move_delay)
+            else:
+                self.check_and_click_play(target_x, target_y)
+                break
+
+            last_pos = {'x': self.current_x, 'y': self.current_y}
 
     def check_and_click_play(self, x, y):
-        """
-        Verifica y activa el botón de play si es necesario.
-        Args:
-            x: Coordenada X actual
-            y: Coordenada Y actual
-        """
+        """Check play button and update location state"""
         try:
+            current_state = self.get_game_state()
             play_coords = self.config['ocr_coordinates']['play']
             play_button_area = ImageGrab.grab(bbox=tuple(play_coords))
-            play_button_area.save('play_button_area.png')
-            
+            play_path = os.path.join(self.dirs['images'], 'play_button_area.png')
+            play_button_area.save(play_path)
+
             if abs(self.current_x - x) <= 10 and abs(self.current_y - y) <= 10 and not self.play:
                 pyautogui.click(play_coords[0] + 5, play_coords[1] + 3)
                 self.play = True
+                self.update_game_state({'current_location': [x, y]})
                 logging.info("Play button clicked - was inactive (green)")
             elif self.play:
                 logging.info("Play already active (red) - skipping click")
-                
+
         except Exception as e:
             logging.error(f"Error checking play button: {e}")
 
     def reset_character(self):
-        """Reinicia el personaje y distribuye atributos"""
+        """Reset character and manage stats window"""
+        pyautogui.press('c')  # Close stats window before reset
+        time.sleep(0.5)
         pyautogui.press('enter')
         pyautogui.write('/reset')
-        self.level = 0
-        self.resets = 0
         pyautogui.press('enter')
         time.sleep(2)
-        pyautogui.press('c')
+        pyautogui.press('c')  # Reopen stats window after reset
+
+        current_state = self.get_game_state()
+        new_reset = current_state['current_reset'] + 1
+        self.update_game_state({
+            'current_reset': new_reset,
+            'current_level': 0
+        })
         self.distribute_attributes()
 
     def run(self):
         """Ejecuta el bucle principal del bot"""
-        while self.running:  # Changed from while True
+        while self.running:
             try:
                 if not self.running:
                     return
-                
-                pyautogui.click(self.screen_width // 2, self.screen_height // 2)  # Focus game at the center
-                time.sleep(1)
-                
+
+                pyautogui.click(self.screen_width // 2, self.screen_height // 2)
+
+                # Primera inicialización
                 if self.first_time:
-                    logging.info("Open Stats")
-                    pyautogui.press('c')
+                    logging.info("1. Move to lorencia first")
+                    self.move_to_location('/move lorencia')
                     self.first_time = False
+
+                # Manejo de errores consecutivos
                 if self.consecutive_errors > self.config['error_threshold']:
                     logging.error("Many consecutives errors")
+                    self.play = False  # Reset play state
                     self.move_to_location('/move lorencia')
                     time.sleep(5)
                     self.consecutive_errors = 0
-                    
-                #if self.record_good_path:
-                #    self.path_learner.record_good_path(self, self.current_location, duration=30, interval=1)
-                    
-                level, resets = self.read_stats()
-                
-                if level >= self.config['reset_level'] <= self.config['max_level']:
-                    self.reset_character()
 
-                if level < self.config['max_level']:
+                level, resets = self.read_all_stats()
+
+                # Resetear si alcanza el nivel configurado
+                if level >= self.config['reset_level'] <= self.config['max_level']:
+                    self.play = False  # Reset play state
+                    self.reset_character()
+                    # Después del reset, ejecutar el flujo normal una vez
+                    if level < self.config['max_level']:
+                        for threshold, obj in sorted(self.config['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
+                            if level >= int(threshold):
+                                self.move_to_location(obj["command"])
+                                x = obj["location"][0]
+                                y = obj["location"][1]
+                                self.move_to_coordinates(x,y)
+                                self.check_and_click_play(x,y)
+                                break
+
+                # Si no está jugando, ejecutar el flujo normal
+                elif not self.play and level < self.config['max_level']:
                     for threshold, obj in sorted(self.config['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
-                        logging.info(f"Treshold: {threshold}")
-                        logging.info(f"Location: {obj}")
                         if level >= int(threshold):
                             self.move_to_location(obj["command"])
                             x = obj["location"][0]
@@ -641,15 +784,26 @@ class GameBot:
                             self.move_to_coordinates(x,y)
                             self.check_and_click_play(x,y)
                             break
-                
+                elif self.play:
+                    for threshold, obj in sorted(self.config['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
+                        if level >= int(threshold):
+                            self.move_to_location(obj["command"])
+                            x = obj["location"][0]
+                            y = obj["location"][1]
+                            self.move_to_coordinates(x,y)
+                            self.check_and_click_play(x,y)
+                            break
+
                 self.consecutive_errors = 0
                 time.sleep(self.config['check_interval'])
-                
+
             except KeyboardInterrupt:
+                logging.info("Bot stopped by user")
                 break
             except Exception as e:
                 self.consecutive_errors += 1
-                logging.error(f"Error: {e}")
+                logging.error(f"Error in main loop: {e}")
+                time.sleep(1)
 
 if __name__ == "__main__":
     bot = GameBot()
