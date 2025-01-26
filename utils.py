@@ -55,3 +55,14 @@ class Utils:
             return value
         except ValueError:
             return 0
+    
+    def clean_stats_command(self, command):
+        splitted_command = command.split(",")
+        filtered_stats = []
+        
+        for stat in splitted_command:
+            point = stat.strip().split(" ")[1]
+            if point != '0':
+                filtered_stats.append(stat.strip())
+        result = ', '.join(filtered_stats)
+        return result

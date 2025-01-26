@@ -15,6 +15,7 @@ class Configuration:
         self.load_config('config.json')
         self.setup_logging()
         self.setup_keyboard_listener()
+        self.update_game_state(updates=self.start_status())
         
     def setup_logging(self):
         """Configura el sistema de logging y limpia logs anteriores"""
@@ -39,6 +40,23 @@ class Configuration:
         # Disable buffering
         sys.stdout.reconfigure(line_buffering=True)
         sys.stderr.reconfigure(line_buffering=True)
+        
+    def start_status(self):
+        return {
+                "current_reset": 0,
+                "current_level": 0,
+                "current_map": "",
+                "current_coords": [],
+                "current_strenght": 0,
+                "current_agility": 0,
+                "current_vitality": 0,
+                "current_energy": 0,
+                "current_command": 0,
+                "available_points": 0,
+                "mulheper_active": False
+        }
+        
+    
 
     def setup_directories(self):
         """Creates necessary directories for organizing files"""
@@ -50,7 +68,7 @@ class Configuration:
 
         for directory in self.dirs.values():
             os.makedirs(directory, exist_ok=True)
-            
+
     def get_game_state(self):
         """Read current state from file with default values"""
         try:
@@ -58,18 +76,7 @@ class Configuration:
             if os.path.exists(state_file):
                 with open(state_file, 'r') as f:
                     return json.load(f)
-            return {
-                "current_reset": 0,
-                "current_level": 0,
-                "current_map": "Lorencia",
-                "current_location": [],
-                "current_strenght": 0,
-                "current_agility": 0,
-                "current_vitality": 0,
-                "current_energy": 0,
-                "current_command": 0,
-                "available_points": 0
-            }
+            return self.start_status()
         except Exception as e:
             self.logging.error(f"Error reading game state: {e}")
             return None
@@ -84,11 +91,12 @@ class Configuration:
         except Exception as e:
             self.logging.error(f"Error loading game state: {e}")
             
-    def update_game_state(self, updates):
+    def update_game_state(self, updates=None):
         """Update state file with validation"""
         try:
             current_state = self.get_game_state() or {}
-            current_state.update(updates)
+            if updates:
+                current_state.update(updates)
 
             state_file = os.path.join(self.dirs['json'], 'current_status.json')
             with open(state_file, 'w') as f:

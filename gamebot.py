@@ -21,8 +21,6 @@ class GameBot:
         self.interface.load_ocr_packages()
         
         self.running = True
-        self.current_location = None
-        self.play = False
         self.path_learner = PathLearner()
         self.record_good_path = False
         self.reference_point = None
@@ -46,7 +44,7 @@ class GameBot:
             
         raise ValueError(f"Invalid coordinate format: '{raw_data}'")
 
-    def get_current_position(self, retries=900, delay=1):
+    def get_current_coords_from_game(self, retries=900, delay=1):
         """
         Intenta obtener la posición actual con reintentos.
         Args:
@@ -57,7 +55,8 @@ class GameBot:
         """
         for attempt in range(retries):
             try:
-                self.current_x, self.current_y = self._fetch_position()
+                x, y = self._fetch_position()
+                self.interface.set_current_coords([x,y])
                 return True
             except Exception as e:
                 self.logging.warning(f"Attempt {attempt + 1} failed to get current position: {e}")
@@ -67,106 +66,65 @@ class GameBot:
 
     def distribute_attributes(self):
         """Distribuye puntos de atributos disponibles según la configuración."""
-        ref_point = self.interface.get_elemental_reference()
-        if not ref_point:
-            self.logging.error("Cannot distribute attributes - reference point not found")
-            return False
-
-        self.logging.info(f"Reference point found at: {ref_point}")
-
-        # First read all stats
-        self.read_all_stats()
-        current_state = self.config.get_game_state()
-
-        # Log current state
-        self.logging.info("Current stats:")
-        self.logging.info(f"Available Points: {current_state['available_points']}")
-        self.logging.info(f"Strength: {current_state['current_strenght']}")
-        self.logging.info(f"Agility: {current_state['current_agility']}")
-        self.logging.info(f"Vitality: {current_state['current_vitality']}")
-        self.logging.info(f"Command: {current_state['current_command']}")
-
-        # Take screenshot of stats area for debugging
-        try:
-            stats_path = self.interface.take_screenshot("stats_area_debug")
-            self.logging.info(f"Saved stats area screenshot to {stats_path}")
-        except Exception as e:
-            self.logging.error(f"Failed to save debug screenshot: {e}")
+        str_attr_to_add = 0
+        agi_attr_to_add = 0
+        vit_attr_to_add = 0
+        ene_attr_to_add = 0
+        com_attr_to_add = 0
         
-        # Check if we have read stats correctly
-        if (current_state['available_points'] == -1 or
-            current_state['current_strenght'] == -1 or
-            current_state['current_agility'] == -1 or
-            current_state['current_vitality'] == -1 or
-            current_state['current_command'] == -1):
-            self.logging.error("Stats not properly read, values still at -1")
-            return False
+        try:
+            # First read all stats
+            current_state = self.config.get_game_state()
 
-        available_points = current_state['available_points']
-        if available_points <= 0:
-            self.logging.info("No points available to distribute")
-            return False
+            # Check if we have read stats correctly
+            if (current_state['available_points'] == -1 or
+                current_state['current_strenght'] == -1 or
+                current_state['current_agility'] == -1 or
+                current_state['current_vitality'] == -1 or
+                current_state['current_command'] == -1):
+                self.logging.error("Stats not properly read, values still at -1")
+                return False
 
-        self.logging.info(f"Starting distribution of {available_points} available points")
-        self.logging.info(f"Stat distribution config: {self.config.file['stat_distribution']}")
+            available_points = current_state['available_points']
+            if available_points <= 0:
+                self.logging.info("No points available to distribute")
+                return False
 
-        for stat, ratio in self.config.file['stat_distribution'].items():
-            stat_points = int(available_points * ratio)
-            if stat_points <= 0:
-                self.logging.info(f"Skipping {stat} - no points to allocate (ratio: {ratio})")
-                continue
+            self.logging.info(f"Starting distribution of {available_points} available points")
+            self.logging.info(f"Stat distribution config: {self.config.file['stat_distribution']}")
+            
+            # Old Way
 
-            self.logging.info(f"Allocating {stat_points} points to {stat}")
+            for stat, ratio in self.config.file['stat_distribution'].items():
+                stat_points = int(available_points * ratio)
+                if stat_points <= 0:
+                    self.logging.info(f"Skipping {stat} - no points to allocate (ratio: {ratio})")
+                else:
+                    self.interface.command_add_attributes(attribute=stat, points=stat_points)
+                    self.logging.info(f"Allocating {stat_points} points to {stat}")
 
-            try:
-                stat_coords = self.config.file['ocr_coordinates']['attributes'][stat]
-                self.logging.info(f"Base coordinates for {stat}: {stat_coords}")
-
-                if 'first_button' in stat_coords:
-                    first_coords = self.utils.get_relative_coords(stat_coords['first_button'], ref_point)
-                    self.logging.info(f"Clicking first button at relative coords: {first_coords}")
-                    self.interface.mouse_click(x=first_coords[0], y=first_coords[1])
-                    time.sleep(0.5)
-
-                denominations = ['1000', '100', '10']
-                for denom in denominations:
-                    if denom in stat_coords:
-                        denom_value = int(denom)
-                        clicks = stat_points // denom_value
-                        if clicks > 0:
-                            coords = self.utils.get_relative_coords(stat_coords[denom], ref_point)
-                            self.logging.info(f"Will click {clicks} times on {denom} button at coords {coords}")
-                            for click in range(clicks):
-                                self.logging.debug(f"Click {click + 1}/{clicks} for {denom} on {stat}")
-                                self.interface.mouse_click(x=coords[0], y=coords[1])
-                                time.sleep(0.2)
-                            stat_points %= denom_value
-                            time.sleep(0.5)
-
-                    # Log remaining points after this denomination
-                    self.logging.debug(f"Remaining points for {stat} after {denom}: {stat_points}")
-
-                # Hide plus info
-                if 'first_button' in stat_coords:
-                    self.logging.info(f"Hiding plus info for {stat}")
-                    self.interface.mouse_click(x=first_coords[0], y=first_coords[1])
-                    time.sleep(0.5)
-
-            except Exception as e:
-                self.logging.error(f"Error distributing points for {stat}: {e}")
-                self.logging.error(f"Stat coordinates: {stat_coords}")
-                continue
+            # New way
+            """
+            for stat, ratio in self.config.file['stat_distribution'].items():
+                if stat == "strenght":
+                    str_attr_to_add = int(available_points * ratio)
+                if stat == "agility":
+                    agi_attr_to_add = int(available_points * ratio)
+                if stat == "vitality":
+                    vit_attr_to_add = int(available_points * ratio)
+                if stat == "energy":
+                    ene_attr_to_add = int(available_points * ratio)
+                if stat == "command":
+                    com_attr_to_add =  int(available_points * ratio)
+                    
+            self.interface.command_add_attributes(attribute="allstats", points=0, str_attr=str_attr_to_add, agi_attr=agi_attr_to_add, vit_attr=vit_attr_to_add, ene_attr=ene_attr_to_add, com_attr=com_attr_to_add)
+            """
+        except Exception as e:
+            self.logging.error(f"Error distributing points for {stat}: {e}")
 
         # Read stats again after distribution
         self.logging.info("Distribution complete, reading final stats")
-        self.read_all_stats()
-        final_state = self.config.get_game_state()
-        self.logging.info("Final stats:")
-        self.logging.info(f"Available Points: {final_state['available_points']}")
-        self.logging.info(f"Strength: {final_state['current_strenght']}")
-        self.logging.info(f"Agility: {final_state['current_agility']}")
-        self.logging.info(f"Vitality: {final_state['current_vitality']}")
-        self.logging.info(f"Command: {final_state['current_command']}")
+        
         return True
 
     def read_all_stats(self):
@@ -218,6 +176,7 @@ class GameBot:
 
                 # Update state
                 state = {
+                    ''
                     'current_level': stats['level'],
                     'current_reset': stats['reset'],
                     'current_strenght': stats['strenght'],
@@ -229,56 +188,113 @@ class GameBot:
                 }
                 
                 self.config.update_game_state(state)
+                
+                self.logging.info("Final stats:")
+                self.logging.info(f"Available Points: {state['available_points']}")
+                self.logging.info(f"Strength: {state['current_strenght']}")
+                self.logging.info(f"Agility: {state['current_agility']}")
+                self.logging.info(f"Vitality: {state['current_vitality']}")
+                self.logging.info(f"Command: {state['current_command']}")
                 return stats['level'], stats['reset']
 
             except Exception as e:
                 self.logging.error(f"Error reading stats: {e}")
                 time.sleep(1)
 
-    def move_to_location(self, command: str, avoid_checks=False):
+    def move_to_location(self, map_name: str, avoid_checks=False,stuck=False):
         """Modified to keep stats window consistently open"""
-        map_name = command.replace('/move ', '')
+        
         if not avoid_checks:
             current_state = self.config.get_game_state()
-
-            if map_name != current_state['current_map']:
-                self.distribute_attributes()
+            if map_name != current_state['current_map'] or stuck is True:
                 if current_state['current_level'] >= self.config.file['reset_level']:
                     time.sleep(0.1)
 
-                self.play = False
+                self.interface.set_mu_helper_status(False)
                 self.interface.command_move_to_map(map_name=map_name)
 
                 self.config.update_game_state({'current_map': map_name})
+            else:
+                self.logging.info(f"Character already in {map_name}. No need to move again")
         else:
-            self.play = False
-            
+            self.interface.set_mu_helper_status(False)
             self.interface.command_move_to_map(map_name=map_name)
+            
         self.interface.open_stats_window()
+        
+    def check_level_kill_or_reset(self, level):
+        for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
+            if level >= int(threshold):
+                self.move_to_location(map_name=obj["map"])
+                x = obj["location"][0]
+                y = obj["location"][1]
+                self.move_to_coordinates(x,y)
+                self.check_and_click_play(x,y)
+                break
+        
+    def lets_kill_some_mobs(self):
+        
+        current_state = self.config.get_game_state()
+        level = self.interface.get_level(current_state)
+        mu_helper_active = self.interface.get_mu_helper_status(current_state)
+        
+        reset_level = self.config.file['reset_level']
+        max_level = self.config.file['max_level']
+        
+        # Reset
+        if level >= reset_level <= max_level:
+            self.interface.set_mu_helper_status(False)
+            self.reset_character()
+            # Después del reset, ejecutar el flujo normal una vez
+            if level < max_level:
+                self.check_level_kill_or_reset(level=level)
+        # No esta farmeando
+        elif not mu_helper_active and level < max_level:
+            self.check_level_kill_or_reset(level=level)
+        # Ponete a farmear
+        elif mu_helper_active:
+            self.check_level_kill_or_reset(level=level)
 
     def move_to_coordinates(self, target_x: int, target_y: int):
         """Movement without stats window toggling"""
-        if not self.get_current_position():
+        
+        if not self.get_current_coords_from_game():
             self.logging.error("Failed to get initial position")
             return
-
-        last_pos = {'x': self.current_x, 'y': self.current_y}
+        
         stuck_count = 0
-        move_delay = 0.05
+        move_delay = 0.2
+        current_state = self.config.get_game_state()
+        current_map = self.interface.get_current_map(current_state)
 
         while True:
-            if not self.get_current_position():
-                self.move_to_location(f'/move {self.current_location}')
-                continue
-
-            dx = target_x - self.current_x
-            dy = target_y - self.current_y
             
-            position_change = abs(self.current_x - last_pos['x']) + abs(self.current_y - last_pos['y'])
-            if position_change < 5:
+            # Store previous coordinates
+            current_state = self.config.get_game_state()
+            logging.debug("BEFORE LASTSS")
+            logging.debug(self.interface.get_current_coords(current_state))
+            last_x, last_y = self.interface.get_current_coords(current_state)
+            logging.debug(f"X: {last_x}")
+            logging.debug(f"Y: {last_y}")
+            dx = target_x - last_x
+            dy = target_y - last_y
+            
+            self.logging.debug(f"DX -> {dx}")
+            self.logging.debug(f"DY -> {dy}")
+            
+            # Get new coordinates
+            self.get_current_coords_from_game()
+            current_state = self.config.get_game_state()
+            now_x, now_y = self.interface.get_current_coords(current_state)
+            
+            # Compare with previous position
+            position_change = abs(now_x - last_x) + abs(now_y - last_y)
+            self.logging.debug(f"POSITION change -> {position_change}")
+            if position_change < 2:
                 stuck_count += 1
                 if stuck_count >= 3:
-                    self.move_to_location(f'/move {self.current_location}')
+                    self.logging.debug(f"Character it got stuck in some place, will move to {current_map}")
+                    self.move_to_location(map_name=current_map, stuck=True)
                     stuck_count = 0
                     continue
             else:
@@ -286,35 +302,43 @@ class GameBot:
 
             if abs(dx) > 10 or abs(dy) > 10:
                 if abs(dx) > 10:
-                    key = 'left' if dx < 0 else 'right'
-                    self.interface.arrow_key_down()
-                    self.interface.arrow_key_up()
+                    if dx < 0:
+                        self.interface.arrow_key_left()
+                        
+                    else:
+                        self.interface.arrow_key_right()
                 
                 if abs(dy) > 10:
-                    key = 'down' if dy < 0 else 'up'
-                    self.interface.arrow_key_down()
-                    self.interface.arrow_key_up()
+                    if dy < 0:
+                        self.interface.arrow_key_down()
+                    else:
+                        self.interface.arrow_key_up()
 
+                self.get_current_coords_from_game()
+                self.logging.debug(f"Actual position: [{last_x},{last_y}]")
                 time.sleep(move_delay)
             else:
                 self.check_and_click_play(target_x, target_y)
                 break
 
-            last_pos = {'x': self.current_x, 'y': self.current_y}
-
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
         try:
-            current_state = self.config.get_game_state()
+            #current_state = self.config.get_game_state()
             play_coords = self.config.file['ocr_coordinates']['play']
             self.interface.take_screenshot_with_coords(coords=play_coords, image_name="play_button_area")
 
-            if abs(self.current_x - x) <= 10 and abs(self.current_y - y) <= 10 and not self.play:
+            self.get_current_coords_from_game()
+            current_state = self.config.get_game_state()
+            current_x, currenty_y = self.interface.get_current_coords(current_state=current_state)
+            mu_helper_active = self.interface.get_mu_helper_status(current_state)
+            
+            if abs(current_x - x) <= 10 and abs(currenty_y - y) <= 10 and not mu_helper_active:
                 self.interface.mouse_click(play_coords[0] + 5, play_coords[1] + 3)
-                self.play = True
-                self.config.update_game_state({'current_location': [x, y]})
+                self.interface.set_mu_helper_status(True)
+                self.interface.set_current_coords([x, y])
                 self.logging.info("Play button clicked - was inactive (green)")
-            elif self.play:
+            elif mu_helper_active:
                 self.logging.info("Play already active (red) - skipping click")
 
         except Exception as e:
@@ -345,12 +369,22 @@ class GameBot:
 
                 # Primera inicialización
                 if self.first_time:
-                    self.logging.info("1. Move to lorencia first")
-                    self.move_to_location('/move lorencia')
                     self.first_time = False
-                    level, resets = self.read_all_stats()
+                    self.logging.info("1. Read stats")
+                    self.read_all_stats()
+                    self.logging.info("2. Assign attributes")
+                    self.distribute_attributes()
+                    
+                    self.logging.info("3. Show last stats after add attributes")
+                    self.read_all_stats()
+                    
                 else:
-                    break       
+                    self.logging.info("1. Lets go to kill some mobs")
+                    self.lets_kill_some_mobs()
+                    self.logging.info(f"2. Wait {self.config.file['check_interval']} seconds until check and add stats")
+                    time.sleep(self.config.file['check_interval'])
+                    self.read_all_stats()
+                    self.distribute_attributes()
 
             except KeyboardInterrupt:
                 self.logging.info("Bot stopped by user")

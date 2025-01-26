@@ -46,7 +46,7 @@ class PathLearner:
         start_time = time.time()
         
         while time.time() - start_time < duration:
-            current_pos = game_bot.get_current_position()
+            current_pos = game_bot.get_current_coords()
             if current_pos:
                 good_path.append({'x': game_bot.current_x, 'y': game_bot.current_y, 'timestamp': time.time()})
             

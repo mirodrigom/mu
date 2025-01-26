@@ -1,15 +1,17 @@
 {
-    "current_reset": 18,
-    "current_level": 349,
+    "current_reset": 19,
+    "current_level": 1,
     "current_map": "lorencia",
     "current_location": [
-        0,
-        0
+        148,
+        134
     ],
-    "available_points": 6,
-    "current_strenght": 4476,
-    "current_agility": 1306,
-    "current_vitality": 1026,
-    "current_energy": 2146,
-    "current_command": 2146
+    "available_points": 0,
+    "current_strenght": 4744,
+    "current_agility": 700,
+    "current_vitality": 700,
+    "current_energy": 700,
+    "current_command": 700,
+    "current_coords": [],
+    "mulheper_active": false
 }
