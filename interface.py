@@ -136,3 +136,27 @@ class Interface:
     
     def click_center_screen(self):
         pyautogui.click(self.screen_width // 2, self.screen_height // 2)
+        
+    def enter(self):
+        pyautogui.press('enter')
+        
+    def command_reset(self):
+        self.enter()
+        pyautogui.write('/reset')
+        self.enter()
+        
+    def command_add(self, attribute, points):
+        self.enter()
+        if attribute == "strenght":
+            pyautogui.write(f'/s {points}')
+        elif attribute == "agility":
+            pyautogui.write(f'/a {points}')
+        elif attribute == "vitality":
+            pyautogui.write(f'/v {points}')
+        elif attribute == "energy":
+            pyautogui.write(f'/e {points}')
+        elif attribute == "command":
+            pyautogui.write(f'/c {points}')
+        else:
+            self.logging.warning("Wrong attribute to add points.")
+        self.enter()
