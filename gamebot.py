@@ -36,12 +36,12 @@ class GameBot:
         Raises:
             ValueError: Si el formato de coordenadas es inválido
         """
+
+        time.sleep(0.1)  # Add delay before reading
         raw_data = self.interface.get_position_data(with_comma=True)
-        
         if ',' in raw_data:
             x, y = raw_data.split(',')
             return int(x), int(y)
-            
         raise ValueError(f"Invalid coordinate format: '{raw_data}'")
 
     def get_current_coords_from_game(self, retries=900, delay=1):
@@ -55,11 +55,11 @@ class GameBot:
         """
         for attempt in range(retries):
             try:
-                x, y = self._fetch_position()
+                x, y = self._fetch_position() 
                 self.interface.set_current_coords([x,y])
                 return True
             except Exception as e:
-                self.logging.warning(f"Attempt {attempt + 1} failed to get current position: {e}")
+                self.logging.warning(f"Attempt {attempt + 1} failed: {e}")
                 if attempt < retries - 1:
                     time.sleep(delay)
         return False
@@ -285,14 +285,14 @@ class GameBot:
             # Get new coordinates
             self.get_current_coords_from_game()
             current_state = self.config.get_game_state()
-            now_x, now_y = self.interface.get_current_coords(current_state)
+            now_x, now_y = self._fetch_position() 
             
             # Compare with previous position
             position_change = abs(now_x - last_x) + abs(now_y - last_y)
             self.logging.debug(f"POSITION change -> {position_change}")
-            if position_change < 2:
+            if position_change < 2 and (abs(dx) > 5 or abs(dy) > 5):
                 stuck_count += 1
-                if stuck_count >= 3:
+                if stuck_count >= 5:
                     self.logging.debug(f"Character it got stuck in some place, will move to {current_map}")
                     self.move_to_location(map_name=current_map, stuck=True)
                     stuck_count = 0

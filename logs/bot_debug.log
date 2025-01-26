@@ -1,141 +1,303 @@
-2025-01-26 18:56:49,230 - interface - setup_screen - INFO - Screen size: 1920x1080
-2025-01-26 18:56:54,339 - __main__ - run - INFO - 1. Read stats
-2025-01-26 18:56:56,339 - interface - open_stats_window - INFO - Open stat window
-2025-01-26 18:56:56,441 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 18:56:56,441 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 18:56:57,521 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1611), top=np.int64(134), width=106, height=25)
-2025-01-26 18:56:57,521 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-26 18:56:57,648 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-26 18:56:57,781 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-26 18:56:57,918 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-26 18:56:58,048 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-26 18:56:58,175 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-26 18:56:58,307 - interface - convert_image_into_string - DEBUG - Converting command...
-2025-01-26 18:56:58,433 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-26 18:56:58,553 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-26 18:56:58,553 - __main__ - read_all_stats - INFO - Available Points: 0
-2025-01-26 18:56:58,553 - __main__ - read_all_stats - INFO - Strength: 4744
-2025-01-26 18:56:58,553 - __main__ - read_all_stats - INFO - Agility: 700
-2025-01-26 18:56:58,553 - __main__ - read_all_stats - INFO - Vitality: 700
-2025-01-26 18:56:58,553 - __main__ - read_all_stats - INFO - Command: 700
-2025-01-26 18:56:58,553 - __main__ - run - INFO - 2. Assign attributes
-2025-01-26 18:56:58,558 - __main__ - distribute_attributes - INFO - No points available to distribute
-2025-01-26 18:56:58,558 - __main__ - run - INFO - 3. Show last stats after add attributes
-2025-01-26 18:57:00,558 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-26 18:57:00,558 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 18:57:00,558 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 18:57:01,635 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1611), top=np.int64(134), width=106, height=25)
-2025-01-26 18:57:01,635 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-26 18:57:01,752 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-26 18:57:01,883 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-26 18:57:02,010 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-26 18:57:02,134 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-26 18:57:02,259 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-26 18:57:02,387 - interface - convert_image_into_string - DEBUG - Converting command...
-2025-01-26 18:57:02,519 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-26 18:57:02,633 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-26 18:57:02,633 - __main__ - read_all_stats - INFO - Available Points: 0
-2025-01-26 18:57:02,633 - __main__ - read_all_stats - INFO - Strength: 4744
-2025-01-26 18:57:02,633 - __main__ - read_all_stats - INFO - Agility: 700
-2025-01-26 18:57:02,633 - __main__ - read_all_stats - INFO - Vitality: 700
-2025-01-26 18:57:02,633 - __main__ - read_all_stats - INFO - Command: 700
-2025-01-26 18:57:02,738 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-26 18:57:03,341 - interface - execute_command - DEBUG - Command /move lorencia is executing
-2025-01-26 18:57:06,052 - interface - open_stats_window - INFO - Open stat window
-2025-01-26 18:57:06,153 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:06,295 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:06,295 - root - move_to_coordinates - DEBUG - (147, 127)
-2025-01-26 18:57:06,295 - root - move_to_coordinates - DEBUG - X: 147
-2025-01-26 18:57:06,295 - root - move_to_coordinates - DEBUG - Y: 127
-2025-01-26 18:57:06,295 - __main__ - move_to_coordinates - DEBUG - DX -> -19
-2025-01-26 18:57:06,295 - __main__ - move_to_coordinates - DEBUG - DY -> 73
-2025-01-26 18:57:06,296 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:06,430 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 0
-2025-01-26 18:57:06,430 - interface - press_key - DEBUG - Command left is executing
-2025-01-26 18:57:06,731 - interface - press_key - DEBUG - Command up is executing
-2025-01-26 18:57:07,033 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:07,165 - __main__ - move_to_coordinates - DEBUG - Actual position: [147,127]
-2025-01-26 18:57:07,370 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:07,371 - root - move_to_coordinates - DEBUG - (145, 127)
-2025-01-26 18:57:07,371 - root - move_to_coordinates - DEBUG - X: 145
-2025-01-26 18:57:07,371 - root - move_to_coordinates - DEBUG - Y: 127
-2025-01-26 18:57:07,371 - __main__ - move_to_coordinates - DEBUG - DX -> -17
-2025-01-26 18:57:07,371 - __main__ - move_to_coordinates - DEBUG - DY -> 73
-2025-01-26 18:57:07,371 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:07,510 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 1
-2025-01-26 18:57:07,510 - interface - press_key - DEBUG - Command left is executing
-2025-01-26 18:57:07,812 - interface - press_key - DEBUG - Command up is executing
-2025-01-26 18:57:08,113 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:08,250 - __main__ - move_to_coordinates - DEBUG - Actual position: [145,127]
-2025-01-26 18:57:08,456 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:08,456 - root - move_to_coordinates - DEBUG - (142, 127)
-2025-01-26 18:57:08,456 - root - move_to_coordinates - DEBUG - X: 142
-2025-01-26 18:57:08,456 - root - move_to_coordinates - DEBUG - Y: 127
-2025-01-26 18:57:08,456 - __main__ - move_to_coordinates - DEBUG - DX -> -14
-2025-01-26 18:57:08,456 - __main__ - move_to_coordinates - DEBUG - DY -> 73
-2025-01-26 18:57:08,456 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:08,590 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 1
-2025-01-26 18:57:08,591 - __main__ - move_to_coordinates - DEBUG - Character it got stuck in some place, will move to lorencia
-2025-01-26 18:57:09,193 - interface - execute_command - DEBUG - Command /move lorencia is executing
-2025-01-26 18:57:11,902 - interface - open_stats_window - INFO - Open stat window
-2025-01-26 18:57:12,003 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:12,003 - root - move_to_coordinates - DEBUG - (141, 127)
-2025-01-26 18:57:12,003 - root - move_to_coordinates - DEBUG - X: 141
-2025-01-26 18:57:12,003 - root - move_to_coordinates - DEBUG - Y: 127
-2025-01-26 18:57:12,003 - __main__ - move_to_coordinates - DEBUG - DX -> -13
-2025-01-26 18:57:12,003 - __main__ - move_to_coordinates - DEBUG - DY -> 73
-2025-01-26 18:57:12,003 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:12,142 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 13
-2025-01-26 18:57:12,142 - interface - press_key - DEBUG - Command left is executing
-2025-01-26 18:57:12,443 - interface - press_key - DEBUG - Command up is executing
-2025-01-26 18:57:12,745 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:12,890 - __main__ - get_current_coords_from_game - WARNING - Attempt 1 failed to get current position: Invalid coordinate format: '1457120'
-2025-01-26 18:57:13,890 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:14,026 - __main__ - move_to_coordinates - DEBUG - Actual position: [141,127]
-2025-01-26 18:57:14,233 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:14,233 - root - move_to_coordinates - DEBUG - (143, 120)
-2025-01-26 18:57:14,233 - root - move_to_coordinates - DEBUG - X: 143
-2025-01-26 18:57:14,233 - root - move_to_coordinates - DEBUG - Y: 120
-2025-01-26 18:57:14,233 - __main__ - move_to_coordinates - DEBUG - DX -> -15
-2025-01-26 18:57:14,233 - __main__ - move_to_coordinates - DEBUG - DY -> 80
-2025-01-26 18:57:14,233 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:14,367 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 0
-2025-01-26 18:57:14,367 - interface - press_key - DEBUG - Command left is executing
-2025-01-26 18:57:14,668 - interface - press_key - DEBUG - Command up is executing
-2025-01-26 18:57:14,970 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:15,108 - __main__ - move_to_coordinates - DEBUG - Actual position: [143,120]
-2025-01-26 18:57:15,308 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:15,309 - root - move_to_coordinates - DEBUG - (141, 120)
-2025-01-26 18:57:15,309 - root - move_to_coordinates - DEBUG - X: 141
-2025-01-26 18:57:15,309 - root - move_to_coordinates - DEBUG - Y: 120
-2025-01-26 18:57:15,309 - __main__ - move_to_coordinates - DEBUG - DX -> -13
-2025-01-26 18:57:15,309 - __main__ - move_to_coordinates - DEBUG - DY -> 80
-2025-01-26 18:57:15,309 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:15,446 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 1
-2025-01-26 18:57:15,446 - interface - press_key - DEBUG - Command left is executing
-2025-01-26 18:57:15,747 - interface - press_key - DEBUG - Command up is executing
-2025-01-26 18:57:16,049 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:16,184 - __main__ - move_to_coordinates - DEBUG - Actual position: [141,120]
-2025-01-26 18:57:16,391 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:16,391 - root - move_to_coordinates - DEBUG - (138, 120)
-2025-01-26 18:57:16,391 - root - move_to_coordinates - DEBUG - X: 138
-2025-01-26 18:57:16,391 - root - move_to_coordinates - DEBUG - Y: 120
-2025-01-26 18:57:16,391 - __main__ - move_to_coordinates - DEBUG - DX -> -10
-2025-01-26 18:57:16,391 - __main__ - move_to_coordinates - DEBUG - DY -> 80
-2025-01-26 18:57:16,391 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:16,529 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 1
-2025-01-26 18:57:16,529 - __main__ - move_to_coordinates - DEBUG - Character it got stuck in some place, will move to lorencia
-2025-01-26 18:57:17,131 - interface - execute_command - DEBUG - Command /move lorencia is executing
-2025-01-26 18:57:19,839 - interface - open_stats_window - INFO - Open stat window
-2025-01-26 18:57:19,940 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
-2025-01-26 18:57:19,941 - root - move_to_coordinates - DEBUG - (137, 120)
-2025-01-26 18:57:19,941 - root - move_to_coordinates - DEBUG - X: 137
-2025-01-26 18:57:19,941 - root - move_to_coordinates - DEBUG - Y: 120
-2025-01-26 18:57:19,941 - __main__ - move_to_coordinates - DEBUG - DX -> -9
-2025-01-26 18:57:19,941 - __main__ - move_to_coordinates - DEBUG - DY -> 80
-2025-01-26 18:57:19,941 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:20,085 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 24
-2025-01-26 18:57:20,085 - interface - press_key - DEBUG - Command up is executing
-2025-01-26 18:57:20,387 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-26 18:57:20,520 - __main__ - move_to_coordinates - DEBUG - Actual position: [137,120]
-2025-01-26 18:57:20,651 - config - on_press - INFO - Bot stopped
+2025-01-26 19:19:08,845 - interface - setup_screen - INFO - Screen size: 1920x1080
+2025-01-26 19:19:13,947 - __main__ - run - INFO - 1. Read stats
+2025-01-26 19:19:15,947 - interface - open_stats_window - INFO - Open stat window
+2025-01-26 19:19:16,048 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 19:19:16,048 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 19:19:17,127 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1611), top=np.int64(134), width=106, height=25)
+2025-01-26 19:19:17,127 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-26 19:19:17,669 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 19:19:17,795 - interface - convert_image_into_string - DEBUG - Converting strenght...
+2025-01-26 19:19:17,931 - interface - convert_image_into_string - DEBUG - Converting agility...
+2025-01-26 19:19:18,061 - interface - convert_image_into_string - DEBUG - Converting vitality...
+2025-01-26 19:19:18,191 - interface - convert_image_into_string - DEBUG - Converting energy...
+2025-01-26 19:19:18,325 - interface - convert_image_into_string - DEBUG - Converting command...
+2025-01-26 19:19:18,450 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-26 19:19:18,575 - __main__ - read_all_stats - INFO - Final stats:
+2025-01-26 19:19:18,575 - __main__ - read_all_stats - INFO - Available Points: 0
+2025-01-26 19:19:18,575 - __main__ - read_all_stats - INFO - Strength: 4744
+2025-01-26 19:19:18,575 - __main__ - read_all_stats - INFO - Agility: 700
+2025-01-26 19:19:18,575 - __main__ - read_all_stats - INFO - Vitality: 700
+2025-01-26 19:19:18,575 - __main__ - read_all_stats - INFO - Command: 700
+2025-01-26 19:19:18,575 - __main__ - run - INFO - 2. Assign attributes
+2025-01-26 19:19:18,581 - __main__ - distribute_attributes - INFO - No points available to distribute
+2025-01-26 19:19:18,581 - __main__ - run - INFO - 3. Show last stats after add attributes
+2025-01-26 19:19:20,581 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-26 19:19:20,581 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 19:19:20,582 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 19:19:21,653 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1611), top=np.int64(134), width=106, height=25)
+2025-01-26 19:19:21,653 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-26 19:19:21,776 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 19:19:21,889 - interface - convert_image_into_string - DEBUG - Converting strenght...
+2025-01-26 19:19:22,018 - interface - convert_image_into_string - DEBUG - Converting agility...
+2025-01-26 19:19:22,140 - interface - convert_image_into_string - DEBUG - Converting vitality...
+2025-01-26 19:19:22,268 - interface - convert_image_into_string - DEBUG - Converting energy...
+2025-01-26 19:19:22,391 - interface - convert_image_into_string - DEBUG - Converting command...
+2025-01-26 19:19:22,516 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-26 19:19:22,634 - __main__ - read_all_stats - INFO - Final stats:
+2025-01-26 19:19:22,634 - __main__ - read_all_stats - INFO - Available Points: 0
+2025-01-26 19:19:22,634 - __main__ - read_all_stats - INFO - Strength: 4744
+2025-01-26 19:19:22,634 - __main__ - read_all_stats - INFO - Agility: 700
+2025-01-26 19:19:22,634 - __main__ - read_all_stats - INFO - Vitality: 700
+2025-01-26 19:19:22,634 - __main__ - read_all_stats - INFO - Command: 700
+2025-01-26 19:19:22,739 - __main__ - run - INFO - 1. Lets go to kill some mobs
+2025-01-26 19:19:23,342 - interface - execute_command - DEBUG - Command /move lorencia is executing
+2025-01-26 19:19:26,056 - interface - open_stats_window - INFO - Open stat window
+2025-01-26 19:19:26,257 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:26,398 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:26,398 - root - move_to_coordinates - DEBUG - (144, 125)
+2025-01-26 19:19:26,398 - root - move_to_coordinates - DEBUG - X: 144
+2025-01-26 19:19:26,398 - root - move_to_coordinates - DEBUG - Y: 125
+2025-01-26 19:19:26,398 - __main__ - move_to_coordinates - DEBUG - DX -> -16
+2025-01-26 19:19:26,398 - __main__ - move_to_coordinates - DEBUG - DY -> 75
+2025-01-26 19:19:26,498 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:26,731 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:26,866 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 0
+2025-01-26 19:19:26,866 - interface - press_key - DEBUG - Command left is executing
+2025-01-26 19:19:27,168 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:27,571 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:27,701 - __main__ - move_to_coordinates - DEBUG - Actual position: [144,125]
+2025-01-26 19:19:27,909 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:27,909 - root - move_to_coordinates - DEBUG - (142, 125)
+2025-01-26 19:19:27,909 - root - move_to_coordinates - DEBUG - X: 142
+2025-01-26 19:19:27,909 - root - move_to_coordinates - DEBUG - Y: 125
+2025-01-26 19:19:27,909 - __main__ - move_to_coordinates - DEBUG - DX -> -14
+2025-01-26 19:19:27,909 - __main__ - move_to_coordinates - DEBUG - DY -> 75
+2025-01-26 19:19:28,009 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:28,245 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:28,373 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:28,373 - interface - press_key - DEBUG - Command left is executing
+2025-01-26 19:19:28,675 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:29,077 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:29,211 - __main__ - move_to_coordinates - DEBUG - Actual position: [142,125]
+2025-01-26 19:19:29,416 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:29,416 - root - move_to_coordinates - DEBUG - (138, 125)
+2025-01-26 19:19:29,416 - root - move_to_coordinates - DEBUG - X: 138
+2025-01-26 19:19:29,416 - root - move_to_coordinates - DEBUG - Y: 125
+2025-01-26 19:19:29,416 - __main__ - move_to_coordinates - DEBUG - DX -> -10
+2025-01-26 19:19:29,416 - __main__ - move_to_coordinates - DEBUG - DY -> 75
+2025-01-26 19:19:29,516 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:29,754 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:29,889 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:29,889 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:30,291 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:30,424 - __main__ - move_to_coordinates - DEBUG - Actual position: [138,125]
+2025-01-26 19:19:30,629 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:30,629 - root - move_to_coordinates - DEBUG - (136, 126)
+2025-01-26 19:19:30,629 - root - move_to_coordinates - DEBUG - X: 136
+2025-01-26 19:19:30,629 - root - move_to_coordinates - DEBUG - Y: 126
+2025-01-26 19:19:30,629 - __main__ - move_to_coordinates - DEBUG - DX -> -8
+2025-01-26 19:19:30,629 - __main__ - move_to_coordinates - DEBUG - DY -> 74
+2025-01-26 19:19:30,730 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:30,975 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:31,107 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:31,107 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:31,509 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:31,642 - __main__ - move_to_coordinates - DEBUG - Actual position: [136,126]
+2025-01-26 19:19:31,848 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:31,848 - root - move_to_coordinates - DEBUG - (136, 130)
+2025-01-26 19:19:31,848 - root - move_to_coordinates - DEBUG - X: 136
+2025-01-26 19:19:31,848 - root - move_to_coordinates - DEBUG - Y: 130
+2025-01-26 19:19:31,848 - __main__ - move_to_coordinates - DEBUG - DX -> -8
+2025-01-26 19:19:31,848 - __main__ - move_to_coordinates - DEBUG - DY -> 70
+2025-01-26 19:19:31,948 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:32,190 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:32,321 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 1
+2025-01-26 19:19:32,321 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:32,723 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:32,865 - __main__ - move_to_coordinates - DEBUG - Actual position: [136,130]
+2025-01-26 19:19:33,072 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:33,072 - root - move_to_coordinates - DEBUG - (137, 132)
+2025-01-26 19:19:33,072 - root - move_to_coordinates - DEBUG - X: 137
+2025-01-26 19:19:33,072 - root - move_to_coordinates - DEBUG - Y: 132
+2025-01-26 19:19:33,072 - __main__ - move_to_coordinates - DEBUG - DX -> -9
+2025-01-26 19:19:33,072 - __main__ - move_to_coordinates - DEBUG - DY -> 68
+2025-01-26 19:19:33,173 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:33,415 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:33,545 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:33,545 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:33,947 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:34,077 - __main__ - move_to_coordinates - DEBUG - Actual position: [137,132]
+2025-01-26 19:19:34,283 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:34,283 - root - move_to_coordinates - DEBUG - (136, 135)
+2025-01-26 19:19:34,283 - root - move_to_coordinates - DEBUG - X: 136
+2025-01-26 19:19:34,283 - root - move_to_coordinates - DEBUG - Y: 135
+2025-01-26 19:19:34,283 - __main__ - move_to_coordinates - DEBUG - DX -> -8
+2025-01-26 19:19:34,283 - __main__ - move_to_coordinates - DEBUG - DY -> 65
+2025-01-26 19:19:34,383 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:34,613 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:34,743 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:34,743 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:35,145 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:35,276 - __main__ - move_to_coordinates - DEBUG - Actual position: [136,135]
+2025-01-26 19:19:35,477 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:35,477 - root - move_to_coordinates - DEBUG - (137, 138)
+2025-01-26 19:19:35,477 - root - move_to_coordinates - DEBUG - X: 137
+2025-01-26 19:19:35,477 - root - move_to_coordinates - DEBUG - Y: 138
+2025-01-26 19:19:35,477 - __main__ - move_to_coordinates - DEBUG - DX -> -9
+2025-01-26 19:19:35,477 - __main__ - move_to_coordinates - DEBUG - DY -> 62
+2025-01-26 19:19:35,577 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:35,813 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:35,948 - __main__ - run - ERROR - Error in main loop: Invalid coordinate format: '137140'
+2025-01-26 19:19:37,055 - __main__ - run - INFO - 1. Lets go to kill some mobs
+2025-01-26 19:19:37,056 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
+2025-01-26 19:19:39,056 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-26 19:19:39,157 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:39,295 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:39,296 - root - move_to_coordinates - DEBUG - (137, 142)
+2025-01-26 19:19:39,296 - root - move_to_coordinates - DEBUG - X: 137
+2025-01-26 19:19:39,296 - root - move_to_coordinates - DEBUG - Y: 142
+2025-01-26 19:19:39,296 - __main__ - move_to_coordinates - DEBUG - DX -> -9
+2025-01-26 19:19:39,296 - __main__ - move_to_coordinates - DEBUG - DY -> 58
+2025-01-26 19:19:39,396 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:39,622 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:39,756 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 0
+2025-01-26 19:19:39,756 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:40,159 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:40,287 - __main__ - move_to_coordinates - DEBUG - Actual position: [137,142]
+2025-01-26 19:19:40,494 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:40,494 - root - move_to_coordinates - DEBUG - (137, 143)
+2025-01-26 19:19:40,494 - root - move_to_coordinates - DEBUG - X: 137
+2025-01-26 19:19:40,494 - root - move_to_coordinates - DEBUG - Y: 143
+2025-01-26 19:19:40,494 - __main__ - move_to_coordinates - DEBUG - DX -> -9
+2025-01-26 19:19:40,494 - __main__ - move_to_coordinates - DEBUG - DY -> 57
+2025-01-26 19:19:40,594 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:40,833 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:40,976 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:40,976 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:41,379 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:41,507 - __main__ - move_to_coordinates - DEBUG - Actual position: [137,143]
+2025-01-26 19:19:41,714 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:41,714 - root - move_to_coordinates - DEBUG - (137, 147)
+2025-01-26 19:19:41,714 - root - move_to_coordinates - DEBUG - X: 137
+2025-01-26 19:19:41,714 - root - move_to_coordinates - DEBUG - Y: 147
+2025-01-26 19:19:41,714 - __main__ - move_to_coordinates - DEBUG - DX -> -9
+2025-01-26 19:19:41,714 - __main__ - move_to_coordinates - DEBUG - DY -> 53
+2025-01-26 19:19:41,815 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:42,050 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:42,174 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 1
+2025-01-26 19:19:42,174 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:42,576 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:42,708 - __main__ - move_to_coordinates - DEBUG - Actual position: [137,147]
+2025-01-26 19:19:42,914 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:42,914 - root - move_to_coordinates - DEBUG - (136, 148)
+2025-01-26 19:19:42,914 - root - move_to_coordinates - DEBUG - X: 136
+2025-01-26 19:19:42,914 - root - move_to_coordinates - DEBUG - Y: 148
+2025-01-26 19:19:42,914 - __main__ - move_to_coordinates - DEBUG - DX -> -8
+2025-01-26 19:19:42,914 - __main__ - move_to_coordinates - DEBUG - DY -> 52
+2025-01-26 19:19:43,014 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:43,248 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:43,379 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 3
+2025-01-26 19:19:43,379 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:43,782 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:43,920 - __main__ - move_to_coordinates - DEBUG - Actual position: [136,148]
+2025-01-26 19:19:44,126 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:44,126 - root - move_to_coordinates - DEBUG - (135, 151)
+2025-01-26 19:19:44,126 - root - move_to_coordinates - DEBUG - X: 135
+2025-01-26 19:19:44,126 - root - move_to_coordinates - DEBUG - Y: 151
+2025-01-26 19:19:44,126 - __main__ - move_to_coordinates - DEBUG - DX -> -7
+2025-01-26 19:19:44,126 - __main__ - move_to_coordinates - DEBUG - DY -> 49
+2025-01-26 19:19:44,227 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:44,460 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:44,586 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:44,586 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:44,988 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:45,125 - __main__ - move_to_coordinates - DEBUG - Actual position: [135,151]
+2025-01-26 19:19:45,330 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:45,331 - root - move_to_coordinates - DEBUG - (135, 155)
+2025-01-26 19:19:45,331 - root - move_to_coordinates - DEBUG - X: 135
+2025-01-26 19:19:45,331 - root - move_to_coordinates - DEBUG - Y: 155
+2025-01-26 19:19:45,331 - __main__ - move_to_coordinates - DEBUG - DX -> -7
+2025-01-26 19:19:45,331 - __main__ - move_to_coordinates - DEBUG - DY -> 45
+2025-01-26 19:19:45,431 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:45,663 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:45,787 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:45,787 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:46,189 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:46,322 - __main__ - move_to_coordinates - DEBUG - Actual position: [135,155]
+2025-01-26 19:19:46,528 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:46,528 - root - move_to_coordinates - DEBUG - (135, 158)
+2025-01-26 19:19:46,528 - root - move_to_coordinates - DEBUG - X: 135
+2025-01-26 19:19:46,528 - root - move_to_coordinates - DEBUG - Y: 158
+2025-01-26 19:19:46,528 - __main__ - move_to_coordinates - DEBUG - DX -> -7
+2025-01-26 19:19:46,528 - __main__ - move_to_coordinates - DEBUG - DY -> 42
+2025-01-26 19:19:46,628 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:46,862 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:46,995 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:46,995 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:47,397 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:47,523 - __main__ - move_to_coordinates - DEBUG - Actual position: [135,158]
+2025-01-26 19:19:47,730 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:47,730 - root - move_to_coordinates - DEBUG - (135, 162)
+2025-01-26 19:19:47,730 - root - move_to_coordinates - DEBUG - X: 135
+2025-01-26 19:19:47,730 - root - move_to_coordinates - DEBUG - Y: 162
+2025-01-26 19:19:47,730 - __main__ - move_to_coordinates - DEBUG - DX -> -7
+2025-01-26 19:19:47,730 - __main__ - move_to_coordinates - DEBUG - DY -> 38
+2025-01-26 19:19:47,831 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:48,071 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:48,203 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 2
+2025-01-26 19:19:48,203 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:19:48,606 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:48,739 - __main__ - move_to_coordinates - DEBUG - Actual position: [135,162]
+2025-01-26 19:19:48,945 - root - move_to_coordinates - DEBUG - BEFORE LASTSS
+2025-01-26 19:19:48,945 - root - move_to_coordinates - DEBUG - (135, 165)
+2025-01-26 19:19:48,945 - root - move_to_coordinates - DEBUG - X: 135
+2025-01-26 19:19:48,945 - root - move_to_coordinates - DEBUG - Y: 165
+2025-01-26 19:19:48,945 - __main__ - move_to_coordinates - DEBUG - DX -> -7
+2025-01-26 19:19:48,945 - __main__ - move_to_coordinates - DEBUG - DY -> 35
+2025-01-26 19:19:49,046 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:49,172 - __main__ - get_current_coords_from_game - WARNING - Attempt 1 failed: too many values to unpack (expected 2)
+2025-01-26 19:19:50,272 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:50,406 - __main__ - get_current_coords_from_game - WARNING - Attempt 2 failed: Invalid coordinate format: '135468'
+2025-01-26 19:19:51,507 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:51,635 - __main__ - get_current_coords_from_game - WARNING - Attempt 3 failed: Invalid coordinate format: '135354168'
+2025-01-26 19:19:52,736 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:52,858 - __main__ - get_current_coords_from_game - WARNING - Attempt 4 failed: Invalid coordinate format: '1357168'
+2025-01-26 19:19:53,959 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:54,093 - __main__ - get_current_coords_from_game - WARNING - Attempt 5 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:19:55,194 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:55,307 - __main__ - get_current_coords_from_game - WARNING - Attempt 6 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:19:56,407 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:56,528 - __main__ - get_current_coords_from_game - WARNING - Attempt 7 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:19:57,629 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:57,746 - __main__ - get_current_coords_from_game - WARNING - Attempt 8 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:19:58,846 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:19:58,959 - __main__ - get_current_coords_from_game - WARNING - Attempt 9 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:00,060 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:00,188 - __main__ - get_current_coords_from_game - WARNING - Attempt 10 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:01,289 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:01,407 - __main__ - get_current_coords_from_game - WARNING - Attempt 11 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:02,508 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:02,625 - __main__ - get_current_coords_from_game - WARNING - Attempt 12 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:03,726 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:03,841 - __main__ - get_current_coords_from_game - WARNING - Attempt 13 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:04,942 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:05,057 - __main__ - get_current_coords_from_game - WARNING - Attempt 14 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:06,158 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:06,278 - __main__ - get_current_coords_from_game - WARNING - Attempt 15 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:07,380 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:07,494 - __main__ - get_current_coords_from_game - WARNING - Attempt 16 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:08,595 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:08,713 - __main__ - get_current_coords_from_game - WARNING - Attempt 17 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:09,814 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:09,933 - __main__ - get_current_coords_from_game - WARNING - Attempt 18 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:11,034 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:11,148 - __main__ - get_current_coords_from_game - WARNING - Attempt 19 failed: Invalid coordinate format: '1359168'
+2025-01-26 19:20:12,249 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:12,486 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:12,634 - __main__ - move_to_coordinates - DEBUG - POSITION change -> 6
+2025-01-26 19:20:12,635 - interface - press_key - DEBUG - Command up is executing
+2025-01-26 19:20:13,036 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:13,167 - __main__ - get_current_coords_from_game - WARNING - Attempt 1 failed: too many values to unpack (expected 2)
+2025-01-26 19:20:14,267 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:14,396 - __main__ - get_current_coords_from_game - WARNING - Attempt 2 failed: Invalid coordinate format: '1333473'
+2025-01-26 19:20:15,497 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:15,613 - __main__ - get_current_coords_from_game - WARNING - Attempt 3 failed: Invalid coordinate format: '0'
+2025-01-26 19:20:16,714 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:16,830 - __main__ - get_current_coords_from_game - WARNING - Attempt 4 failed: Invalid coordinate format: '133473'
+2025-01-26 19:20:17,931 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:18,048 - __main__ - get_current_coords_from_game - WARNING - Attempt 5 failed: Invalid coordinate format: '133473'
+2025-01-26 19:20:19,148 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:19,267 - __main__ - get_current_coords_from_game - WARNING - Attempt 6 failed: Invalid coordinate format: '133473'
+2025-01-26 19:20:20,368 - interface - convert_image_into_string - DEBUG - Converting position...
+2025-01-26 19:20:20,484 - __main__ - get_current_coords_from_game - WARNING - Attempt 7 failed: Invalid coordinate format: '133473'
+2025-01-26 19:20:20,915 - __main__ - run - INFO - Bot stopped by user
