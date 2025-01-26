@@ -1,11 +1,119 @@
-2025-01-26 03:13:37,969 - __main__ - run - INFO - 1. Move to lorencia first
-2025-01-26 03:13:37,970 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 03:13:37,970 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 03:13:39,044 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
-2025-01-26 03:13:40,116 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
-2025-01-26 03:13:41,188 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
-2025-01-26 03:13:41,190 - __main__ - distribute_attributes - ERROR - Cannot distribute attributes - reference point not found
-2025-01-26 03:13:45,799 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 03:13:45,799 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 03:13:46,871 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
-2025-01-26 03:13:47,460 - config - on_press - INFO - Bot stopped
+2025-01-26 04:57:40,246 - __main__ - run - INFO - 1. Move to lorencia first
+2025-01-26 04:57:40,247 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:57:40,247 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:57:41,327 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:57:42,402 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:57:43,470 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:57:43,471 - __main__ - distribute_attributes - ERROR - Cannot distribute attributes - reference point not found
+2025-01-26 04:57:48,082 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:57:48,082 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:57:49,151 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:57:50,218 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:57:51,293 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:57:53,496 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:57:53,496 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:57:54,574 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1735), top=np.int64(147), width=106, height=25)
+2025-01-26 04:57:54,574 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-26 04:57:54,699 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:57:54,815 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:57:54,949 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:57:55,074 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:57:55,201 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:57:55,333 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:57:55,333 - utils - get_relative_coords - ERROR - list index out of range: It seems that your coordinates sucks.
+2025-01-26 04:57:55,333 - interface - convert_image_into_string - ERROR - Error reading reset: 'NoneType' object is not iterable
+2025-01-26 04:57:55,333 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-26 04:57:55,465 - __main__ - read_all_stats - INFO - ======== RESET: 18 ========
+2025-01-26 04:57:55,465 - __main__ - read_all_stats - INFO - ======== LEVEL: 349 ========
+2025-01-26 04:57:55,465 - __main__ - read_all_stats - INFO - ======== STATS: STR:4476 AGI:1306 VIT:1026 ENE:2146 CMD:0 ========
+2025-01-26 04:57:55,465 - __main__ - read_all_stats - INFO - ======== AVAILABLE POINTS: 5 ========
+2025-01-26 04:57:55,466 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:57:55,466 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:57:56,541 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1735), top=np.int64(147), width=106, height=25)
+2025-01-26 04:57:56,541 - __main__ - distribute_attributes - INFO - Reference point found at: Point(x=np.int64(1788), y=np.int64(159))
+2025-01-26 04:57:58,742 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:57:58,742 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:57:59,809 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:00,884 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:01,952 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:04,155 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:04,155 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:05,226 - interface - get_elemental_reference - DEBUG - Found elemental reference at: Box(left=np.int64(1735), top=np.int64(147), width=106, height=25)
+2025-01-26 04:58:05,226 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-26 04:58:05,338 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:58:05,451 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:58:05,575 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:58:05,695 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:58:05,822 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:58:05,946 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-26 04:58:05,946 - utils - get_relative_coords - ERROR - list index out of range: It seems that your coordinates sucks.
+2025-01-26 04:58:05,946 - interface - convert_image_into_string - ERROR - Error reading reset: 'NoneType' object is not iterable
+2025-01-26 04:58:05,946 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-26 04:58:06,062 - __main__ - read_all_stats - INFO - ======== RESET: 18 ========
+2025-01-26 04:58:06,062 - __main__ - read_all_stats - INFO - ======== LEVEL: 349 ========
+2025-01-26 04:58:06,062 - __main__ - read_all_stats - INFO - ======== STATS: STR:4476 AGI:1306 VIT:1026 ENE:2146 CMD:0 ========
+2025-01-26 04:58:06,062 - __main__ - read_all_stats - INFO - ======== AVAILABLE POINTS: 5 ========
+2025-01-26 04:58:06,063 - __main__ - distribute_attributes - INFO - Current stats:
+2025-01-26 04:58:06,063 - __main__ - distribute_attributes - INFO - Available Points: 5
+2025-01-26 04:58:06,063 - __main__ - distribute_attributes - INFO - Strength: 4476
+2025-01-26 04:58:06,063 - __main__ - distribute_attributes - INFO - Agility: 1306
+2025-01-26 04:58:06,063 - __main__ - distribute_attributes - INFO - Vitality: 1026
+2025-01-26 04:58:06,063 - __main__ - distribute_attributes - INFO - Command: 0
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Saved stats area screenshot to images\stats_area_debug.png
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Starting distribution of 5 available points
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Stat distribution config: {'strenght': 0.0, 'agility': 0.2, 'vitality': 0.0, 'energy': 0.8}
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Skipping strenght - no points to allocate (ratio: 0.0)
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Allocating 1 points to agility
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Base coordinates for agility: {'first_button': [34, 302, 57, 323], 'points': [-120, 290, -10, 330], '10': [6, 346, 51, 365], '100': [-60, 346, -14, 366], '1000': [-126, 349, -81, 366], 'custom': [-299, 348, -232, 365]}
+2025-01-26 04:58:06,232 - __main__ - distribute_attributes - INFO - Clicking first button at relative coords: [np.int64(1822), np.int64(461), np.int64(1845), np.int64(482)]
+2025-01-26 04:58:06,839 - __main__ - distribute_attributes - DEBUG - Remaining points for agility after 1000: 1
+2025-01-26 04:58:06,839 - __main__ - distribute_attributes - DEBUG - Remaining points for agility after 100: 1
+2025-01-26 04:58:06,839 - __main__ - distribute_attributes - DEBUG - Remaining points for agility after 10: 1
+2025-01-26 04:58:06,839 - __main__ - distribute_attributes - INFO - Hiding plus info for agility
+2025-01-26 04:58:07,440 - __main__ - distribute_attributes - INFO - Skipping vitality - no points to allocate (ratio: 0.0)
+2025-01-26 04:58:07,440 - __main__ - distribute_attributes - INFO - Allocating 4 points to energy
+2025-01-26 04:58:07,440 - __main__ - distribute_attributes - INFO - Base coordinates for energy: {'first_button': [34, 437, 58, 460], 'points': [-120, 430, -10, 470], '10': [10, 484, 45, 503], '100': [-57, 487, -16, 503], '1000': [-122, 488, -84, 502], 'custom': [-295, 486, -228, 506]}
+2025-01-26 04:58:07,440 - __main__ - distribute_attributes - INFO - Clicking first button at relative coords: [np.int64(1822), np.int64(596), np.int64(1846), np.int64(619)]
+2025-01-26 04:58:08,042 - __main__ - distribute_attributes - DEBUG - Remaining points for energy after 1000: 4
+2025-01-26 04:58:08,042 - __main__ - distribute_attributes - DEBUG - Remaining points for energy after 100: 4
+2025-01-26 04:58:08,042 - __main__ - distribute_attributes - DEBUG - Remaining points for energy after 10: 4
+2025-01-26 04:58:08,042 - __main__ - distribute_attributes - INFO - Hiding plus info for energy
+2025-01-26 04:58:08,645 - __main__ - distribute_attributes - INFO - Distribution complete, reading final stats
+2025-01-26 04:58:10,846 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:10,847 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:11,917 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:12,992 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:14,068 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:16,271 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:16,271 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:17,342 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:18,414 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:19,484 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:21,687 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:21,687 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:22,750 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:23,815 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:24,881 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:27,084 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:27,084 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:28,156 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:29,224 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:30,294 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:32,497 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:32,497 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:33,561 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:34,627 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:35,698 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:37,901 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:37,901 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:38,966 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:40,030 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:41,099 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:43,302 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:43,302 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:44,374 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 04:58:45,440 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 04:58:46,508 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 04:58:48,710 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 04:58:48,710 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 04:58:48,850 - config - on_press - INFO - Bot stopped

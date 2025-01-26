@@ -37,14 +37,13 @@ class GameBot:
         Raises:
             ValueError: Si el formato de coordenadas es inválido
         """
-        raw_data = self.interface.get_position_data()
-        if not self.utils.is_valid_coordinate(raw_data):
-            # Try processing as single string of digits
-            coords = self.utils.process_coordinates(raw_data)
-            if coords:
-                return coords
-            raise ValueError(f"Invalid coordinate format: '{raw_data}'")
-        return map(int, raw_data.split(','))
+        raw_data = self.interface.get_position_data(with_comma=True)
+        
+        if ',' in raw_data:
+            x, y = raw_data.split(',')
+            return int(x), int(y)
+            
+        raise ValueError(f"Invalid coordinate format: '{raw_data}'")
 
     def get_current_position(self, retries=900, delay=1):
         """
@@ -177,15 +176,19 @@ class GameBot:
             ref_point = self.interface.get_elemental_reference()
             if not ref_point:
                 return self.read_all_stats()
+            
+            level_coords = self.config.get_ocr_coordinates()['level']
+            reset_coords = self.config.get_ocr_coordinates()['reset']
 
-            level = self.interface.convert_image_into_number('level', ref_point, 'level')
-            reset = self.interface.convert_image_into_number('reset', ref_point, 'reset')
+            level = self.interface.convert_image_into_number(coords=level_coords, image_name='level', relative_coords=ref_point)
+            reset = self.interface.convert_image_into_number(coords=reset_coords, image_name='reset', relative_coords=ref_point)
 
-            strenght = self.interface.read_attribute('strenght', ref_point)
-            agility = self.interface.read_attribute('agility', ref_point)
-            vitality = self.interface.read_attribute('vitality', ref_point)
-            energy = self.interface.read_attribute('energy', ref_point)
-            command = self.interface.read_attribute('command', ref_point)
+
+            strenght = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['strenght']['points'], image_name='reset', relative_coords=ref_point)
+            agility = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['agility']['points'], image_name='reset', relative_coords=ref_point)
+            vitality = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['vitality']['points'], image_name='reset', relative_coords=ref_point)
+            energy = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['energy']['points'], image_name='reset', relative_coords=ref_point)
+            command = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['command']['points'], image_name='reset', relative_coords=ref_point)
             
             available_coords = self.config.get_ocr_coordinates()['available_points']
             points_coords = self.utils.get_relative_coords(available_coords, ref_point)

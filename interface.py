@@ -38,7 +38,7 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error pressing C key: {e}")
             
-    def get_position_data(self):
+    def get_position_data(self, with_comma=False):
         """
         Obtiene las coordenadas del juego mediante OCR.
         Returns:
@@ -46,7 +46,7 @@ class Interface:
         """
         try:
             adjusted_position = self.config.get_ocr_coordinates()['position']
-            return self.convert_image_into_string(coords=adjusted_position, image_name="position").strip()
+            return self.convert_image_into_string(coords=adjusted_position, image_name="position", with_comma=with_comma).strip()
         except Exception as e:
             self.logging.error(f"Position fetch failed: {e}")
             raise ValueError("Position fetch failed")
@@ -99,58 +99,40 @@ class Interface:
         return None
     
     
-    def convert_image_into_string(self, coords, image_name, relative_coords=None ):
+    def convert_image_into_string(self, coords, image_name, relative_coords=None, with_comma=False):
+        self.logging.debug(f"Converting {image_name}...")
         try:
             if relative_coords:
                 final_coords = self.utils.get_relative_coords(coords, relative_coords)
             else:
                 final_coords = coords
-                
             path = self.take_screenshot_with_coords(coords=final_coords, image_name=image_name)
-            
+                
+            if with_comma:
+                method_ocr = '--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789,'
+            else:
+                method_ocr = '--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
+                
             preprocessed = self._preprocess_image(path)
             text = pytesseract.image_to_string(
                 preprocessed,
-                config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
-            )
+                config=method_ocr
+            ).strip()
             
-            return text
+            return text if text else "0" 
         except Exception as e:
             self.logging.error(f"Error reading {image_name}: {e}")
-            return 0
+            return "0" 
         
-    def convert_image_into_number(self, coords, image_name, relative_coords=None ):
+    def convert_image_into_number(self, coords, image_name, relative_coords=None, with_comma=False):
         try:
-            text = self.convert_image_into_string(coords, image_name, relative_coords)
-            number = self.utils.extract_numeric_value(text)
-            
-            return number
+            text = self.convert_image_into_string(coords, image_name, relative_coords, with_comma)
+            return int(text) if text.isdigit() else 0
         except Exception as e:
             self.logging.error(f"Error reading {image_name}: {e}")
             return 0
     
-    def read_attribute(self, attribute_name, ref_point):
-        """Read attribute with validation based on config settings"""
-        try:
-            attribute_coords = self.config.get_ocr_coordinates()['attributes'][attribute_name]['points']
-            relative_coords = self.utils.get_relative_coords(attribute_coords, ref_point)
-            
-            value = self.convert_image_into_string(coords=attribute_coords, image_name=f'{attribute_name}_value', relative_coords=relative_coords,)
 
-            # Get validation rules from config
-            if 'validation' in self.config.file and attribute_name in self.config.file['validation']:
-                min_val = self.config.file['validation'][attribute_name].get('min', 0)
-                max_val = self.config.file['validation'][attribute_name].get('max', float('inf'))
-
-                if not min_val <= value <= max_val:
-                    self.logging.warning(f"{attribute_name} value out of range: {value}")
-                    return self.read_attribute(attribute_name, ref_point)
-
-            return value
-
-        except Exception as e:
-            self.logging.error(f"Error reading {attribute_name}: {e}")
-            return 0
     
     #################################### Clicks ####################################
     

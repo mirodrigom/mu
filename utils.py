@@ -1,58 +1,10 @@
 import logging
+import os
 
 class Utils:
     
     def __init__(self):
         self.logging = logging.getLogger(__name__)
-
-    def is_valid_coordinate(self, coordinate_str: str) -> bool:
-        """
-        Verifica si una cadena representa coordenadas válidas.
-        Args:
-            coordinate_str: Cadena de coordenadas a validar
-        Returns:
-            bool: True si es válida, False si no
-        """
-        try:
-            parts = coordinate_str.strip().split(',')
-            if len(parts) != 2:
-                return False
-            return all(part.strip().isdigit() for part in parts)
-        except:
-            return False
-        
-    def fix_7_digit_coordinate(self, coord_str: str) -> str:
-        """
-        Corrige coordenadas de 7 dígitos eliminando el dígito del medio.
-        Args:
-            coord_str: Coordenada de 7 dígitos
-        Returns:
-            str: Coordenada corregida de 6 dígitos
-        """
-        if len(coord_str) != 7:
-            return coord_str
-        return coord_str[:3] + coord_str[4:]
-
-    def process_coordinates(self, coord_str: str) -> tuple[int, int]:
-        """
-        Procesa una cadena de coordenadas en una tupla (x,y).
-        Args:
-            coord_str: Cadena de coordenadas
-        Returns:
-            tuple: Coordenadas (x,y) o None si son inválidas
-        """
-        # Clean the string
-        coord_str = ''.join(filter(str.isdigit, coord_str))
-
-        # Handle 7-digit case
-        if len(coord_str) == 7:
-            coord_str = self.fix_7_digit_coordinate(coord_str)
-
-        # Extract coordinates
-        if len(coord_str) == 6:
-            return int(coord_str[:3]), int(coord_str[3:])
-
-        return None
 
     def get_relative_coords(self, base_coords, ref_point):
         """
@@ -63,12 +15,24 @@ class Utils:
         Returns:
             list: Coordenadas ajustadas
         """
-        return [
-            base_coords[0] + ref_point[0],
-            base_coords[1] + ref_point[1],
-            base_coords[2] + ref_point[0],
-            base_coords[3] + ref_point[1]
-        ]
+        '''
+        self.logging.debug(f"Base coords: {base_coords}")
+        self.logging.debug(f"Reference point: {ref_point}")
+        
+        self.logging.debug(f"1. {base_coords[0]} + {ref_point[0]} = {base_coords[0] + ref_point[0]}")
+        self.logging.debug(f"2. {base_coords[1]} + {ref_point[1]} = {base_coords[1] + ref_point[1]}")
+        self.logging.debug(f"3. {base_coords[2]} + {ref_point[0]} = {base_coords[2] + ref_point[0]}")
+        self.logging.debug(f"4. {base_coords[3]} + {ref_point[1]} = {base_coords[3] + ref_point[1]}")
+        '''
+        try:
+            return [
+                base_coords[0] + ref_point[0],
+                base_coords[1] + ref_point[1],
+                base_coords[2] + ref_point[0],
+                base_coords[3] + ref_point[1]
+            ]
+        except Exception as e:
+            self.logging.error(f"{e}: It seems that your coordinates sucks.")
         
     def extract_numeric_value(self, text):
         """Enhanced numeric value extraction"""
