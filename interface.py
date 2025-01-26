@@ -30,14 +30,6 @@ class Interface:
             self.screen_height = monitor.height
             self.logging.info(f"Screen size: {self.screen_width}x{self.screen_height}")
             
-    def ensure_stats_window_open(self):
-        """Ensures the stats window stays open without image detection"""
-        try:
-            self.open_stats_window()
-            time.sleep(0.1)
-        except Exception as e:
-            self.logging.error(f"Error pressing C key: {e}")
-            
     def get_position_data(self, with_comma=False):
         """
         Obtiene las coordenadas del juego mediante OCR.
@@ -188,9 +180,11 @@ class Interface:
     def open_stats_window(self):
         time.sleep(2)
         if not self.window_stats_open:
+            self.logging.info("Open stat window")
             pyautogui.press('c')
+            self.window_stats_open = True
         else:
-            self.logging("Stat window is already open.")
+            self.logging.info("Stat window is already open.")
             
     def take_screenshot(self, image_name):
         image_area = ImageGrab.grab()

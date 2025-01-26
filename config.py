@@ -1,6 +1,7 @@
 import os
 import logging
 import json
+import sys
 
 from pynput import keyboard
 
@@ -19,24 +20,25 @@ class Configuration:
         """Configura el sistema de logging y limpia logs anteriores"""
         log_file = os.path.join(self.dirs['logs'], 'bot_debug.log')
         
-        # Ensure directory exists
         os.makedirs(os.path.dirname(log_file), exist_ok=True)
         
-        # Reset root logger
         for handler in logging.root.handlers[:]:
             logging.root.removeHandler(handler)
         
+        handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+        handler.setFormatter(logging.Formatter(
+            '%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s'
+        ))
         
-        format_str = '%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s'
-        # Configure file-only logging
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format=format_str,
-            filename=log_file,
-            filemode='w'
-        )
+        root = logging.getLogger()
+        root.setLevel(logging.DEBUG)
+        root.addHandler(handler)
         
         self.logging = logging.getLogger(__name__)
+        
+        # Disable buffering
+        sys.stdout.reconfigure(line_buffering=True)
+        sys.stderr.reconfigure(line_buffering=True)
 
     def setup_directories(self):
         """Creates necessary directories for organizing files"""

@@ -1,5 +1,6 @@
 import time
 import logging
+import os
 
 from pathlearner import PathLearner
 from interface import Interface
@@ -170,54 +171,69 @@ class GameBot:
 
     def read_all_stats(self):
         """Read and save all character stats"""
-        try:
-            self.interface.ensure_stats_window_open()
-            
-            ref_point = self.interface.get_elemental_reference()
-            if not ref_point:
-                return self.read_all_stats()
-            
-            level_coords = self.config.get_ocr_coordinates()['level']
-            reset_coords = self.config.get_ocr_coordinates()['reset']
+        while True:
+            try:
+                self.interface.open_stats_window()
+                ref_point = self.interface.get_elemental_reference()
+                if not ref_point:
+                    time.sleep(1)
+                    continue
+                
+                # Read all stats
+                stats = {}
+                coords = self.config.get_ocr_coordinates()
+                
+                # Basic stats
+                for stat in ['level', 'reset']:
+                    stats[stat] = self.interface.convert_image_into_number(
+                        coords=coords[stat], 
+                        image_name=stat, 
+                        relative_coords=ref_point
+                    )
+                    if stats[stat] <= 0:  # Invalid read
+                        self.logging.error(f"Invalid {stat} value: {stats[stat]}")
+                        raise ValueError(f"Invalid {stat} value: {stats[stat]}")
 
-            level = self.interface.convert_image_into_number(coords=level_coords, image_name='level', relative_coords=ref_point)
-            reset = self.interface.convert_image_into_number(coords=reset_coords, image_name='reset', relative_coords=ref_point)
+                # Attributes
+                for attr in ['strenght', 'agility', 'vitality', 'energy', 'command']:
+                    stats[attr] = self.interface.convert_image_into_number(
+                        coords=coords['attributes'][attr]['points'],
+                        image_name=attr,
+                        relative_coords=ref_point
+                    )
+                    if stats[attr] < 0:  # Invalid read
+                        self.logging.error(f"Invalid {attr} value: {stats[attr]}")
+                        raise ValueError(f"Invalid {attr} value: {stats[attr]}")
 
+                # Available points
+                available_coords = coords['available_points']
+                stats['available_points'] = self.interface.convert_image_into_number(
+                    coords=available_coords,
+                    image_name="available_points",
+                    relative_coords=ref_point
+                )
+                if stats['available_points'] < 0:
+                    self.logging.error(f"Invalid available points: {stats['available_points']}")
+                    raise ValueError(f"Invalid available points: {stats['available_points']}")
 
-            strenght = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['strenght']['points'], image_name='reset', relative_coords=ref_point)
-            agility = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['agility']['points'], image_name='reset', relative_coords=ref_point)
-            vitality = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['vitality']['points'], image_name='reset', relative_coords=ref_point)
-            energy = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['energy']['points'], image_name='reset', relative_coords=ref_point)
-            command = self.interface.convert_image_into_number(coords=self.config.get_ocr_coordinates()['attributes']['command']['points'], image_name='reset', relative_coords=ref_point)
-            
-            available_coords = self.config.get_ocr_coordinates()['available_points']
-            points_coords = self.utils.get_relative_coords(available_coords, ref_point)
-            
-            available_points = self.interface.convert_image_into_number(coords=available_coords,image_name="available_points", relative_coords=points_coords)
+                # Update state
+                state = {
+                    'current_level': stats['level'],
+                    'current_reset': stats['reset'],
+                    'current_strenght': stats['strenght'],
+                    'current_agility': stats['agility'],
+                    'current_vitality': stats['vitality'],
+                    'current_energy': stats['energy'],
+                    'current_command': stats['command'],
+                    'available_points': stats['available_points']
+                }
+                
+                self.config.update_game_state(state)
+                return stats['level'], stats['reset']
 
-            state = {
-                'current_level': level,
-                'current_reset': reset,
-                'current_strenght': strenght,
-                'current_agility': agility,
-                'current_vitality': vitality,
-                'current_energy': energy,
-                'current_command': command,
-                'available_points': available_points
-            }
-
-            self.config.update_game_state(state)
-
-            self.logging.info(f"======== RESET: {reset} ========")
-            self.logging.info(f"======== LEVEL: {level} ========")
-            self.logging.info(f"======== STATS: STR:{strenght} AGI:{agility} VIT:{vitality} ENE:{energy} CMD:{command} ========")
-            self.logging.info(f"======== AVAILABLE POINTS: {available_points} ========")
-
-            return level, reset
-
-        except Exception as e:
-            self.logging.error(f"Error reading stats: {e}")
-            return self.read_all_stats()
+            except Exception as e:
+                self.logging.error(f"Error reading stats: {e}")
+                time.sleep(1)
 
     def move_to_location(self, command: str, avoid_checks=False):
         """Modified to keep stats window consistently open"""
@@ -232,14 +248,13 @@ class GameBot:
 
                 self.play = False
                 self.interface.command_move_to_map(map_name=map_name)
-                self.interface.open_stats_window()
 
                 self.config.update_game_state({'current_map': map_name})
         else:
             self.play = False
             
             self.interface.command_move_to_map(map_name=map_name)
-            self.interface.open_stats_window()
+        self.interface.open_stats_window()
 
     def move_to_coordinates(self, target_x: int, target_y: int):
         """Movement without stats window toggling"""
@@ -292,7 +307,7 @@ class GameBot:
         try:
             current_state = self.config.get_game_state()
             play_coords = self.config.file['ocr_coordinates']['play']
-            self.interface.take_screenshot_with_coords(coords=play_coords, image_Name="play_button_area")
+            self.interface.take_screenshot_with_coords(coords=play_coords, image_name="play_button_area")
 
             if abs(self.current_x - x) <= 10 and abs(self.current_y - y) <= 10 and not self.play:
                 self.interface.mouse_click(play_coords[0] + 5, play_coords[1] + 3)
@@ -333,60 +348,14 @@ class GameBot:
                     self.logging.info("1. Move to lorencia first")
                     self.move_to_location('/move lorencia')
                     self.first_time = False
-
-                # Manejo de errores consecutivos
-                if self.consecutive_errors > self.config.file['error_threshold']:
-                    self.logging.error("Many consecutives errors")
-                    self.play = False  # Reset play state
-                    self.move_to_location('/move lorencia')
-                    time.sleep(5)
-                    self.consecutive_errors = 0
-
-                level, resets = self.read_all_stats()
-
-                # Resetear si alcanza el nivel configurado
-                if level >= self.config.file['reset_level'] <= self.config.file['max_level']:
-                    self.play = False  # Reset play state
-                    self.reset_character()
-                    # Después del reset, ejecutar el flujo normal una vez
-                    if level < self.config.file['max_level']:
-                        for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
-                            if level >= int(threshold):
-                                self.move_to_location(obj["command"])
-                                x = obj["location"][0]
-                                y = obj["location"][1]
-                                self.move_to_coordinates(x,y)
-                                self.check_and_click_play(x,y)
-                                break
-
-                # Si no está jugando, ejecutar el flujo normal
-                elif not self.play and level < self.config.file['max_level']:
-                    for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
-                        if level >= int(threshold):
-                            self.move_to_location(obj["command"])
-                            x = obj["location"][0]
-                            y = obj["location"][1]
-                            self.move_to_coordinates(x,y)
-                            self.check_and_click_play(x,y)
-                            break
-                elif self.play:
-                    for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
-                        if level >= int(threshold):
-                            self.move_to_location(obj["command"])
-                            x = obj["location"][0]
-                            y = obj["location"][1]
-                            self.move_to_coordinates(x,y)
-                            self.check_and_click_play(x,y)
-                            break
-
-                self.consecutive_errors = 0
-                time.sleep(self.config.file['check_interval'])
+                    level, resets = self.read_all_stats()
+                else:
+                    break       
 
             except KeyboardInterrupt:
                 self.logging.info("Bot stopped by user")
                 break
             except Exception as e:
-                self.consecutive_errors += 1
                 self.logging.error(f"Error in main loop: {e}")
                 time.sleep(1)
 
