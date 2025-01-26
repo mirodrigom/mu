@@ -16,8 +16,8 @@ class Interface:
     screen_width = 0
     screen_height = 0
     
-    def __init__(self):
-        self.config = Configuration()
+    def __init__(self, config):
+        self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
 
@@ -43,9 +43,9 @@ class Interface:
             str: Coordenadas en formato "x,y"
         """
         try:
-            adjusted_position = self.config.file['ocr_coordinates']['position']
+            adjusted_position = self.config.get_ocr_coordinates()['position']
             coord_area = ImageGrab.grab(bbox=tuple(adjusted_position))
-            coord_area_path = os.path.join(self.dirs['images'], 'coord_area_path.png')
+            coord_area_path = os.path.join(self.config.dirs['images'], 'coord_area_path.png')
             coord_area.save(coord_area_path)
             config = r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789,'
             return pytesseract.image_to_string(coord_area, config=config).strip()
@@ -83,6 +83,7 @@ class Interface:
         self.logging.debug("Attempting to locate elemental reference on the screen")
         
         image_path = os.path.join(self.config.dirs['images'], 'tofind', 'elemental_reference.png')
+        self.logging.debug(image_path)
         if not os.path.exists(image_path):
             self.logging.error(f"Reference image not found at: {image_path}")
             return None
@@ -121,7 +122,7 @@ class Interface:
 
     def _read_numeric_area(self, area_name, ref_point):
         """Read numeric value from specified area"""
-        coords = self.utils.get_relative_coords(self.config['ocr_coordinates'][area_name], ref_point)
+        coords = self.utils.get_relative_coords(self.config.get_ocr_coordinates()[area_name], ref_point)
         area = ImageGrab.grab(bbox=tuple(coords))
         path = os.path.join(self.config.dirs['images'], f'{area_name}_test.png')
         area.save(path)

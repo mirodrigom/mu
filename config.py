@@ -11,11 +11,8 @@ class Configuration:
     
     def __init__(self):
         self.setup_directories()
-        self.setup_logging()
-        self.setup_keyboard_listener()
         self.load_config('config.json')
-        self.load_game_state()
-        
+        self.setup_logging()
         
     def setup_logging(self):
         """Configura el sistema de logging y limpia logs anteriores"""
@@ -106,11 +103,12 @@ class Configuration:
             self.logging.error(f"Error saving game state: {e}")
         
     def load_config(self, config_path: str):
-        """Carga la configuración del bot desde un archivo JSON"""
         config_file = os.path.join(self.dirs['json'], config_path)
+        print(f"Loading config from: {config_file}")  # Debug
         with open(config_file) as f:
             self.file = json.load(f)
-            
+        print(f"Config loaded: {self.file is not None}")  # Debug
+                
     def setup_keyboard_listener(self):
         """Configura un listener para detectar la tecla F9 que detiene el bot"""
         def on_press(key):
@@ -124,3 +122,18 @@ class Configuration:
         # Suppress PIL and Tesseract debug logs
         logging.getLogger('PIL').setLevel(logging.WARNING)
         logging.getLogger('pytesseract').setLevel(logging.WARNING)
+        
+    def get_ocr_coordinates(self):
+        if not self.file:
+            raise ValueError("Config file not loaded")
+        return self.file['ocr_coordinates']
+
+    def get_validation_rules(self):
+        if not self.file:
+            raise ValueError("Config file not loaded")
+        return self.file.get('validation', {})
+
+    def get_stat_distribution(self):
+        if not self.file:
+            raise ValueError("Config file not loaded")
+        return self.file['stat_distribution']

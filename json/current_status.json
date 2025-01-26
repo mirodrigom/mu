@@ -1,15 +1,15 @@
 {
-    "current_reset": 6,
-    "current_level": 206,
-    "current_map": "lorencia",
+    "current_reset": 17,
+    "current_level": 333,
+    "current_map": "None",
     "current_location": [
-        221,
-        82
+        130,
+        39
     ],
-    "available_points": 9,
-    "current_strenght": 2786,
-    "current_agility": 166,
-    "current_vitality": 27,
-    "current_energy": 1131,
+    "available_points": 4,
+    "current_strenght": 3026,
+    "current_agility": 1496,
+    "current_vitality": 1026,
+    "current_energy": 2976,
     "current_command": 0
 }

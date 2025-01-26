@@ -2,6 +2,7 @@ import os
 import pyautogui
 import time
 import logging
+import pytesseract
 
 from pathlearner import PathLearner
 from interface import Interface
@@ -17,9 +18,9 @@ class GameBot:
     """
     def __init__(self):
         self.config = Configuration()
-        self.interface = Interface()
-        self.utils = Utils()
         self.logging = logging.getLogger(__name__)
+        self.interface = Interface(self.config)
+        self.utils = Utils()
         self.interface.load_ocr_packages()
         pyautogui.FAILSAFE = False
         self.running = True
@@ -177,7 +178,7 @@ class GameBot:
     def read_attribute(self, attribute_name, ref_point):
         """Read attribute with validation based on config settings"""
         try:
-            attribute_coords = self.config.file['ocr_coordinates']['attributes'][attribute_name]['points']
+            attribute_coords = self.config.get_ocr_coordinates()['attributes'][attribute_name]['points']
             relative_coords = self.utils.get_relative_coords(attribute_coords, ref_point)
 
             attr_area = ImageGrab.grab(bbox=tuple(relative_coords))
@@ -224,8 +225,8 @@ class GameBot:
             vitality = self.read_attribute('vitality', ref_point)
             energy = self.read_attribute('energy', ref_point)
             command = self.read_attribute('command', ref_point)
-
-            available_coords = self.config.file['ocr_coordinates']['available_points']
+            
+            available_coords = self.config.get_ocr_coordinates()['available_points']
             points_coords = self.utils.get_relative_coords(available_coords, ref_point)
             points_area = ImageGrab.grab(bbox=tuple(points_coords))
             points_path = os.path.join(self.config.dirs['images'], 'available_points.png')
