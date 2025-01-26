@@ -13,6 +13,7 @@ class Configuration:
         self.setup_directories()
         self.load_config('config.json')
         self.setup_logging()
+        self.setup_keyboard_listener()
         
     def setup_logging(self):
         """Configura el sistema de logging y limpia logs anteriores"""
@@ -104,10 +105,8 @@ class Configuration:
         
     def load_config(self, config_path: str):
         config_file = os.path.join(self.dirs['json'], config_path)
-        print(f"Loading config from: {config_file}")  # Debug
         with open(config_file) as f:
             self.file = json.load(f)
-        print(f"Config loaded: {self.file is not None}")  # Debug
                 
     def setup_keyboard_listener(self):
         """Configura un listener para detectar la tecla F9 que detiene el bot"""

@@ -70,7 +70,7 @@ class Utils:
             base_coords[3] + ref_point[1]
         ]
         
-    def _extract_numeric_value(self, text):
+    def extract_numeric_value(self, text):
         """Enhanced numeric value extraction"""
         try:
             # Clean the text

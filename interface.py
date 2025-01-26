@@ -44,11 +44,7 @@ class Interface:
         """
         try:
             adjusted_position = self.config.get_ocr_coordinates()['position']
-            coord_area = ImageGrab.grab(bbox=tuple(adjusted_position))
-            coord_area_path = os.path.join(self.config.dirs['images'], 'coord_area_path.png')
-            coord_area.save(coord_area_path)
-            config = r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789,'
-            return pytesseract.image_to_string(coord_area, config=config).strip()
+            return self.convert_image_into_string(coords=adjusted_position, image_name="position").strip()
         except Exception as e:
             self.logging.error(f"Position fetch failed: {e}")
             raise ValueError("Position fetch failed")
@@ -100,43 +96,69 @@ class Interface:
                 self.logging.error(f"Error finding elemental reference on attempt {attempt + 1}: {str(e)}")
         return None
     
-    def read_available_points(self, ref_point):
-        """Read available attribute points"""
+    def convert_image_into_string(self, coords, image_name, relative_coords=None ):
         try:
-            coords = self.utils.get_relative_coords(self.config.file['ocr_coordinates']['available_points'], ref_point)
-            points_area = ImageGrab.grab(bbox=tuple(coords))
-            points_path = os.path.join(self.config.dirs['images'], 'available_points.png')
-            points_area.save(points_path)
-
-            points_thresh = self._preprocess_image(points_path)
-            if points_thresh is not None:
-                points_text = pytesseract.image_to_string(
-                    Image.fromarray(points_thresh),
-                    config=r'--oem 3 --psm 13 -c tessedit_char_whitelist=0123456789'
-                )
-                return self.utils._extract_numeric_value(points_text)
+            if relative_coords:
+                final_coords = self.utils.get_relative_coords(coords, relative_coords)
+            else:
+                final_coords = coords
+            area = ImageGrab.grab(bbox=tuple(final_coords))
+            path = os.path.join(self.config.dirs['images'], f'{image_name}.png')
+            area.save(path)
+            
+            preprocessed = self._preprocess_image(path)
+            text = pytesseract.image_to_string(
+                preprocessed,
+                config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
+            )
+            
+            return text
         except Exception as e:
-            self.logging.error(f"Error reading available points: {e}")
-        return 0
+            self.logging.error(f"Error reading {image_name}: {e}")
+            return 0
+        
+    def convert_image_into_number(self, coords, image_name, relative_coords=None ):
+        try:
+            text = self.convert_image_into_string(coords, image_name, relative_coords)
+            number = self.utils.extract_numeric_value(text)
+            
+            return number
+        except Exception as e:
+            self.logging.error(f"Error reading {image_name}: {e}")
+            return 0
     
+    def read_attribute(self, attribute_name, ref_point):
+        """Read attribute with validation based on config settings"""
+        try:
+            attribute_coords = self.config.get_ocr_coordinates()['attributes'][attribute_name]['points']
+            relative_coords = self.utils.get_relative_coords(attribute_coords, ref_point)
+            
+            value = self.convert_image_into_string(coords=attribute_coords, image_name=f'{attribute_name}_value', relative_coords=relative_coords,)
 
-    def _read_numeric_area(self, area_name, ref_point):
-        """Read numeric value from specified area"""
-        coords = self.utils.get_relative_coords(self.config.get_ocr_coordinates()[area_name], ref_point)
-        area = ImageGrab.grab(bbox=tuple(coords))
-        path = os.path.join(self.config.dirs['images'], f'{area_name}_test.png')
-        area.save(path)
+            # Get validation rules from config
+            if 'validation' in self.config.file and attribute_name in self.config.file['validation']:
+                min_val = self.config.file['validation'][attribute_name].get('min', 0)
+                max_val = self.config.file['validation'][attribute_name].get('max', float('inf'))
 
-        preprocessed = self._preprocess_image(path)
-        text = pytesseract.image_to_string(
-            preprocessed,
-            config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
-        )
-        return self.utils._extract_numeric_value(text)
+                if not min_val <= value <= max_val:
+                    self.logging.warning(f"{attribute_name} value out of range: {value}")
+                    return self.read_attribute(attribute_name, ref_point)
+
+            return value
+
+        except Exception as e:
+            self.logging.error(f"Error reading {attribute_name}: {e}")
+            return 0
+    
+    #################################### Clicks ####################################
     
     def click_center_screen(self):
         pyautogui.click(self.screen_width // 2, self.screen_height // 2)
         
+    def mouse_click(self, x, y):
+        pyautogui.click(x, y)
+    
+    #################################### Commands ####################################
     def enter(self):
         pyautogui.press('enter')
         
@@ -160,3 +182,5 @@ class Interface:
         else:
             self.logging.warning("Wrong attribute to add points.")
         self.enter()
+        
+    

@@ -131,7 +131,7 @@ class GameBot:
                 if 'first_button' in stat_coords:
                     first_coords = self.utils.get_relative_coords(stat_coords['first_button'], ref_point)
                     self.logging.info(f"Clicking first button at relative coords: {first_coords}")
-                    pyautogui.click(first_coords[0], first_coords[1])
+                    self.interface.mouse_click(x=first_coords[0], y=first_coords[1])
                     time.sleep(0.5)
 
                 denominations = ['1000', '100', '10']
@@ -144,7 +144,7 @@ class GameBot:
                             self.logging.info(f"Will click {clicks} times on {denom} button at coords {coords}")
                             for click in range(clicks):
                                 self.logging.debug(f"Click {click + 1}/{clicks} for {denom} on {stat}")
-                                pyautogui.click(coords[0], coords[1])
+                                self.interface.mouse_click(x=coords[0], y=coords[1])
                                 time.sleep(0.2)
                             stat_points %= denom_value
                             time.sleep(0.5)
@@ -155,7 +155,7 @@ class GameBot:
                 # Hide plus info
                 if 'first_button' in stat_coords:
                     self.logging.info(f"Hiding plus info for {stat}")
-                    pyautogui.click(first_coords[0], first_coords[1])
+                    self.interface.mouse_click(x=first_coords[0], y=first_coords[1])
                     time.sleep(0.5)
 
             except Exception as e:
@@ -175,39 +175,6 @@ class GameBot:
         self.logging.info(f"Command: {final_state['current_command']}")
         return True
 
-    def read_attribute(self, attribute_name, ref_point):
-        """Read attribute with validation based on config settings"""
-        try:
-            attribute_coords = self.config.get_ocr_coordinates()['attributes'][attribute_name]['points']
-            relative_coords = self.utils.get_relative_coords(attribute_coords, ref_point)
-
-            attr_area = ImageGrab.grab(bbox=tuple(relative_coords))
-            attr_path = os.path.join(self.config.dirs['images'], f'{attribute_name}_value.png')
-            attr_area.save(attr_path)
-
-            preprocessed = self.interface._preprocess_image(attr_path)
-            text = pytesseract.image_to_string(
-                preprocessed,
-                config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
-            )
-
-            value = self.utils._extract_numeric_value(text)
-
-            # Get validation rules from config
-            if 'validation' in self.config.file and attribute_name in self.config.file['validation']:
-                min_val = self.config.file['validation'][attribute_name].get('min', 0)
-                max_val = self.config.file['validation'][attribute_name].get('max', float('inf'))
-
-                if not min_val <= value <= max_val:
-                    self.logging.warning(f"{attribute_name} value out of range: {value}")
-                    return self.read_attribute(attribute_name, ref_point)
-
-            return value
-
-        except Exception as e:
-            self.logging.error(f"Error reading {attribute_name}: {e}")
-            return 0
-
     def read_all_stats(self):
         """Read and save all character stats"""
         try:
@@ -217,14 +184,14 @@ class GameBot:
             if not ref_point:
                 return self.read_all_stats()
 
-            level = self.interface._read_numeric_area('level', ref_point)
-            reset = self.interface._read_numeric_area('reset', ref_point)
+            level = self.interface.convert_image_into_number('level', ref_point, 'level')
+            reset = self.interface.convert_image_into_number('reset', ref_point, 'reset')
 
-            strenght = self.read_attribute('strenght', ref_point)
-            agility = self.read_attribute('agility', ref_point)
-            vitality = self.read_attribute('vitality', ref_point)
-            energy = self.read_attribute('energy', ref_point)
-            command = self.read_attribute('command', ref_point)
+            strenght = self.interface.read_attribute('strenght', ref_point)
+            agility = self.interface.read_attribute('agility', ref_point)
+            vitality = self.interface.read_attribute('vitality', ref_point)
+            energy = self.interface.read_attribute('energy', ref_point)
+            command = self.interface.read_attribute('command', ref_point)
             
             available_coords = self.config.get_ocr_coordinates()['available_points']
             points_coords = self.utils.get_relative_coords(available_coords, ref_point)
@@ -237,7 +204,7 @@ class GameBot:
                 preprocessed,
                 config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
             )
-            available_points = self.utils._extract_numeric_value(points_text)
+            available_points = self.utils.extract_numeric_value(points_text)
 
             state = {
                 'current_level': level,

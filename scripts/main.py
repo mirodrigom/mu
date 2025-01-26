@@ -149,7 +149,7 @@ class GameBot:
             logging.error(f"Image preprocessing error: {e}")
             return None
 
-    def _extract_numeric_value(self, text):
+    def extract_numeric_value(self, text):
         try:
             return int(''.join(filter(str.isdigit, text.strip())))
         except ValueError:
@@ -172,7 +172,7 @@ class GameBot:
             reset_thresh = self._preprocess_image(reset_path)
             if reset_thresh is not None:
                 reset_text = pytesseract.image_to_string(Image.fromarray(reset_thresh), config=r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789')
-                reset_numeric_value = self._extract_numeric_value(reset_text)
+                reset_numeric_value = self.extract_numeric_value(reset_text)
                 
                 logging.info(f"Reset got from image: {reset_numeric_value}")
                 
@@ -194,7 +194,7 @@ class GameBot:
             level_thresh = self._preprocess_image(level_path)
             if level_thresh is not None:
                 level_text = pytesseract.image_to_string(Image.fromarray(level_thresh), config=r'--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789')
-                level_numeric_value = self._extract_numeric_value(level_text)
+                level_numeric_value = self.extract_numeric_value(level_text)
                 
                 logging.info(f"Level got from image: {level_numeric_value}")
                 
