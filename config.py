@@ -26,10 +26,12 @@ class Configuration:
         for handler in logging.root.handlers[:]:
             logging.root.removeHandler(handler)
         
+        
+        format_str = '%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s'
         # Configure file-only logging
         logging.basicConfig(
             level=logging.DEBUG,
-            format='%(asctime)s - %(levelname)s - %(message)s',
+            format=format_str,
             filename=log_file,
             filemode='w'
         )

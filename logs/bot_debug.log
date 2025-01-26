@@ -1,32 +1,11 @@
-2025-01-26 03:05:16,161 - INFO - 1. Move to lorencia first
-2025-01-26 03:05:16,162 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 03:05:16,162 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 03:05:17,246 - ERROR - Error finding elemental reference on attempt 1: 
-2025-01-26 03:05:18,319 - ERROR - Error finding elemental reference on attempt 2: 
-2025-01-26 03:05:19,406 - ERROR - Error finding elemental reference on attempt 3: 
-2025-01-26 03:05:19,407 - ERROR - Cannot distribute attributes - reference point not found
-2025-01-26 03:05:24,027 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 03:05:24,027 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 03:05:25,119 - ERROR - Error finding elemental reference on attempt 1: 
-2025-01-26 03:05:26,204 - ERROR - Error finding elemental reference on attempt 2: 
-2025-01-26 03:05:27,282 - ERROR - Error finding elemental reference on attempt 3: 
-2025-01-26 03:05:29,485 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 03:05:29,485 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 03:05:30,576 - DEBUG - Found elemental reference at: Box(left=np.int64(1687), top=np.int64(129), width=106, height=25)
-2025-01-26 03:05:30,602 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
-2025-01-26 03:05:30,602 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
-2025-01-26 03:05:30,627 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
-2025-01-26 03:05:30,628 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
-2025-01-26 03:05:31,207 - ERROR - Error reading strenght: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 03:05:31,346 - ERROR - Error reading agility: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 03:05:31,499 - ERROR - Error reading vitality: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 03:05:31,643 - ERROR - Error reading energy: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 03:05:31,643 - ERROR - Error reading command: list index out of range
-2025-01-26 03:05:31,784 - INFO - ======== RESET: 0 ========
-2025-01-26 03:05:31,784 - INFO - ======== LEVEL: 0 ========
-2025-01-26 03:05:31,784 - INFO - ======== STATS: STR:0 AGI:0 VIT:0 ENE:0 CMD:0 ========
-2025-01-26 03:05:31,784 - INFO - ======== AVAILABLE POINTS: 0 ========
-2025-01-26 03:05:31,919 - WARNING - Attempt 1 failed to get current position: Invalid coordinate format: ''
-2025-01-26 03:05:33,048 - WARNING - Attempt 2 failed to get current position: Invalid coordinate format: ''
-2025-01-26 03:05:34,293 - WARNING - Attempt 1 failed to get current position: Invalid coordinate format: ''
-2025-01-26 03:05:36,232 - INFO - Bot stopped by user
+2025-01-26 03:13:37,969 - __main__ - run - INFO - 1. Move to lorencia first
+2025-01-26 03:13:37,970 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 03:13:37,970 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 03:13:39,044 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 03:13:40,116 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 03:13:41,188 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 03:13:41,190 - __main__ - distribute_attributes - ERROR - Cannot distribute attributes - reference point not found
+2025-01-26 03:13:45,799 - interface - get_elemental_reference - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 03:13:45,799 - interface - get_elemental_reference - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 03:13:46,871 - interface - get_elemental_reference - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 03:13:47,460 - config - on_press - INFO - Bot stopped
