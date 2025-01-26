@@ -105,9 +105,8 @@ class Interface:
                 final_coords = self.utils.get_relative_coords(coords, relative_coords)
             else:
                 final_coords = coords
-            area = ImageGrab.grab(bbox=tuple(final_coords))
-            path = os.path.join(self.config.dirs['images'], f'{image_name}.png')
-            area.save(path)
+                
+            path = self.take_screenshot_with_coords(coords=final_coords, image_name=image_name)
             
             preprocessed = self._preprocess_image(path)
             text = pytesseract.image_to_string(
@@ -212,12 +211,13 @@ class Interface:
             self.logging("Stat window is already open.")
             
     def take_screenshot(self, image_name):
-        stats_area = ImageGrab.grab()
-        stats_path = os.path.join(self.config.dirs['images'], f"{image_name}.png")
-        stats_area.save(stats_path)
-        return stats_path
+        image_area = ImageGrab.grab()
+        path = os.path.join(self.config.dirs['images'], f"{image_name}.png")
+        image_area.save(path)
+        return path
     
     def take_screenshot_with_coords(self, coords, image_name):
         image_area = ImageGrab.grab(bbox=tuple(coords))
-        path = os.path.join(self.config.dirs['images'], 'play_button_area.png')
+        path = os.path.join(self.config.dirs['images'], f'{image_name}.png')
         image_area.save(path)
+        return path
