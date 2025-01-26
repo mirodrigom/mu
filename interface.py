@@ -15,11 +15,13 @@ class Interface:
     
     screen_width = 0
     screen_height = 0
+    window_stats_open = False
     
     def __init__(self, config):
         self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
+        pyautogui.FAILSAFE = False
 
     def setup_screen(self):
             """Configura los parámetros de la pantalla del juego"""
@@ -31,7 +33,7 @@ class Interface:
     def ensure_stats_window_open(self):
         """Ensures the stats window stays open without image detection"""
         try:
-            pyautogui.press('c')
+            self.open_stats_window()
             time.sleep(0.1)
         except Exception as e:
             self.logging.error(f"Error pressing C key: {e}")
@@ -95,6 +97,7 @@ class Interface:
             except Exception as e:
                 self.logging.error(f"Error finding elemental reference on attempt {attempt + 1}: {str(e)}")
         return None
+    
     
     def convert_image_into_string(self, coords, image_name, relative_coords=None ):
         try:
@@ -183,4 +186,38 @@ class Interface:
             self.logging.warning("Wrong attribute to add points.")
         self.enter()
         
+    def command_move_to_map(self, map_name):
+        self.enter()
+        pyautogui.write(f'/move {map_name}')
+        self.enter()
+        self.window_stats_open = False
+        
+    def arrow_key_up(self):
+        pyautogui.keyUp('up')
+        
+    def arrow_key_down(self):
+        pyautogui.keyUp('down')
     
+    def arrow_key_left(self):
+        pyautogui.keyUp('left')
+        
+    def arrow_key_right(self):
+        pyautogui.keyUp('right')
+        
+    def open_stats_window(self):
+        time.sleep(2)
+        if not self.window_stats_open:
+            pyautogui.press('c')
+        else:
+            self.logging("Stat window is already open.")
+            
+    def take_screenshot(self, image_name):
+        stats_area = ImageGrab.grab()
+        stats_path = os.path.join(self.config.dirs['images'], f"{image_name}.png")
+        stats_area.save(stats_path)
+        return stats_path
+    
+    def take_screenshot_with_coords(self, coords, image_name):
+        image_area = ImageGrab.grab(bbox=tuple(coords))
+        path = os.path.join(self.config.dirs['images'], 'play_button_area.png')
+        image_area.save(path)

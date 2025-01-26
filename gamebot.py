@@ -1,14 +1,10 @@
-import os
-import pyautogui
 import time
 import logging
-import pytesseract
 
 from pathlearner import PathLearner
 from interface import Interface
 from utils import Utils
 from config import Configuration
-from PIL import Image, ImageGrab
 
 class GameBot:
     
@@ -22,7 +18,7 @@ class GameBot:
         self.interface = Interface(self.config)
         self.utils = Utils()
         self.interface.load_ocr_packages()
-        pyautogui.FAILSAFE = False
+        
         self.running = True
         self.current_location = None
         self.play = False
@@ -92,9 +88,7 @@ class GameBot:
 
         # Take screenshot of stats area for debugging
         try:
-            stats_area = ImageGrab.grab()
-            stats_path = os.path.join(self.config.dirs['images'], 'stats_area_debug.png')
-            stats_area.save(stats_path)
+            stats_path = self.interface.take_screenshot("stats_area_debug")
             self.logging.info(f"Saved stats area screenshot to {stats_path}")
         except Exception as e:
             self.logging.error(f"Failed to save debug screenshot: {e}")
@@ -195,16 +189,8 @@ class GameBot:
             
             available_coords = self.config.get_ocr_coordinates()['available_points']
             points_coords = self.utils.get_relative_coords(available_coords, ref_point)
-            points_area = ImageGrab.grab(bbox=tuple(points_coords))
-            points_path = os.path.join(self.config.dirs['images'], 'available_points.png')
-            points_area.save(points_path)
-
-            preprocessed = self.interface._preprocess_image(points_path)
-            points_text = pytesseract.image_to_string(
-                preprocessed,
-                config='--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789'
-            )
-            available_points = self.utils.extract_numeric_value(points_text)
+            
+            available_points = self.interface.convert_image_into_number(coords=available_coords,image_name="available_points", relative_coords=points_coords)
 
             state = {
                 'current_level': level,
@@ -232,30 +218,25 @@ class GameBot:
 
     def move_to_location(self, command: str, avoid_checks=False):
         """Modified to keep stats window consistently open"""
+        map_name = command.replace('/move ', '')
         if not avoid_checks:
-            location = command.replace('/move ', '')
             current_state = self.config.get_game_state()
 
-            if location != current_state['current_map']:
+            if map_name != current_state['current_map']:
                 self.distribute_attributes()
                 if current_state['current_level'] >= self.config.file['reset_level']:
                     time.sleep(0.1)
 
                 self.play = False
-                pyautogui.press('enter')
-                pyautogui.write(command)
-                pyautogui.press('enter')
-                time.sleep(0.5)
-                pyautogui.press('c')  # Reopen stats after command
+                self.interface.command_move_to_map(map_name=map_name)
+                self.interface.open_stats_window()
 
-                self.config.update_game_state({'current_map': location})
+                self.config.update_game_state({'current_map': map_name})
         else:
             self.play = False
-            pyautogui.press('enter')
-            pyautogui.write(command)
-            pyautogui.press('enter')
-            time.sleep(0.5)
-            pyautogui.press('c')
+            
+            self.interface.command_move_to_map(map_name=map_name)
+            self.interface.open_stats_window()
 
     def move_to_coordinates(self, target_x: int, target_y: int):
         """Movement without stats window toggling"""
@@ -288,13 +269,13 @@ class GameBot:
             if abs(dx) > 10 or abs(dy) > 10:
                 if abs(dx) > 10:
                     key = 'left' if dx < 0 else 'right'
-                    pyautogui.keyDown(key)
-                    pyautogui.keyUp(key)
+                    self.interface.arrow_key_down()
+                    self.interface.arrow_key_up()
                 
                 if abs(dy) > 10:
                     key = 'down' if dy < 0 else 'up'
-                    pyautogui.keyDown(key)
-                    pyautogui.keyUp(key)
+                    self.interface.arrow_key_down()
+                    self.interface.arrow_key_up()
 
                 time.sleep(move_delay)
             else:
@@ -308,12 +289,10 @@ class GameBot:
         try:
             current_state = self.config.get_game_state()
             play_coords = self.config.file['ocr_coordinates']['play']
-            play_button_area = ImageGrab.grab(bbox=tuple(play_coords))
-            play_path = os.path.join(self.config.dirs['images'], 'play_button_area.png')
-            play_button_area.save(play_path)
+            self.interface.take_screenshot_with_coords(coords=play_coords, image_Name="play_button_area")
 
             if abs(self.current_x - x) <= 10 and abs(self.current_y - y) <= 10 and not self.play:
-                pyautogui.click(play_coords[0] + 5, play_coords[1] + 3)
+                self.interface.mouse_click(play_coords[0] + 5, play_coords[1] + 3)
                 self.play = True
                 self.config.update_game_state({'current_location': [x, y]})
                 self.logging.info("Play button clicked - was inactive (green)")
@@ -325,13 +304,9 @@ class GameBot:
 
     def reset_character(self):
         """Reset character and manage stats window"""
-        pyautogui.press('c')  # Close stats window before reset
-        time.sleep(0.5)
-        pyautogui.press('enter')
-        pyautogui.write('/reset')
-        pyautogui.press('enter')
-        time.sleep(2)
-        pyautogui.press('c')  # Reopen stats window after reset
+        self.interface.open_stats_window()
+        self.interface.command_reset()
+        self.interface.open_stats_window()
 
         current_state = self.config.get_game_state()
         new_reset = current_state['current_reset'] + 1

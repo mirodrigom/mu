@@ -1,65 +1,32 @@
-2025-01-26 02:36:31,771 - INFO - 1. Move to lorencia first
-2025-01-26 02:36:31,974 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 02:36:31,974 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 02:36:33,050 - ERROR - Error finding elemental reference on attempt 1: 
-2025-01-26 02:36:34,118 - ERROR - Error finding elemental reference on attempt 2: 
-2025-01-26 02:36:35,187 - ERROR - Error finding elemental reference on attempt 3: 
-2025-01-26 02:36:35,390 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 02:36:35,390 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 02:36:36,463 - DEBUG - Found elemental reference at: Box(left=np.int64(1687), top=np.int64(129), width=106, height=25)
-2025-01-26 02:36:36,479 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
-2025-01-26 02:36:36,480 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
-2025-01-26 02:36:36,497 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
-2025-01-26 02:36:36,498 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
-2025-01-26 02:36:36,642 - ERROR - Error reading strenght: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:36,767 - ERROR - Error reading agility: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:36,897 - ERROR - Error reading vitality: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:37,024 - ERROR - Error reading energy: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:37,024 - ERROR - Error reading command: list index out of range
-2025-01-26 02:36:37,144 - INFO - ======== RESET: 0 ========
-2025-01-26 02:36:37,144 - INFO - ======== LEVEL: 0 ========
-2025-01-26 02:36:37,144 - INFO - ======== STATS: STR:0 AGI:0 VIT:0 ENE:0 CMD:0 ========
-2025-01-26 02:36:37,144 - INFO - ======== AVAILABLE POINTS: 6 ========
-2025-01-26 02:36:38,154 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 02:36:38,154 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 02:36:39,232 - DEBUG - Found elemental reference at: Box(left=np.int64(1687), top=np.int64(129), width=106, height=25)
-2025-01-26 02:36:39,232 - INFO - Reference point found at: Point(x=np.int64(1740), y=np.int64(141))
-2025-01-26 02:36:39,433 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 02:36:39,433 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 02:36:40,502 - ERROR - Error finding elemental reference on attempt 1: 
-2025-01-26 02:36:41,570 - ERROR - Error finding elemental reference on attempt 2: 
-2025-01-26 02:36:42,644 - ERROR - Error finding elemental reference on attempt 3: 
-2025-01-26 02:36:42,846 - DEBUG - Attempting to locate elemental reference on the screen
-2025-01-26 02:36:42,846 - DEBUG - images\tofind\elemental_reference.png
-2025-01-26 02:36:43,922 - DEBUG - Found elemental reference at: Box(left=np.int64(1687), top=np.int64(129), width=106, height=25)
-2025-01-26 02:36:43,943 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
-2025-01-26 02:36:43,943 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
-2025-01-26 02:36:43,959 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
-2025-01-26 02:36:43,959 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
-2025-01-26 02:36:44,095 - ERROR - Error reading strenght: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:44,216 - ERROR - Error reading agility: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:44,356 - ERROR - Error reading vitality: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:44,495 - ERROR - Error reading energy: '<=' not supported between instances of 'int' and 'str'
-2025-01-26 02:36:44,495 - ERROR - Error reading command: list index out of range
-2025-01-26 02:36:44,609 - INFO - ======== RESET: 0 ========
-2025-01-26 02:36:44,609 - INFO - ======== LEVEL: 0 ========
-2025-01-26 02:36:44,609 - INFO - ======== STATS: STR:0 AGI:0 VIT:0 ENE:0 CMD:0 ========
-2025-01-26 02:36:44,609 - INFO - ======== AVAILABLE POINTS: 6 ========
-2025-01-26 02:36:44,610 - INFO - Current stats:
-2025-01-26 02:36:44,610 - INFO - Available Points: 6
-2025-01-26 02:36:44,610 - INFO - Strength: 0
-2025-01-26 02:36:44,610 - INFO - Agility: 0
-2025-01-26 02:36:44,610 - INFO - Vitality: 0
-2025-01-26 02:36:44,610 - INFO - Command: 0
-2025-01-26 02:36:44,771 - INFO - Saved stats area screenshot to images\stats_area_debug.png
-2025-01-26 02:36:44,771 - INFO - Starting distribution of 6 available points
-2025-01-26 02:36:44,771 - INFO - Stat distribution config: {'strenght': 0.0, 'agility': 0.2, 'vitality': 0.0, 'energy': 0.8}
-2025-01-26 02:36:44,771 - INFO - Skipping strenght - no points to allocate (ratio: 0.0)
-2025-01-26 02:36:44,771 - INFO - Allocating 1 points to agility
-2025-01-26 02:36:44,771 - INFO - Base coordinates for agility: {'first_button': [34, 302, 57, 323], 'points': [-120, 290, -10, 330], '10': [6, 346, 51, 365], '100': [-60, 346, -14, 366], '1000': [-126, 349, -81, 366], 'custom': [-299, 348, -232, 365]}
-2025-01-26 02:36:44,771 - INFO - Clicking first button at relative coords: [np.int64(1774), np.int64(443), np.int64(1797), np.int64(464)]
-2025-01-26 02:36:45,380 - DEBUG - Remaining points for agility after 1000: 1
-2025-01-26 02:36:45,380 - DEBUG - Remaining points for agility after 100: 1
-2025-01-26 02:36:45,380 - DEBUG - Remaining points for agility after 10: 1
-2025-01-26 02:36:45,380 - INFO - Hiding plus info for agility
-2025-01-26 02:36:45,876 - INFO - Bot stopped
+2025-01-26 03:05:16,161 - INFO - 1. Move to lorencia first
+2025-01-26 03:05:16,162 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 03:05:16,162 - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 03:05:17,246 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 03:05:18,319 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 03:05:19,406 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 03:05:19,407 - ERROR - Cannot distribute attributes - reference point not found
+2025-01-26 03:05:24,027 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 03:05:24,027 - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 03:05:25,119 - ERROR - Error finding elemental reference on attempt 1: 
+2025-01-26 03:05:26,204 - ERROR - Error finding elemental reference on attempt 2: 
+2025-01-26 03:05:27,282 - ERROR - Error finding elemental reference on attempt 3: 
+2025-01-26 03:05:29,485 - DEBUG - Attempting to locate elemental reference on the screen
+2025-01-26 03:05:29,485 - DEBUG - images\tofind\elemental_reference.png
+2025-01-26 03:05:30,576 - DEBUG - Found elemental reference at: Box(left=np.int64(1687), top=np.int64(129), width=106, height=25)
+2025-01-26 03:05:30,602 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
+2025-01-26 03:05:30,602 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
+2025-01-26 03:05:30,627 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): unsupported operand type(s) for -: 'str' and 'int'
+2025-01-26 03:05:30,628 - ERROR - Error reading Point(x=np.int64(1740), y=np.int64(141)): 'int' object has no attribute 'strip'
+2025-01-26 03:05:31,207 - ERROR - Error reading strenght: '<=' not supported between instances of 'int' and 'str'
+2025-01-26 03:05:31,346 - ERROR - Error reading agility: '<=' not supported between instances of 'int' and 'str'
+2025-01-26 03:05:31,499 - ERROR - Error reading vitality: '<=' not supported between instances of 'int' and 'str'
+2025-01-26 03:05:31,643 - ERROR - Error reading energy: '<=' not supported between instances of 'int' and 'str'
+2025-01-26 03:05:31,643 - ERROR - Error reading command: list index out of range
+2025-01-26 03:05:31,784 - INFO - ======== RESET: 0 ========
+2025-01-26 03:05:31,784 - INFO - ======== LEVEL: 0 ========
+2025-01-26 03:05:31,784 - INFO - ======== STATS: STR:0 AGI:0 VIT:0 ENE:0 CMD:0 ========
+2025-01-26 03:05:31,784 - INFO - ======== AVAILABLE POINTS: 0 ========
+2025-01-26 03:05:31,919 - WARNING - Attempt 1 failed to get current position: Invalid coordinate format: ''
+2025-01-26 03:05:33,048 - WARNING - Attempt 2 failed to get current position: Invalid coordinate format: ''
+2025-01-26 03:05:34,293 - WARNING - Attempt 1 failed to get current position: Invalid coordinate format: ''
+2025-01-26 03:05:36,232 - INFO - Bot stopped by user
