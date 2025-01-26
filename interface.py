@@ -18,6 +18,7 @@ class Interface:
     window_stats_open = False
     
     def __init__(self, config):
+        self.setup_screen()
         self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
