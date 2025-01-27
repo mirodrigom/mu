@@ -36,12 +36,32 @@ class GameBot:
         Raises:
             ValueError: Si el formato de coordenadas es inválido
         """
-
-        time.sleep(0.1)  # Add delay before reading
+        time.sleep(0.1)
         raw_data = self.interface.get_position_data(with_comma=True)
+        
+        # Try comma-separated format first
         if ',' in raw_data:
             x, y = raw_data.split(',')
-            return int(x), int(y)
+            try:
+                return int(x.strip()), int(y.strip())
+            except ValueError:
+                pass
+                
+        # Handle case where comma is missing but numbers are distinct
+        raw_data = raw_data.strip()
+        if raw_data.isdigit():
+            # Assume format like "133473" means "133,473"
+            str_len = len(raw_data)
+            if 4 <= str_len <= 8:  # Reasonable coordinate ranges
+                mid = str_len // 2
+                try:
+                    x = int(raw_data[:mid])
+                    y = int(raw_data[mid:])
+                    if 0 <= x <= 999 and 0 <= y <= 999:  # Validate ranges
+                        return x, y
+                except ValueError:
+                    pass
+                    
         raise ValueError(f"Invalid coordinate format: '{raw_data}'")
 
     def get_current_coords_from_game(self, retries=900, delay=1):
