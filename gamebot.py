@@ -389,40 +389,190 @@ class GameBot:
                     time.sleep(delay)
         return False
     
-    
     def detect_wall(self, positions_history, current_pos):
         """
-        Detect if there's a wall by analyzing recent position history
-        Returns: tuple (is_wall, blocked_directions)
+        Enhanced wall detection with better stuck detection
         """
         if len(positions_history) < 3:
             return False, set()
             
-        # Check last few positions for minimal movement
-        last_positions = positions_history[-5:]
-        x_values = [pos[0] for pos in last_positions]
-        y_values = [pos[1] for pos in last_positions]
+        # Check for complete immobility
+        recent_positions = positions_history[-5:]
+        if all(pos == recent_positions[0] for pos in recent_positions):
+            self.logging.warning(f"[WALL] 🚫 Complete stuck detected at {current_pos}")
+            return True, {'N', 'S', 'E', 'W'}  # All directions blocked
+            
+        x_values = [pos[0] for pos in positions_history[-5:]]
+        y_values = [pos[1] for pos in positions_history[-5:]]
         
         x_movement = max(x_values) - min(x_values)
         y_movement = max(y_values) - min(y_values)
         
         blocked_directions = set()
         
-        # If we're not moving in x direction despite trying
+        # More aggressive wall detection
         if x_movement <= 2:
-            if current_pos[0] > positions_history[-5][0]:
-                blocked_directions.add('W')  # Wall on the left
-            else:
-                blocked_directions.add('E')  # Wall on the right
+            if abs(current_pos[0] - positions_history[-5][0]) < 2:
+                blocked_directions.add('W')
+                blocked_directions.add('E')
+                self.logging.warning(f"[WALL] ⬅️➡️ X-axis movement blocked at x={current_pos[0]}")
                 
-        # If we're not moving in y direction despite trying
         if y_movement <= 2:
-            if current_pos[1] > positions_history[-5][1]:
-                blocked_directions.add('S')  # Wall below
-            else:
-                blocked_directions.add('N')  # Wall above
+            if abs(current_pos[1] - positions_history[-5][1]) < 2:
+                blocked_directions.add('N')
+                blocked_directions.add('S')
+                self.logging.warning(f"[WALL] ⬆️⬇️ Y-axis movement blocked at y={current_pos[1]}")
                 
         return len(blocked_directions) > 0, blocked_directions
+
+    def calculate_escape_vector(self, current_pos, blocked_directions, attempt=0, target_pos=None):
+        """
+        Calculate escape vector when stuck, with smarter pattern selection
+        """
+        # If we have target position, calculate desired direction
+        if target_pos:
+            dx = target_pos[0] - current_pos[0]
+            dy = target_pos[1] - current_pos[1]
+            target_direction = ''
+            
+            if dy > 0:  # Need to go up
+                if dx < 0:  # Need to go left
+                    primary_patterns = ['NW', 'W', 'N', 'SW', 'NE']
+                else:  # Need to go right
+                    primary_patterns = ['NE', 'E', 'N', 'SE', 'NW']
+            else:  # Need to go down
+                if dx < 0:  # Need to go left
+                    primary_patterns = ['SW', 'W', 'S', 'NW', 'SE']
+                else:  # Need to go right
+                    primary_patterns = ['SE', 'E', 'S', 'NE', 'SW']
+        else:
+            # If no target, use default pattern order
+            primary_patterns = ['NE', 'NW', 'SE', 'SW', 'N', 'S', 'E', 'W']
+
+        # Get pattern based on attempt number
+        pattern_index = attempt % len(primary_patterns)
+        chosen_pattern = primary_patterns[pattern_index]
+        
+        # Define movement vectors for each pattern
+        vectors = {
+            'N': (0, 2),     # Strong up
+            'S': (0, -2),    # Strong down
+            'E': (2, 0),     # Strong right
+            'W': (-2, 0),    # Strong left
+            'NE': (1, 1),    # Northeast
+            'NW': (-1, 1),   # Northwest
+            'SE': (1, -1),   # Southeast
+            'SW': (-1, -1),  # Southwest
+        }
+        
+        # Try patterns in order until we find one that's not blocked
+        for pattern in primary_patterns[pattern_index:] + primary_patterns[:pattern_index]:
+            if pattern not in blocked_directions:
+                self.logging.info(f"[ESCAPE] Trying escape pattern: {pattern} (attempt {attempt})")
+                return vectors[pattern][0], vectors[pattern][1], f'escape_{pattern}'
+        
+        # If all normal patterns are blocked, try a more aggressive random movement
+        random_x = (-1)**(attempt % 2) * (2 if attempt % 3 == 0 else 1)
+        random_y = (-1)**((attempt + 1) % 2) * (2 if attempt % 3 != 0 else 1)
+        
+        self.logging.warning(f"[ESCAPE] All patterns blocked! Using random movement (attempt {attempt})")
+        return random_x, random_y, 'escape_random'
+
+    def move_to_coordinates(self, target_x: int, target_y: int):
+        """Enhanced movement method with better stuck handling"""
+        self.current_path = []
+        positions_history = []
+        stuck_count = 0
+        escape_attempt = 0
+        last_pos = None
+        last_movement_type = None
+        
+        self.logging.info(f"[MOVEMENT] Starting movement to target [{target_x}, {target_y}]")
+        
+        if not self.get_current_coords_from_game():
+            self.logging.error("[MOVEMENT] Failed to get initial position")
+            return
+            
+        current_state = self.config.get_game_state()
+        current_map = self.interface.get_current_map(current_state)
+        blocked_directions = set()
+        
+        while True:
+            # Get current position
+            self.get_current_coords_from_game()
+            current_x, current_y = self._fetch_position()
+            positions_history.append((current_x, current_y))
+            
+            # Log current status with target distance
+            dx = target_x - current_x
+            dy = target_y - current_y
+            dist = abs(dx) + abs(dy)
+            self.logging.info(f"[STATUS] Pos:[{current_x},{current_y}] Target:[{target_x},{target_y}] Dist:{dist} | Last movement: {last_movement_type}")
+            
+            # Check if we've reached destination
+            if abs(dx) <= 10 and abs(dy) <= 10:
+                self.logging.info(f"[MOVEMENT] ✅ Reached destination!")
+                self.check_and_click_play(target_x, target_y)
+                break
+                
+            # Detect stuck condition
+            if last_pos == (current_x, current_y):
+                stuck_count += 1
+                if stuck_count >= 3:  # Stuck for 3 consecutive checks
+                    self.logging.warning(f"[STUCK] 🚫 Stuck for {stuck_count} moves at [{current_x},{current_y}]")
+                    
+                    # Try escape movement
+                    move_x, move_y, move_type = self.calculate_escape_vector(
+                        (current_x, current_y),
+                        blocked_directions,
+                        escape_attempt,
+                        (target_x, target_y)  # Pass target position for smarter escapes
+                    )
+                    escape_attempt += 1
+                    
+                    # If we've tried escaping multiple times without success, reset position
+                    if escape_attempt >= 8:  # Increased from 5 to 8 attempts
+                        self.logging.warning(f"[RESET] 🔄 Failed to escape after {escape_attempt} attempts, resetting position")
+                        self.move_to_location(map_name=current_map, stuck=True)
+                        stuck_count = 0
+                        escape_attempt = 0
+                        positions_history.clear()
+                        blocked_directions.clear()
+                        continue
+            else:
+                stuck_count = 0
+                if escape_attempt > 0:  # If we moved, reset escape attempt counter
+                    escape_attempt = 0
+                    blocked_directions.clear()  # Clear blocked directions if we successfully moved
+                    
+            last_pos = (current_x, current_y)
+            
+            # Keep history manageable
+            if len(positions_history) > 10:
+                positions_history.pop(0)
+                
+            # Check for walls
+            is_wall, new_blocked = self.detect_wall(positions_history, (current_x, current_y))
+            if is_wall:
+                blocked_directions.update(new_blocked)
+                
+            # Calculate movement
+            if stuck_count >= 3:
+                move_x, move_y, move_type = self.calculate_escape_vector(
+                    (current_x, current_y),
+                    blocked_directions,
+                    escape_attempt,
+                    (target_x, target_y)  # Pass target position for smarter escapes
+                )
+            else:
+                move_x, move_y, move_type = self.calculate_movement_vector(
+                    current_x, current_y, target_x, target_y, blocked_directions
+                )
+                
+            # Execute movement
+            self.execute_movement(move_x, move_y, move_type)
+            last_movement_type = move_type
+            time.sleep(0.3)  # Slightly longer delay between movements
 
     def calculate_movement_vector(self, current_x, current_y, target_x, target_y, blocked_directions):
         """
@@ -481,26 +631,64 @@ class GameBot:
         return vectors[primary_dir][0], vectors[primary_dir][1], 'primary'
 
     def execute_movement(self, move_x, move_y, movement_type):
-        """Execute the movement with proper delays and logging"""
-        if move_x < 0:
-            self.interface.arrow_key_left()
-        elif move_x > 0:
-            self.interface.arrow_key_right()
+        """
+        Execute the movement with proper delays and key release checks.
+        Implements more careful key press handling to avoid input conflicts.
+        """
+        # Base delays
+        key_press_delay = 0.1    # Time to hold a key
+        between_keys_delay = 0.2  # Time between different key presses
+        post_move_delay = 0.3    # Time after complete movement
+        
+        try:
+            # Execute X movement first if any
+            if move_x != 0:
+                if move_x < 0:
+                    self.logging.debug("[MOVEMENT] Pressing LEFT")
+                    self.interface.arrow_key_left()
+                    time.sleep(key_press_delay)
+                elif move_x > 0:
+                    self.logging.debug("[MOVEMENT] Pressing RIGHT")
+                    self.interface.arrow_key_right()
+                    time.sleep(key_press_delay)
+                    
+                # Wait between different directions
+                time.sleep(between_keys_delay)
+                
+            # Then execute Y movement if any
+            if move_y != 0:
+                if move_y < 0:
+                    self.logging.debug("[MOVEMENT] Pressing DOWN")
+                    self.interface.arrow_key_down()
+                    time.sleep(key_press_delay)
+                elif move_y > 0:
+                    self.logging.debug("[MOVEMENT] Pressing UP")
+                    self.interface.arrow_key_up()
+                    time.sleep(key_press_delay)
             
-        if move_y < 0:
-            self.interface.arrow_key_down()
-        elif move_y > 0:
-            self.interface.arrow_key_up()
+            # Log the complete movement
+            self.logging.debug(
+                f"[MOVEMENT] Executed {movement_type} movement: "
+                f"[{'LEFT' if move_x < 0 else 'RIGHT' if move_x > 0 else ''} "
+                f"{'UP' if move_y > 0 else 'DOWN' if move_y < 0 else ''}]"
+            )
             
-        self.logging.debug(f"[MOVEMENT] Executing {movement_type} movement: [{'LEFT' if move_x < 0 else 'RIGHT' if move_x > 0 else ''} {'UP' if move_y > 0 else 'DOWN' if move_y < 0 else ''}]")
-        time.sleep(0.2)  # Base movement delay
+            # Wait after complete movement
+            time.sleep(post_move_delay)
+            
+        except Exception as e:
+            self.logging.error(f"[MOVEMENT] Error executing movement: {e}")
+            time.sleep(post_move_delay)  # Still wait even if there's an error
 
     def move_to_coordinates(self, target_x: int, target_y: int):
-        """Modified movement method with enhanced wall detection and pathfinding"""
+        """Enhanced movement method with better stuck handling"""
         self.current_path = []
         positions_history = []
-        last_wall_check = 0
-        wall_check_interval = 3  # Check for walls every 3 positions
+        stuck_count = 0
+        escape_attempt = 0
+        last_pos = None
+        
+        self.logging.info(f"[MOVEMENT] Starting movement to target [{target_x}, {target_y}]")
         
         if not self.get_current_coords_from_game():
             self.logging.error("[MOVEMENT] Failed to get initial position")
@@ -516,46 +704,72 @@ class GameBot:
             current_x, current_y = self._fetch_position()
             positions_history.append((current_x, current_y))
             
+            # Log current status with target distance
+            dx = target_x - current_x
+            dy = target_y - current_y
+            dist = abs(dx) + abs(dy)
+            self.logging.info(f"[STATUS] Pos:[{current_x},{current_y}] Target:[{target_x},{target_y}] Dist:{dist}")
+            
+            # Check if we've reached destination
+            if abs(dx) <= 10 and abs(dy) <= 10:
+                self.logging.info(f"[MOVEMENT] ✅ Reached destination!")
+                self.check_and_click_play(target_x, target_y)
+                break
+                
+            # Detect stuck condition
+            if last_pos == (current_x, current_y):
+                stuck_count += 1
+                if stuck_count >= 3:  # Stuck for 3 consecutive checks
+                    self.logging.warning(f"[STUCK] 🚫 Stuck for {stuck_count} moves at [{current_x},{current_y}]")
+                    
+                    # Try escape movement
+                    move_x, move_y, move_type = self.calculate_escape_vector(
+                        (current_x, current_y),
+                        blocked_directions,
+                        escape_attempt
+                    )
+                    escape_attempt += 1
+                    
+                    # If we've tried escaping multiple times without success, reset position
+                    if escape_attempt >= 5:
+                        self.logging.warning(f"[RESET] 🔄 Failed to escape after {escape_attempt} attempts, resetting position")
+                        self.move_to_location(map_name=current_map, stuck=True)
+                        stuck_count = 0
+                        escape_attempt = 0
+                        positions_history.clear()
+                        blocked_directions.clear()
+                        continue
+            else:
+                stuck_count = 0
+                if escape_attempt > 0:  # If we moved, reset escape attempt counter
+                    escape_attempt = 0
+                    
+            last_pos = (current_x, current_y)
+            
             # Keep history manageable
             if len(positions_history) > 10:
                 positions_history.pop(0)
                 
-            # Calculate distances
-            dx = target_x - current_x
-            dy = target_y - current_y
-            
-            # Check if we've reached the destination
-            if abs(dx) <= 10 and abs(dy) <= 10:
-                self.logging.info(f"[MOVEMENT] ✅ Reached destination: [{current_x}, {current_y}]")
-                self.check_and_click_play(target_x, target_y)
-                break
+            # Check for walls
+            is_wall, new_blocked = self.detect_wall(positions_history, (current_x, current_y))
+            if is_wall:
+                blocked_directions.update(new_blocked)
                 
-            # Check for walls periodically
-            if len(positions_history) - last_wall_check >= wall_check_interval:
-                is_wall, new_blocked = self.detect_wall(positions_history, (current_x, current_y))
-                if is_wall:
-                    blocked_directions.update(new_blocked)
-                    self.logging.warning(f"[MOVEMENT] 🚧 Wall detected! Blocked directions: {blocked_directions}")
-                last_wall_check = len(positions_history)
+            # Calculate movement
+            if stuck_count >= 3:
+                move_x, move_y, move_type = self.calculate_escape_vector(
+                    (current_x, current_y),
+                    blocked_directions,
+                    escape_attempt
+                )
+            else:
+                move_x, move_y, move_type = self.calculate_movement_vector(
+                    current_x, current_y, target_x, target_y, blocked_directions
+                )
                 
-            # Calculate and execute movement
-            move_x, move_y, move_type = self.calculate_movement_vector(
-                current_x, current_y, target_x, target_y, blocked_directions
-            )
-            
+            # Execute movement
             self.execute_movement(move_x, move_y, move_type)
-            
-            # If we're stuck for too long, reset
-            if len(positions_history) >= 10:
-                x_variation = max(p[0] for p in positions_history) - min(p[0] for p in positions_history)
-                y_variation = max(p[1] for p in positions_history) - min(p[1] for p in positions_history)
-                
-                if x_variation <= 3 and y_variation <= 3:
-                    self.logging.warning(f"[MOVEMENT] 🔄 Stuck detected at [{current_x}, {current_y}], resetting to {current_map}")
-                    self.move_to_location(map_name=current_map, stuck=True)
-                    blocked_directions.clear()
-                    positions_history.clear()
-                    continue
+            time.sleep(0.2)  # Small delay between movements
 
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
