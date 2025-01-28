@@ -1,12 +1,12 @@
 {
     "level_thresholds": {
-        "280": {
-            "map": "losttower5",
-            "location": [130,39]
+        "140": {
+            "map": "tarkan",
+            "location": [123,91]
         },
-        "150": {
-            "map": "losttower",
-            "location": [221,82]
+        "50": {
+            "map": "dungeon2",
+            "location": [208,128]
         },
         "0": {
             "map": "lorencia",
@@ -20,7 +20,7 @@
         "energy": 0.1
     },
     "max_level": 400,
-    "reset_level": 380,
+    "reset_level": 390,
     "coordinate_samples": 3,
     "error_threshold": 3,
     "check_interval": 15,
