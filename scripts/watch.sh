@@ -1,0 +1,1 @@
+while true; do clear; cat /c/Users/mirod/OneDrive/Documentos/Proyectos/mu/json/current_status.json; sleep 2; done
