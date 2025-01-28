@@ -25,7 +25,87 @@ class GameBot:
         self.record_good_path = False
         self.reference_point = None
         self.first_time = True
+        self.current_path = []  # Store coordinates for current path
+        self.good_paths = {}  # Dictionary to store successful paths by destination
         
+
+    def save_good_path(self, target_x: int, target_y: int):
+        """
+        Save the current path as a good path for reaching the target coordinates.
+        """
+        path_key = f"{target_x},{target_y}"
+        if self.current_path:
+            self.good_paths[path_key] = self.current_path.copy()
+            self.logging.info(f"Saved good path to {path_key} with {len(self.current_path)} coordinates")
+            
+            # Optionally save to file for persistence
+            try:
+                path_file = f"good_path_{path_key}.txt"
+                with open(path_file, 'w') as f:
+                    for coord in self.current_path:
+                        f.write(f"{coord[0]},{coord[1]}\n")
+                self.logging.info(f"Saved path to file: {path_file}")
+            except Exception as e:
+                self.logging.error(f"Error saving path to file: {e}")
+                
+    def is_position_blocked(self, x: int, y: int, direction: str, history: list) -> bool:
+        """
+        Check if a position has been blocked recently based on movement history
+        Returns True if the position appears to be blocked
+        """
+        for pos, dir in history[-5:]:  # Check last 5 movements
+            if abs(pos[0] - x) < 3 and abs(pos[1] - y) < 3 and dir == direction:
+                return True
+        return False
+    
+    def format_movement_log(self, current_x: int, current_y: int, target_x: int, target_y: int, blocked: set = None, status: str = "") -> str:
+        """Format a concise movement log string"""
+        dx = target_x - current_x
+        dy = target_y - current_y
+        dist = abs(dx) + abs(dy)
+        blocked_str = f"[Blocked: {','.join(blocked)}]" if blocked else ""
+        status_str = f" | {status}" if status else ""
+        return (f"[POS] Current:[{current_x},{current_y}] → Target:[{target_x},{target_y}] | " f"Δ[{dx},{dy}] | Dist:{dist}{blocked_str}{status_str}")
+
+    def find_alternative_route(self, current_x: int, current_y: int, target_x: int, target_y: int, blocked_directions: set, history: list) -> tuple:
+        """
+        Find an alternative route when direct path is blocked
+        Returns the best available direction as (dx, dy)
+        """
+        possible_moves = []
+        dx = target_x - current_x
+        dy = target_y - current_y
+        
+        # Calculate all possible 45-degree movements
+        directions = [
+            ('NE', 1, 1), ('NW', -1, 1), ('SE', 1, -1), ('SW', -1, -1),
+            ('N', 0, 1), ('S', 0, -1), ('E', 1, 0), ('W', -1, 0)
+        ]
+        
+        for name, move_x, move_y in directions:
+            if name in blocked_directions:
+                continue
+                
+            # Score this move based on how much closer it gets us to the target
+            new_x = current_x + (move_x * 10)  # Project the position forward
+            new_y = current_y + (move_y * 10)
+            current_dist = abs(dx) + abs(dy)
+            new_dist = abs(target_x - new_x) + abs(target_y - new_y)
+            improvement = current_dist - new_dist
+            
+            if not self.is_position_blocked(new_x, new_y, name, history):
+                possible_moves.append((improvement, move_x, move_y, name))
+                self.logging.debug(f"[ROUTE] Possible move {name}: improvement={improvement}")
+        
+        if not possible_moves:
+            self.logging.warning(f"[ROUTE] ⚠️ No valid moves found! Blocked directions: {blocked_directions}")
+            return (0, 0)  # No valid moves found
+            
+        # Choose the best move
+        possible_moves.sort(reverse=True)  # Sort by improvement
+        return (possible_moves[0][1], possible_moves[0][2])
+
+
 
     # Update _fetch_position in GameBot class:
     def _fetch_position(self):
@@ -38,51 +118,37 @@ class GameBot:
         """
         time.sleep(0.1)
         raw_data = self.interface.get_position_data(with_comma=True)
+        self.logging.debug(f"[POSITION] Raw position data: '{raw_data}'")
         
         # Try comma-separated format first
         if ',' in raw_data:
-            x, y = raw_data.split(',')
             try:
-                return int(x.strip()), int(y.strip())
-            except ValueError:
-                pass
-                
-        # Handle case where comma is missing but numbers are distinct
-        raw_data = raw_data.strip()
-        if raw_data.isdigit():
-            # Assume format like "133473" means "133,473"
-            str_len = len(raw_data)
-            if 4 <= str_len <= 8:  # Reasonable coordinate ranges
-                mid = str_len // 2
-                try:
-                    x = int(raw_data[:mid])
-                    y = int(raw_data[mid:])
-                    if 0 <= x <= 999 and 0 <= y <= 999:  # Validate ranges
-                        return x, y
-                except ValueError:
-                    pass
-                    
-        raise ValueError(f"Invalid coordinate format: '{raw_data}'")
+                x, y = raw_data.split(',')
+                x, y = int(x.strip()), int(y.strip())
+                self.logging.debug(f"[POSITION] Parsed coordinates: [{x}, {y}]")
+                return x, y
+            except ValueError as e:
+                self.logging.debug(f"[POSITION] Failed to parse comma format: {e}")
 
-    def get_current_coords_from_game(self, retries=900, delay=1):
-        """
-        Intenta obtener la posición actual con reintentos.
-        Args:
-            retries: Número máximo de intentos
-            delay: Tiempo entre intentos
-        Returns:
-            bool: True si tuvo éxito, False si no
-        """
-        for attempt in range(retries):
-            try:
-                x, y = self._fetch_position() 
-                self.interface.set_current_coords([x,y])
-                return True
-            except Exception as e:
-                self.logging.warning(f"Attempt {attempt + 1} failed: {e}")
-                if attempt < retries - 1:
-                    time.sleep(delay)
-        return False
+        def get_current_coords_from_game(self, retries=900, delay=1):
+            """
+            Intenta obtener la posición actual con reintentos.
+            Args:
+                retries: Número máximo de intentos
+                delay: Tiempo entre intentos
+            Returns:
+                bool: True si tuvo éxito, False si no
+            """
+            for attempt in range(retries):
+                try:
+                    x, y = self._fetch_position() 
+                    self.interface.set_current_coords([x,y])
+                    return True
+                except Exception as e:
+                    self.logging.warning(f"Attempt {attempt + 1} failed: {e}")
+                    if attempt < retries - 1:
+                        time.sleep(delay)
+            return False
 
     def distribute_attributes(self):
         """Distribuye puntos de atributos disponibles según la configuración."""
@@ -274,72 +340,222 @@ class GameBot:
         # Ponete a farmear
         elif mu_helper_active:
             self.check_level_kill_or_reset(level=level)
+            
+    def load_good_path(self, target_x: int, target_y: int):
+        """
+        Load a previously saved good path for the target coordinates.
+        Returns None if no path exists.
+        """
+        path_key = f"{target_x},{target_y}"
+        
+        # First try memory
+        if path_key in self.good_paths:
+            return self.good_paths[path_key]
+            
+        # Then try file
+        try:
+            path_file = f"good_path_{path_key}.txt"
+            if os.path.exists(path_file):
+                path = []
+                with open(path_file, 'r') as f:
+                    for line in f:
+                        x, y = map(int, line.strip().split(','))
+                        path.append((x, y))
+                self.good_paths[path_key] = path  # Cache in memory
+                return path
+        except Exception as e:
+            self.logging.error(f"Error loading path from file: {e}")
+        
+        return None
+    
+    def get_current_coords_from_game(self, retries=3, delay=1):
+        """
+        Intenta obtener la posición actual con reintentos.
+        Args:
+            retries: Número máximo de intentos
+            delay: Tiempo entre intentos
+        Returns:
+            bool: True si tuvo éxito, False si no
+        """
+        for attempt in range(retries):
+            try:
+                x, y = self._fetch_position() 
+                self.interface.set_current_coords([x,y])
+                self.logging.info(f"[POSITION] Successfully got coordinates: [{x}, {y}] (attempt {attempt + 1})")
+                return True
+            except Exception as e:
+                self.logging.warning(f"[POSITION] ⚠️ Attempt {attempt + 1} failed: {str(e)}")
+                if attempt < retries - 1:
+                    time.sleep(delay)
+        return False
+    
+    
+    def detect_wall(self, positions_history, current_pos):
+        """
+        Detect if there's a wall by analyzing recent position history
+        Returns: tuple (is_wall, blocked_directions)
+        """
+        if len(positions_history) < 3:
+            return False, set()
+            
+        # Check last few positions for minimal movement
+        last_positions = positions_history[-5:]
+        x_values = [pos[0] for pos in last_positions]
+        y_values = [pos[1] for pos in last_positions]
+        
+        x_movement = max(x_values) - min(x_values)
+        y_movement = max(y_values) - min(y_values)
+        
+        blocked_directions = set()
+        
+        # If we're not moving in x direction despite trying
+        if x_movement <= 2:
+            if current_pos[0] > positions_history[-5][0]:
+                blocked_directions.add('W')  # Wall on the left
+            else:
+                blocked_directions.add('E')  # Wall on the right
+                
+        # If we're not moving in y direction despite trying
+        if y_movement <= 2:
+            if current_pos[1] > positions_history[-5][1]:
+                blocked_directions.add('S')  # Wall below
+            else:
+                blocked_directions.add('N')  # Wall above
+                
+        return len(blocked_directions) > 0, blocked_directions
+
+    def calculate_movement_vector(self, current_x, current_y, target_x, target_y, blocked_directions):
+        """
+        Calculate movement vector considering blocked directions
+        Returns: tuple (dx, dy, movement_type)
+        """
+        dx = target_x - current_x
+        dy = target_y - current_y
+        
+        # Base movement vectors
+        vectors = {
+            'N': (0, 1),
+            'S': (0, -1),
+            'E': (1, 0),
+            'W': (-1, 0),
+            'NE': (1, 1),
+            'NW': (-1, 1),
+            'SE': (1, -1),
+            'SW': (-1, -1)
+        }
+        
+        # Determine primary direction needed
+        primary_dir = ''
+        if abs(dx) > abs(dy):
+            primary_dir = 'E' if dx > 0 else 'W'
+        else:
+            primary_dir = 'N' if dy > 0 else 'S'
+            
+        # If primary direction is blocked, try alternatives
+        if primary_dir in blocked_directions:
+            # Try diagonal movements
+            if 'N' not in blocked_directions and dy > 0:
+                if 'E' not in blocked_directions and dx > 0:
+                    return vectors['NE'][0], vectors['NE'][1], 'diagonal'
+                elif 'W' not in blocked_directions and dx < 0:
+                    return vectors['NW'][0], vectors['NW'][1], 'diagonal'
+            elif 'S' not in blocked_directions and dy < 0:
+                if 'E' not in blocked_directions and dx > 0:
+                    return vectors['SE'][0], vectors['SE'][1], 'diagonal'
+                elif 'W' not in blocked_directions and dx < 0:
+                    return vectors['SW'][0], vectors['SW'][1], 'diagonal'
+                    
+            # If diagonals don't work, try perpendicular movement
+            if primary_dir in ['E', 'W']:
+                if 'N' not in blocked_directions:
+                    return vectors['N'][0], vectors['N'][1], 'alternate'
+                elif 'S' not in blocked_directions:
+                    return vectors['S'][0], vectors['S'][1], 'alternate'
+            else:
+                if 'E' not in blocked_directions:
+                    return vectors['E'][0], vectors['E'][1], 'alternate'
+                elif 'W' not in blocked_directions:
+                    return vectors['W'][0], vectors['W'][1], 'alternate'
+        
+        # Default to primary direction if not blocked
+        return vectors[primary_dir][0], vectors[primary_dir][1], 'primary'
+
+    def execute_movement(self, move_x, move_y, movement_type):
+        """Execute the movement with proper delays and logging"""
+        if move_x < 0:
+            self.interface.arrow_key_left()
+        elif move_x > 0:
+            self.interface.arrow_key_right()
+            
+        if move_y < 0:
+            self.interface.arrow_key_down()
+        elif move_y > 0:
+            self.interface.arrow_key_up()
+            
+        self.logging.debug(f"[MOVEMENT] Executing {movement_type} movement: [{'LEFT' if move_x < 0 else 'RIGHT' if move_x > 0 else ''} {'UP' if move_y > 0 else 'DOWN' if move_y < 0 else ''}]")
+        time.sleep(0.2)  # Base movement delay
 
     def move_to_coordinates(self, target_x: int, target_y: int):
-        """Movement without stats window toggling"""
+        """Modified movement method with enhanced wall detection and pathfinding"""
+        self.current_path = []
+        positions_history = []
+        last_wall_check = 0
+        wall_check_interval = 3  # Check for walls every 3 positions
         
         if not self.get_current_coords_from_game():
-            self.logging.error("Failed to get initial position")
+            self.logging.error("[MOVEMENT] Failed to get initial position")
             return
-        
-        stuck_count = 0
-        move_delay = 0.2
+            
         current_state = self.config.get_game_state()
         current_map = self.interface.get_current_map(current_state)
-
+        blocked_directions = set()
+        
         while True:
-            
-            # Store previous coordinates
-            current_state = self.config.get_game_state()
-            logging.debug("BEFORE LASTSS")
-            logging.debug(self.interface.get_current_coords(current_state))
-            last_x, last_y = self.interface.get_current_coords(current_state)
-            logging.debug(f"X: {last_x}")
-            logging.debug(f"Y: {last_y}")
-            dx = target_x - last_x
-            dy = target_y - last_y
-            
-            self.logging.debug(f"DX -> {dx}")
-            self.logging.debug(f"DY -> {dy}")
-            
-            # Get new coordinates
+            # Get current position
             self.get_current_coords_from_game()
-            current_state = self.config.get_game_state()
-            now_x, now_y = self._fetch_position() 
+            current_x, current_y = self._fetch_position()
+            positions_history.append((current_x, current_y))
             
-            # Compare with previous position
-            position_change = abs(now_x - last_x) + abs(now_y - last_y)
-            self.logging.debug(f"POSITION change -> {position_change}")
-            if position_change < 2 and (abs(dx) > 5 or abs(dy) > 5):
-                stuck_count += 1
-                if stuck_count >= 5:
-                    self.logging.debug(f"Character it got stuck in some place, will move to {current_map}")
-                    self.move_to_location(map_name=current_map, stuck=True)
-                    stuck_count = 0
-                    continue
-            else:
-                stuck_count = 0
-
-            if abs(dx) > 10 or abs(dy) > 10:
-                if abs(dx) > 10:
-                    if dx < 0:
-                        self.interface.arrow_key_left()
-                        
-                    else:
-                        self.interface.arrow_key_right()
+            # Keep history manageable
+            if len(positions_history) > 10:
+                positions_history.pop(0)
                 
-                if abs(dy) > 10:
-                    if dy < 0:
-                        self.interface.arrow_key_down()
-                    else:
-                        self.interface.arrow_key_up()
-
-                self.get_current_coords_from_game()
-                self.logging.debug(f"Actual position: [{last_x},{last_y}]")
-                time.sleep(move_delay)
-            else:
+            # Calculate distances
+            dx = target_x - current_x
+            dy = target_y - current_y
+            
+            # Check if we've reached the destination
+            if abs(dx) <= 10 and abs(dy) <= 10:
+                self.logging.info(f"[MOVEMENT] ✅ Reached destination: [{current_x}, {current_y}]")
                 self.check_and_click_play(target_x, target_y)
                 break
+                
+            # Check for walls periodically
+            if len(positions_history) - last_wall_check >= wall_check_interval:
+                is_wall, new_blocked = self.detect_wall(positions_history, (current_x, current_y))
+                if is_wall:
+                    blocked_directions.update(new_blocked)
+                    self.logging.warning(f"[MOVEMENT] 🚧 Wall detected! Blocked directions: {blocked_directions}")
+                last_wall_check = len(positions_history)
+                
+            # Calculate and execute movement
+            move_x, move_y, move_type = self.calculate_movement_vector(
+                current_x, current_y, target_x, target_y, blocked_directions
+            )
+            
+            self.execute_movement(move_x, move_y, move_type)
+            
+            # If we're stuck for too long, reset
+            if len(positions_history) >= 10:
+                x_variation = max(p[0] for p in positions_history) - min(p[0] for p in positions_history)
+                y_variation = max(p[1] for p in positions_history) - min(p[1] for p in positions_history)
+                
+                if x_variation <= 3 and y_variation <= 3:
+                    self.logging.warning(f"[MOVEMENT] 🔄 Stuck detected at [{current_x}, {current_y}], resetting to {current_map}")
+                    self.move_to_location(map_name=current_map, stuck=True)
+                    blocked_directions.clear()
+                    positions_history.clear()
+                    continue
 
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
