@@ -1,17 +1,17 @@
 {
-    "current_reset": 19,
-    "current_level": 1,
-    "current_map": "lorencia",
+    "current_reset": 22,
+    "current_level": 160,
+    "current_map": "tarkan",
     "current_location": [
-        133,
-        169
+        188,
+        69
     ],
-    "available_points": 0,
-    "current_strenght": 4744,
-    "current_agility": 700,
-    "current_vitality": 700,
-    "current_energy": 700,
-    "current_command": 700,
+    "available_points": 421,
+    "current_strenght": 5722,
+    "current_agility": 838,
+    "current_vitality": 795,
+    "current_energy": 755,
+    "current_command": 755,
     "current_coords": [],
     "mulheper_active": false
 }

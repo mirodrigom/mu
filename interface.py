@@ -240,17 +240,33 @@ class Interface:
         self.set_current_map(map_name = map_name)
         self.window_stats_open = False
         
-    def arrow_key_up(self):
-        self.press_key("up")
-        
-    def arrow_key_down(self):
-        self.press_key("down")
-    
-    def arrow_key_left(self):
-        self.press_key("left")
-        
-    def arrow_key_right(self):
-        self.press_key("right")
+    def arrow_key_left(self, press=True, release=False):
+        """Enhanced arrow key control with press/release options"""
+        if press:
+            pyautogui.keyDown('left')
+        if release:
+            pyautogui.keyUp('left')
+            
+    def arrow_key_right(self, press=True, release=False):
+        """Enhanced arrow key control with press/release options"""
+        if press:
+            pyautogui.keyDown('right')
+        if release:
+            pyautogui.keyUp('right')
+            
+    def arrow_key_up(self, press=True, release=False):
+        """Enhanced arrow key control with press/release options"""
+        if press:
+            pyautogui.keyDown('up')
+        if release:
+            pyautogui.keyUp('up')
+            
+    def arrow_key_down(self, press=True, release=False):
+        """Enhanced arrow key control with press/release options"""
+        if press:
+            pyautogui.keyDown('down')
+        if release:
+            pyautogui.keyUp('down')
         
     def open_stats_window(self):
         time.sleep(2)

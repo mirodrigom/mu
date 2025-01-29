@@ -390,92 +390,108 @@ class GameBot:
         return False
     
     def detect_wall(self, positions_history, current_pos):
-        """
-        Enhanced wall detection with better stuck detection
-        """
-        if len(positions_history) < 3:
+        """Enhanced wall detection with pattern recognition"""
+        if len(positions_history) < 5:
             return False, set()
             
         # Check for complete immobility
         recent_positions = positions_history[-5:]
         if all(pos == recent_positions[0] for pos in recent_positions):
             self.logging.warning(f"[WALL] 🚫 Complete stuck detected at {current_pos}")
-            return True, {'N', 'S', 'E', 'W'}  # All directions blocked
+            return True, {'N', 'S', 'E', 'W'}
             
-        x_values = [pos[0] for pos in positions_history[-5:]]
-        y_values = [pos[1] for pos in positions_history[-5:]]
+        # Analyze movement patterns
+        x_values = [pos[0] for pos in positions_history[-7:]]
+        y_values = [pos[1] for pos in positions_history[-7:]]
         
         x_movement = max(x_values) - min(x_values)
         y_movement = max(y_values) - min(y_values)
         
         blocked_directions = set()
         
-        # More aggressive wall detection
-        if x_movement <= 2:
-            if abs(current_pos[0] - positions_history[-5][0]) < 2:
-                blocked_directions.add('W')
-                blocked_directions.add('E')
-                self.logging.warning(f"[WALL] ⬅️➡️ X-axis movement blocked at x={current_pos[0]}")
-                
-        if y_movement <= 2:
-            if abs(current_pos[1] - positions_history[-5][1]) < 2:
-                blocked_directions.add('N')
-                blocked_directions.add('S')
-                self.logging.warning(f"[WALL] ⬆️⬇️ Y-axis movement blocked at y={current_pos[1]}")
-                
-        return len(blocked_directions) > 0, blocked_directions
-
-    def calculate_escape_vector(self, current_pos, blocked_directions, attempt=0, target_pos=None):
-        """
-        Calculate escape vector when stuck, with smarter pattern selection
-        """
-        # If we have target position, calculate desired direction
+        # Detect horizontal walls
+        if y_movement <= 3:
+            consecutive_y = sum(1 for i in range(len(y_values)-1) if abs(y_values[i] - y_values[i+1]) <= 1)
+            if consecutive_y >= 4:
+                if current_pos[1] >= positions_history[-5][1]:
+                    blocked_directions.add('N')
+                    self.logging.warning(f"[WALL] ⬆️ North movement blocked at y={current_pos[1]}")
+                else:
+                    blocked_directions.add('S')
+                    self.logging.warning(f"[WALL] ⬇️ South movement blocked at y={current_pos[1]}")
+        
+        # Detect vertical walls
+        if x_movement <= 3:
+            consecutive_x = sum(1 for i in range(len(x_values)-1) if abs(x_values[i] - x_values[i+1]) <= 1)
+            if consecutive_x >= 4:
+                if current_pos[0] >= positions_history[-5][0]:
+                    blocked_directions.add('E')
+                    self.logging.warning(f"[WALL] ➡️ East movement blocked at x={current_pos[0]}")
+                else:
+                    blocked_directions.add('W')
+                    self.logging.warning(f"[WALL] ⬅️ West movement blocked at x={current_pos[0]}")
+        
+        # Detect diagonal walls
+        if len(positions_history) >= 7:
+            diagonal_movement = sum(
+                abs(positions_history[i+1][0] - positions_history[i][0]) +
+                abs(positions_history[i+1][1] - positions_history[i][1])
+                for i in range(len(positions_history)-2)
+            )
+            if diagonal_movement <= 5:
+                self.logging.warning("[WALL] Diagonal movement appears blocked")
+                blocked_directions.update({'NE', 'NW', 'SE', 'SW'})
+        
+        return bool(blocked_directions), blocked_directions
+    
+    def calculate_escape_vector(self, current_pos, blocked_directions, attempt, target_pos=None):
+        """Improved escape vector calculation with target-aware navigation"""
+        escape_patterns = []
+        
+        # If we have a target, prioritize movements that get us closer
         if target_pos:
             dx = target_pos[0] - current_pos[0]
             dy = target_pos[1] - current_pos[1]
-            target_direction = ''
             
-            if dy > 0:  # Need to go up
-                if dx < 0:  # Need to go left
-                    primary_patterns = ['NW', 'W', 'N', 'SW', 'NE']
-                else:  # Need to go right
-                    primary_patterns = ['NE', 'E', 'N', 'SE', 'NW']
-            else:  # Need to go down
-                if dx < 0:  # Need to go left
-                    primary_patterns = ['SW', 'W', 'S', 'NW', 'SE']
-                else:  # Need to go right
-                    primary_patterns = ['SE', 'E', 'S', 'NE', 'SW']
+            # Determine primary movement direction based on target
+            if abs(dx) > abs(dy):
+                if dx > 0:  # Need to go right
+                    escape_patterns = ['NE', 'E', 'SE', 'N', 'S', 'NW', 'SW', 'W']
+                else:  # Need to go left
+                    escape_patterns = ['NW', 'W', 'SW', 'N', 'S', 'NE', 'SE', 'E']
+            else:
+                if dy > 0:  # Need to go up
+                    escape_patterns = ['NE', 'N', 'NW', 'E', 'W', 'SE', 'SW', 'S']
+                else:  # Need to go down
+                    escape_patterns = ['SE', 'S', 'SW', 'E', 'W', 'NE', 'NW', 'N']
         else:
-            # If no target, use default pattern order
-            primary_patterns = ['NE', 'NW', 'SE', 'SW', 'N', 'S', 'E', 'W']
-
-        # Get pattern based on attempt number
-        pattern_index = attempt % len(primary_patterns)
-        chosen_pattern = primary_patterns[pattern_index]
+            # Default escape patterns if no target
+            escape_patterns = ['NE', 'NW', 'SE', 'SW', 'N', 'S', 'E', 'W']
         
-        # Define movement vectors for each pattern
+        # Movement vectors with varying intensities
         vectors = {
-            'N': (0, 2),     # Strong up
-            'S': (0, -2),    # Strong down
-            'E': (2, 0),     # Strong right
-            'W': (-2, 0),    # Strong left
-            'NE': (1, 1),    # Northeast
-            'NW': (-1, 1),   # Northwest
-            'SE': (1, -1),   # Southeast
-            'SW': (-1, -1),  # Southwest
+            'N': (0, 2),     'S': (0, -2),    'E': (2, 0),     'W': (-2, 0),
+            'NE': (1, 1),    'NW': (-1, 1),   'SE': (1, -1),   'SW': (-1, -1),
+            'N2': (0, 3),    'S2': (0, -3),   'E2': (3, 0),    'W2': (-3, 0),
+            'NE2': (2, 2),   'NW2': (-2, 2),  'SE2': (2, -2),  'SW2': (-2, -2)
         }
         
-        # Try patterns in order until we find one that's not blocked
-        for pattern in primary_patterns[pattern_index:] + primary_patterns[:pattern_index]:
-            if pattern not in blocked_directions:
-                self.logging.info(f"[ESCAPE] Trying escape pattern: {pattern} (attempt {attempt})")
-                return vectors[pattern][0], vectors[pattern][1], f'escape_{pattern}'
+        # Determine pattern based on attempt number and blocked directions
+        available_patterns = [p for p in escape_patterns if p not in blocked_directions]
+        if not available_patterns:
+            # If all normal directions are blocked, try stronger movements
+            available_patterns = [p + '2' for p in escape_patterns if p + '2' not in blocked_directions]
         
-        # If all normal patterns are blocked, try a more aggressive random movement
-        random_x = (-1)**(attempt % 2) * (2 if attempt % 3 == 0 else 1)
-        random_y = (-1)**((attempt + 1) % 2) * (2 if attempt % 3 != 0 else 1)
+        if available_patterns:
+            pattern = available_patterns[attempt % len(available_patterns)]
+            vector = vectors[pattern]
+            return vector[0], vector[1], f'escape_{pattern}'
         
-        self.logging.warning(f"[ESCAPE] All patterns blocked! Using random movement (attempt {attempt})")
+        # Last resort: random movement with varying intensity
+        intensity = 1 + (attempt % 3)
+        random_x = (-1)**(attempt % 2) * intensity
+        random_y = (-1)**((attempt + 1) % 2) * intensity
+        
         return random_x, random_y, 'escape_random'
 
     def move_to_coordinates(self, target_x: int, target_y: int):
@@ -576,117 +592,133 @@ class GameBot:
 
     def calculate_movement_vector(self, current_x, current_y, target_x, target_y, blocked_directions):
         """
-        Calculate movement vector considering blocked directions
+        Calculate movement vector with improved diagonal movement for MU Online
         Returns: tuple (dx, dy, movement_type)
         """
         dx = target_x - current_x
         dy = target_y - current_y
         
-        # Base movement vectors
-        vectors = {
-            'N': (0, 1),
-            'S': (0, -1),
-            'E': (1, 0),
-            'W': (-1, 0),
-            'NE': (1, 1),
-            'NW': (-1, 1),
-            'SE': (1, -1),
-            'SW': (-1, -1)
-        }
+        # Determine which diagonal direction would be most efficient
+        diagonal_move = None
+        if dx > 0 and dy > 0 and 'NE' not in blocked_directions:
+            diagonal_move = ('NE', 1, 1)
+        elif dx < 0 and dy > 0 and 'NW' not in blocked_directions:
+            diagonal_move = ('NW', -1, 1)
+        elif dx > 0 and dy < 0 and 'SE' not in blocked_directions:
+            diagonal_move = ('SE', 1, -1)
+        elif dx < 0 and dy < 0 and 'SW' not in blocked_directions:
+            diagonal_move = ('SW', -1, -1)
         
-        # Determine primary direction needed
-        primary_dir = ''
-        if abs(dx) > abs(dy):
-            primary_dir = 'E' if dx > 0 else 'W'
-        else:
-            primary_dir = 'N' if dy > 0 else 'S'
+        # If diagonal movement is possible and beneficial, use it
+        if diagonal_move and abs(dx) > 5 and abs(dy) > 5:
+            return diagonal_move[1], diagonal_move[2], f'diagonal_{diagonal_move[0]}'
             
-        # If primary direction is blocked, try alternatives
-        if primary_dir in blocked_directions:
-            # Try diagonal movements
-            if 'N' not in blocked_directions and dy > 0:
-                if 'E' not in blocked_directions and dx > 0:
-                    return vectors['NE'][0], vectors['NE'][1], 'diagonal'
-                elif 'W' not in blocked_directions and dx < 0:
-                    return vectors['NW'][0], vectors['NW'][1], 'diagonal'
-            elif 'S' not in blocked_directions and dy < 0:
-                if 'E' not in blocked_directions and dx > 0:
-                    return vectors['SE'][0], vectors['SE'][1], 'diagonal'
-                elif 'W' not in blocked_directions and dx < 0:
-                    return vectors['SW'][0], vectors['SW'][1], 'diagonal'
-                    
-            # If diagonals don't work, try perpendicular movement
-            if primary_dir in ['E', 'W']:
-                if 'N' not in blocked_directions:
-                    return vectors['N'][0], vectors['N'][1], 'alternate'
-                elif 'S' not in blocked_directions:
-                    return vectors['S'][0], vectors['S'][1], 'alternate'
-            else:
-                if 'E' not in blocked_directions:
-                    return vectors['E'][0], vectors['E'][1], 'alternate'
-                elif 'W' not in blocked_directions:
-                    return vectors['W'][0], vectors['W'][1], 'alternate'
-        
-        # Default to primary direction if not blocked
-        return vectors[primary_dir][0], vectors[primary_dir][1], 'primary'
+        # If diagonal isn't possible, try cardinal directions
+        if abs(dx) > abs(dy):
+            if dx > 0 and 'E' not in blocked_directions:
+                return 1, 0, 'cardinal_E'
+            elif dx < 0 and 'W' not in blocked_directions:
+                return -1, 0, 'cardinal_W'
+        else:
+            if dy > 0 and 'N' not in blocked_directions:
+                return 0, 1, 'cardinal_N'
+            elif dy < 0 and 'S' not in blocked_directions:
+                return 0, -1, 'cardinal_S'
+                
+        # If primary direction is blocked, try alternate route
+        if dx > 0 and dy > 0:
+            if 'E' not in blocked_directions:
+                return 1, 0, 'alternate_E'
+            elif 'N' not in blocked_directions:
+                return 0, 1, 'alternate_N'
+        elif dx < 0 and dy > 0:
+            if 'W' not in blocked_directions:
+                return -1, 0, 'alternate_W'
+            elif 'N' not in blocked_directions:
+                return 0, 1, 'alternate_N'
+        elif dx > 0 and dy < 0:
+            if 'E' not in blocked_directions:
+                return 1, 0, 'alternate_E'
+            elif 'S' not in blocked_directions:
+                return 0, -1, 'alternate_S'
+        elif dx < 0 and dy < 0:
+            if 'W' not in blocked_directions:
+                return -1, 0, 'alternate_W'
+            elif 'S' not in blocked_directions:
+                return 0, -1, 'alternate_S'
+                
+        # If all else fails, return minimal movement
+        return (1 if dx > 0 else -1), (1 if dy > 0 else -1), 'fallback'
 
     def execute_movement(self, move_x, move_y, movement_type):
         """
-        Execute the movement with proper delays and key release checks.
-        Implements more careful key press handling to avoid input conflicts.
+        Execute movement with simultaneous key presses for diagonal movement in MU Online
         """
-        # Base delays
-        key_press_delay = 0.1    # Time to hold a key
-        between_keys_delay = 0.2  # Time between different key presses
-        post_move_delay = 0.3    # Time after complete movement
-        
         try:
-            # Execute X movement first if any
-            if move_x != 0:
+            # Press both keys simultaneously for diagonal movement
+            if move_x != 0 and move_y != 0:
+                # Press both keys
                 if move_x < 0:
-                    self.logging.debug("[MOVEMENT] Pressing LEFT")
-                    self.interface.arrow_key_left()
-                    time.sleep(key_press_delay)
-                elif move_x > 0:
-                    self.logging.debug("[MOVEMENT] Pressing RIGHT")
-                    self.interface.arrow_key_right()
-                    time.sleep(key_press_delay)
+                    self.interface.arrow_key_left(press=True)
+                else:
+                    self.interface.arrow_key_right(press=True)
                     
-                # Wait between different directions
-                time.sleep(between_keys_delay)
-                
-            # Then execute Y movement if any
-            if move_y != 0:
                 if move_y < 0:
-                    self.logging.debug("[MOVEMENT] Pressing DOWN")
-                    self.interface.arrow_key_down()
-                    time.sleep(key_press_delay)
-                elif move_y > 0:
-                    self.logging.debug("[MOVEMENT] Pressing UP")
-                    self.interface.arrow_key_up()
-                    time.sleep(key_press_delay)
+                    self.interface.arrow_key_down(press=True)
+                else:
+                    self.interface.arrow_key_up(press=True)
+                    
+                # Hold for a moment
+                time.sleep(0.15)
+                
+                # Release both keys
+                if move_x < 0:
+                    self.interface.arrow_key_left(release=True)
+                else:
+                    self.interface.arrow_key_right(release=True)
+                    
+                if move_y < 0:
+                    self.interface.arrow_key_down(release=True)
+                else:
+                    self.interface.arrow_key_up(release=True)
+                    
+            # Single direction movement
+            else:
+                if move_x != 0:
+                    if move_x < 0:
+                        self.interface.arrow_key_left(press=True)
+                        time.sleep(0.1)
+                        self.interface.arrow_key_left(release=True)
+                    else:
+                        self.interface.arrow_key_right(press=True)
+                        time.sleep(0.1)
+                        self.interface.arrow_key_right(release=True)
+                        
+                if move_y != 0:
+                    if move_y < 0:
+                        self.interface.arrow_key_down(press=True)
+                        time.sleep(0.1)
+                        self.interface.arrow_key_down(release=True)
+                    else:
+                        self.interface.arrow_key_up(press=True)
+                        time.sleep(0.1)
+                        self.interface.arrow_key_up(release=True)
             
-            # Log the complete movement
-            self.logging.debug(
-                f"[MOVEMENT] Executed {movement_type} movement: "
-                f"[{'LEFT' if move_x < 0 else 'RIGHT' if move_x > 0 else ''} "
-                f"{'UP' if move_y > 0 else 'DOWN' if move_y < 0 else ''}]"
-            )
-            
-            # Wait after complete movement
-            time.sleep(post_move_delay)
+            return True
             
         except Exception as e:
             self.logging.error(f"[MOVEMENT] Error executing movement: {e}")
-            time.sleep(post_move_delay)  # Still wait even if there's an error
+            return False
 
     def move_to_coordinates(self, target_x: int, target_y: int):
-        """Enhanced movement method with better stuck handling"""
+        """Enhanced movement method with improved stuck handling and smoother navigation"""
         self.current_path = []
         positions_history = []
         stuck_count = 0
         escape_attempt = 0
         last_pos = None
+        last_movement_type = None
+        movement_timeout = time.time() + 300  # 5-minute timeout
         
         self.logging.info(f"[MOVEMENT] Starting movement to target [{target_x}, {target_y}]")
         
@@ -697,80 +729,108 @@ class GameBot:
         current_state = self.config.get_game_state()
         current_map = self.interface.get_current_map(current_state)
         blocked_directions = set()
+        last_successful_movement = time.time()
         
         while True:
+            # Timeout check
+            if time.time() > movement_timeout:
+                self.logging.error("[MOVEMENT] Movement timeout reached. Resetting position.")
+                self.move_to_location(map_name=current_map, stuck=True)
+                return
+
             # Get current position
-            self.get_current_coords_from_game()
+            if not self.get_current_coords_from_game():
+                continue
             current_x, current_y = self._fetch_position()
             positions_history.append((current_x, current_y))
             
-            # Log current status with target distance
+            # Calculate distance to target
             dx = target_x - current_x
             dy = target_y - current_y
             dist = abs(dx) + abs(dy)
-            self.logging.info(f"[STATUS] Pos:[{current_x},{current_y}] Target:[{target_x},{target_y}] Dist:{dist}")
             
-            # Check if we've reached destination
+            # Log current status
+            self.logging.info(
+                f"[STATUS] Pos:[{current_x},{current_y}] Target:[{target_x},{target_y}] "
+                f"Dist:{dist} | Last move: {last_movement_type}"
+            )
+            
+            # Check if reached destination
             if abs(dx) <= 10 and abs(dy) <= 10:
                 self.logging.info(f"[MOVEMENT] ✅ Reached destination!")
                 self.check_and_click_play(target_x, target_y)
                 break
-                
-            # Detect stuck condition
+            
+            # Stuck detection with improved logic
             if last_pos == (current_x, current_y):
                 stuck_count += 1
-                if stuck_count >= 3:  # Stuck for 3 consecutive checks
-                    self.logging.warning(f"[STUCK] 🚫 Stuck for {stuck_count} moves at [{current_x},{current_y}]")
+                time_since_movement = time.time() - last_successful_movement
+                
+                if stuck_count >= 3 or time_since_movement > 10:
+                    self.logging.warning(
+                        f"[STUCK] 🚫 Stuck for {stuck_count} moves at [{current_x},{current_y}] "
+                        f"Time since last movement: {time_since_movement:.1f}s"
+                    )
                     
-                    # Try escape movement
+                    # Progressive escape strategy
                     move_x, move_y, move_type = self.calculate_escape_vector(
                         (current_x, current_y),
                         blocked_directions,
-                        escape_attempt
+                        escape_attempt,
+                        (target_x, target_y)
                     )
                     escape_attempt += 1
                     
-                    # If we've tried escaping multiple times without success, reset position
-                    if escape_attempt >= 5:
-                        self.logging.warning(f"[RESET] 🔄 Failed to escape after {escape_attempt} attempts, resetting position")
+                    # Reset position if stuck for too long
+                    if escape_attempt >= 8 or time_since_movement > 30:
+                        self.logging.warning(
+                            f"[RESET] 🔄 Failed to escape after {escape_attempt} attempts "
+                            f"({time_since_movement:.1f}s), resetting position"
+                        )
                         self.move_to_location(map_name=current_map, stuck=True)
-                        stuck_count = 0
-                        escape_attempt = 0
-                        positions_history.clear()
-                        blocked_directions.clear()
-                        continue
+                        return
             else:
-                stuck_count = 0
-                if escape_attempt > 0:  # If we moved, reset escape attempt counter
-                    escape_attempt = 0
+                stuck_count = max(0, stuck_count - 1)  # Gradual reduction of stuck counter
+                if escape_attempt > 0:
+                    escape_attempt = max(0, escape_attempt - 1)
+                    blocked_directions.clear()
+                    last_successful_movement = time.time()
                     
             last_pos = (current_x, current_y)
             
-            # Keep history manageable
-            if len(positions_history) > 10:
+            # Manage position history
+            if len(positions_history) > 15:  # Increased history size
                 positions_history.pop(0)
                 
-            # Check for walls
+            # Enhanced wall detection
             is_wall, new_blocked = self.detect_wall(positions_history, (current_x, current_y))
             if is_wall:
                 blocked_directions.update(new_blocked)
-                
-            # Calculate movement
+                self.logging.warning(f"[WALL] Detected blocked directions: {blocked_directions}")
+            
+            # Movement vector calculation
             if stuck_count >= 3:
                 move_x, move_y, move_type = self.calculate_escape_vector(
                     (current_x, current_y),
                     blocked_directions,
-                    escape_attempt
+                    escape_attempt,
+                    (target_x, target_y)
                 )
             else:
                 move_x, move_y, move_type = self.calculate_movement_vector(
                     current_x, current_y, target_x, target_y, blocked_directions
                 )
                 
-            # Execute movement
-            self.execute_movement(move_x, move_y, move_type)
-            time.sleep(0.2)  # Small delay between movements
-
+            # Execute movement with dynamic delays
+            success = self.execute_movement(move_x, move_y, move_type)
+            if success:
+                last_successful_movement = time.time()
+                
+            # Adaptive delay based on movement success and distance
+            delay = 0.2 if dist > 50 else 0.3
+            delay *= 1.5 if stuck_count > 0 else 1.0
+            time.sleep(delay)
+    
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
         try:
