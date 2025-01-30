@@ -5,14 +5,15 @@
             "location": [123,91]
         },
         "50": {
-            "map": "dungeon2",
-            "location": [208,128]
+            "map": "dungeon3",
+            "location": [32,63]
         },
         "0": {
             "map": "lorencia",
             "location": [128, 200]
         }
     },
+    "application_name": "MEGAMU",
     "stat_distribution": {
         "strenght": 0.7,
         "agility": 0.1,
@@ -23,12 +24,11 @@
     "reset_level": 390,
     "coordinate_samples": 3,
     "error_threshold": 3,
-    "check_interval": 15,
+    "check_interval": 5,
     "ocr_coordinates": {
         "position": [255, 26, 329, 48],
         "reset": [5, 137, 48, 167],
         "level": [42, 112, 84, 135],
-        "play": [300, 65, 307, 71],
         "available_points": [0, 190, 90, 210],
         "attributes": {
             "strenght": {

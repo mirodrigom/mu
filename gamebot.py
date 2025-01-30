@@ -368,7 +368,7 @@ class GameBot:
         
         return None
     
-    def get_current_coords_from_game(self, retries=3, delay=1):
+    def get_current_coords_from_game(self, retries=5, delay=1):
         """
         Intenta obtener la posición actual con reintentos.
         Args:
@@ -386,6 +386,7 @@ class GameBot:
             except Exception as e:
                 self.logging.warning(f"[POSITION] ⚠️ Attempt {attempt + 1} failed: {str(e)}")
                 if attempt < retries - 1:
+                    self.interface.scroll(random_number=True)
                     time.sleep(delay)
         return False
     
@@ -493,7 +494,7 @@ class GameBot:
         random_y = (-1)**((attempt + 1) % 2) * intensity
         
         return random_x, random_y, 'escape_random'
-
+    
     def move_to_coordinates(self, target_x: int, target_y: int):
         """Enhanced movement method with better stuck handling"""
         self.current_path = []
@@ -589,7 +590,7 @@ class GameBot:
             self.execute_movement(move_x, move_y, move_type)
             last_movement_type = move_type
             time.sleep(0.3)  # Slightly longer delay between movements
-
+    
     def calculate_movement_vector(self, current_x, current_y, target_x, target_y, blocked_directions):
         """
         Calculate movement vector with improved diagonal movement for MU Online
@@ -709,7 +710,7 @@ class GameBot:
         except Exception as e:
             self.logging.error(f"[MOVEMENT] Error executing movement: {e}")
             return False
-
+    '''
     def move_to_coordinates(self, target_x: int, target_y: int):
         """Enhanced movement method with improved stuck handling and smoother navigation"""
         self.current_path = []
@@ -830,21 +831,19 @@ class GameBot:
             delay = 0.2 if dist > 50 else 0.3
             delay *= 1.5 if stuck_count > 0 else 1.0
             time.sleep(delay)
-    
+
+    '''
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
         try:
-            #current_state = self.config.get_game_state()
-            play_coords = self.config.file['ocr_coordinates']['play']
-            self.interface.take_screenshot_with_coords(coords=play_coords, image_name="play_button_area")
-
             self.get_current_coords_from_game()
             current_state = self.config.get_game_state()
             current_x, currenty_y = self.interface.get_current_coords(current_state=current_state)
             mu_helper_active = self.interface.get_mu_helper_status(current_state)
             
             if abs(current_x - x) <= 10 and abs(currenty_y - y) <= 10 and not mu_helper_active:
-                self.interface.mouse_click(play_coords[0] + 5, play_coords[1] + 3)
+                #self.interface.mouse_click(play_coords[0] + 5, play_coords[1] + 3)
+                self.interface.start_mu_helper()
                 self.interface.set_mu_helper_status(True)
                 self.interface.set_current_coords([x, y])
                 self.logging.info("Play button clicked - was inactive (green)")
@@ -874,11 +873,10 @@ class GameBot:
             try:
                 if not self.running:
                     return
-
-                self.interface.click_center_screen()
-
+                self.interface.focus_application()
                 # Primera inicialización
                 if self.first_time:
+                    self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
                     self.first_time = False
                     self.logging.info("1. Read stats")
                     self.read_all_stats()
@@ -887,7 +885,6 @@ class GameBot:
                     
                     self.logging.info("3. Show last stats after add attributes")
                     self.read_all_stats()
-                    
                 else:
                     self.logging.info("1. Lets go to kill some mobs")
                     self.lets_kill_some_mobs()
@@ -895,7 +892,6 @@ class GameBot:
                     time.sleep(self.config.file['check_interval'])
                     self.read_all_stats()
                     self.distribute_attributes()
-
             except KeyboardInterrupt:
                 self.logging.info("Bot stopped by user")
                 break

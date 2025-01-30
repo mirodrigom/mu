@@ -29,3 +29,4 @@ screeninfo==0.8.1
 six==1.17.0
 tomlkit==0.13.2
 vulture==2.14
+mouse
