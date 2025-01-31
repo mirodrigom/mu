@@ -21,7 +21,7 @@
         "energy": 0.1
     },
     "max_level": 400,
-    "reset_level": 390,
+    "reset_level": 395,
     "coordinate_samples": 3,
     "error_threshold": 3,
     "check_interval": 5,

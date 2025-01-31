@@ -1,17 +1,17 @@
 {
-    "current_reset": 25,
-    "current_level": 142,
+    "current_reset": 27,
+    "current_level": 0,
     "current_map": "tarkan",
     "current_location": [
-        184,
-        61
+        135,
+        8
     ],
-    "available_points": 1,
-    "current_strenght": 6972,
-    "current_agility": 1006,
-    "current_vitality": 1006,
-    "current_energy": 1006,
-    "current_command": 1006,
+    "available_points": 8,
+    "current_strenght": 8355,
+    "current_agility": 1233,
+    "current_vitality": 1233,
+    "current_energy": 1233,
+    "current_command": 1233,
     "current_coords": [],
     "mulheper_active": false
 }
