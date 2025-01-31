@@ -218,47 +218,83 @@ class GameBot:
         while True:
             try:
                 self.interface.open_stats_window()
-                ref_point = self.interface.get_elemental_reference()
-                if not ref_point:
-                    time.sleep(1)
-                    continue
                 
+                current_state = self.config.get_game_state()                
                 # Read all stats
-                stats = {}
-                coords = self.config.get_ocr_coordinates()
+                stats = {
+                    'level': 0,
+                    'reset': 0,
+                    'strenght': 0,
+                    'agility': 0,
+                    'vitality': 0,
+                    'energy': 0,
+                    'command': 0,  # Initialize command for all classes
+                    'available_points': 0
+                }
                 
                 # Basic stats
-                for stat in ['level', 'reset']:
-                    stats[stat] = self.interface.convert_image_into_number(
-                        coords=coords[stat], 
-                        image_name=stat, 
-                        relative_coords=ref_point
-                    )
+                for stat in ['level', 'reset', 'available_points']:
+                    if stat == 'level':
+                        coords_level = self.interface.get_level_reference(current_state)
+                        if len(coords_level) == 0:
+                            coords_level = self.interface.get_text_from_screen("Nivel")
+                        stats[stat] = self.interface.get_level_ocr(coords_level)
+                        self.interface.set_level_reference(coords_level)
+                    if stat == 'reset':
+                        coords_reset = self.interface.get_reset_reference(current_state)
+                        if len(coords_reset) == 0:
+                            coords_reset = self.interface.get_text_from_screen("Resetear")
+                        stats[stat] = self.interface.get_reset_ocr(coords_reset)
+                        self.interface.set_reset_reference(coords_reset)
+                    if stat == 'available_points':
+                        coords_available_points = self.interface.get_available_attributes(current_state)
+                        if len(coords_available_points) == 0:
+                            coords_available_points = self.interface.get_text_from_screen("Puntos")
+                        stats[stat] = self.interface.get_available_points_ocr(coords_available_points)
+                        self.interface.set_available_attributes(coords_available_points)
+                        
+                    #if not coords_available_points:
+                    #    time.sleep(1)
+                    #    continue
                     if stats[stat] <= 0:  # Invalid read
                         self.logging.error(f"Invalid {stat} value: {stats[stat]}")
+                        if stat == 'level':
+                            self.interface.set_level_reference([])
+                        if stat == 'reset':
+                            self.interface.set_reset_reference([])
+                        if stat == 'available_points':
+                            self.interface.set_available_attributes([])
                         raise ValueError(f"Invalid {stat} value: {stats[stat]}")
 
+                attributes = ['strenght', 'agility', 'vitality', 'energy']
+                
+                if self.config.file["class"] == "Dark Lord":
+                    attributes.append('command')
                 # Attributes
-                for attr in ['strenght', 'agility', 'vitality', 'energy', 'command']:
-                    stats[attr] = self.interface.convert_image_into_number(
-                        coords=coords['attributes'][attr]['points'],
-                        image_name=attr,
-                        relative_coords=ref_point
-                    )
-                    if stats[attr] < 0:  # Invalid read
-                        self.logging.error(f"Invalid {attr} value: {stats[attr]}")
-                        raise ValueError(f"Invalid {attr} value: {stats[attr]}")
-
-                # Available points
-                available_coords = coords['available_points']
-                stats['available_points'] = self.interface.convert_image_into_number(
-                    coords=available_coords,
-                    image_name="available_points",
-                    relative_coords=ref_point
-                )
-                if stats['available_points'] < 0:
-                    self.logging.error(f"Invalid available points: {stats['available_points']}")
-                    raise ValueError(f"Invalid available points: {stats['available_points']}")
+                for attr in attributes:
+                    if attr == 'strenght':
+                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
+                        if len(coords_attr) == 0:
+                            coords_attr = self.interface.get_text_from_screen("Fuerza")
+                    if attr == 'agility':
+                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
+                        if len(coords_attr) == 0:
+                            coords_attr = self.interface.get_text_from_screen("Agilidad")
+                    if attr == 'vitality':
+                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
+                        if len(coords_attr) == 0:
+                            coords_attr = self.interface.get_text_from_screen("Vitalidad")
+                    if attr == 'energy':
+                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
+                        if len(coords_attr) == 0:
+                            coords_attr = self.interface.get_text_from_screen("Energia")
+                    if attr == 'command':
+                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
+                        if len(coords_attr) == 0:
+                            coords_attr = self.interface.get_text_from_screen("Comando")
+                        
+                    self.interface.set_attribute_reference(attr, coords_attr)
+                    stats[attr] = self.interface.get_attr_ocr(coords_attr, attr)
 
                 # Update state
                 state = {
@@ -272,8 +308,8 @@ class GameBot:
                     'current_command': stats['command'],
                     'available_points': stats['available_points']
                 }
-                
                 self.config.update_game_state(state)
+                
                 
                 self.logging.info("Final stats:")
                 self.logging.info(f"Available Points: {state['available_points']}")
@@ -285,6 +321,7 @@ class GameBot:
 
             except Exception as e:
                 self.logging.error(f"Error reading stats: {e}")
+                continue
                 time.sleep(1)
 
     def move_to_location(self, map_name: str, avoid_checks=False,stuck=False):
@@ -747,129 +784,7 @@ class GameBot:
         except Exception as e:
             self.logging.error(f"[MOVEMENT] Error executing movement: {e}")
             return False
-    '''
-    def move_to_coordinates(self, target_x: int, target_y: int):
-        """Enhanced movement method with improved stuck handling and smoother navigation"""
-        self.current_path = []
-        positions_history = []
-        stuck_count = 0
-        escape_attempt = 0
-        last_pos = None
-        last_movement_type = None
-        movement_timeout = time.time() + 300  # 5-minute timeout
-        
-        self.logging.info(f"[MOVEMENT] Starting movement to target [{target_x}, {target_y}]")
-        
-        if not self.get_current_coords_from_game():
-            self.logging.error("[MOVEMENT] Failed to get initial position")
-            return
-            
-        current_state = self.config.get_game_state()
-        current_map = self.interface.get_current_map(current_state)
-        blocked_directions = set()
-        last_successful_movement = time.time()
-        
-        while True:
-            # Timeout check
-            if time.time() > movement_timeout:
-                self.logging.error("[MOVEMENT] Movement timeout reached. Resetting position.")
-                self.move_to_location(map_name=current_map, stuck=True)
-                return
 
-            # Get current position
-            if not self.get_current_coords_from_game():
-                continue
-            current_x, current_y = self._fetch_position()
-            positions_history.append((current_x, current_y))
-            
-            # Calculate distance to target
-            dx = target_x - current_x
-            dy = target_y - current_y
-            dist = abs(dx) + abs(dy)
-            
-            # Log current status
-            self.logging.info(
-                f"[STATUS] Pos:[{current_x},{current_y}] Target:[{target_x},{target_y}] "
-                f"Dist:{dist} | Last move: {last_movement_type}"
-            )
-            
-            # Check if reached destination
-            if abs(dx) <= 10 and abs(dy) <= 10:
-                self.logging.info(f"[MOVEMENT] ✅ Reached destination!")
-                self.check_and_click_play(target_x, target_y)
-                break
-            
-            # Stuck detection with improved logic
-            if last_pos == (current_x, current_y):
-                stuck_count += 1
-                time_since_movement = time.time() - last_successful_movement
-                
-                if stuck_count >= 3 or time_since_movement > 10:
-                    self.logging.warning(
-                        f"[STUCK] 🚫 Stuck for {stuck_count} moves at [{current_x},{current_y}] "
-                        f"Time since last movement: {time_since_movement:.1f}s"
-                    )
-                    
-                    # Progressive escape strategy
-                    move_x, move_y, move_type = self.calculate_escape_vector(
-                        (current_x, current_y),
-                        blocked_directions,
-                        escape_attempt,
-                        (target_x, target_y)
-                    )
-                    escape_attempt += 1
-                    
-                    # Reset position if stuck for too long
-                    if escape_attempt >= 8 or time_since_movement > 30:
-                        self.logging.warning(
-                            f"[RESET] 🔄 Failed to escape after {escape_attempt} attempts "
-                            f"({time_since_movement:.1f}s), resetting position"
-                        )
-                        self.move_to_location(map_name=current_map, stuck=True)
-                        return
-            else:
-                stuck_count = max(0, stuck_count - 1)  # Gradual reduction of stuck counter
-                if escape_attempt > 0:
-                    escape_attempt = max(0, escape_attempt - 1)
-                    blocked_directions.clear()
-                    last_successful_movement = time.time()
-                    
-            last_pos = (current_x, current_y)
-            
-            # Manage position history
-            if len(positions_history) > 15:  # Increased history size
-                positions_history.pop(0)
-                
-            # Enhanced wall detection
-            is_wall, new_blocked = self.detect_wall(positions_history, (current_x, current_y))
-            if is_wall:
-                blocked_directions.update(new_blocked)
-                self.logging.warning(f"[WALL] Detected blocked directions: {blocked_directions}")
-            
-            # Movement vector calculation
-            if stuck_count >= 3:
-                move_x, move_y, move_type = self.calculate_escape_vector(
-                    (current_x, current_y),
-                    blocked_directions,
-                    escape_attempt,
-                    (target_x, target_y)
-                )
-            else:
-                move_x, move_y, move_type = self.calculate_movement_vector(
-                    current_x, current_y, target_x, target_y, blocked_directions
-                )
-                
-            # Execute movement with dynamic delays
-            success = self.execute_movement(move_x, move_y, move_type)
-            if success:
-                last_successful_movement = time.time()
-                
-            # Adaptive delay based on movement success and distance
-            delay = 0.2 if dist > 50 else 0.3
-            delay *= 1.5 if stuck_count > 0 else 1.0
-            time.sleep(delay)
-
-    '''
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
         try:
@@ -915,7 +830,7 @@ class GameBot:
                 self.interface.focus_application()
                 # Primera inicialización
                 if self.first_time:
-                    self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
+                    #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
                     self.first_time = False
                     self.logging.info("1. Read stats")
                     self.read_all_stats()

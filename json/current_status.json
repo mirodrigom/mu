@@ -1,17 +1,61 @@
 {
     "current_reset": 27,
-    "current_level": 0,
-    "current_map": "tarkan",
-    "current_location": [
-        135,
-        8
-    ],
-    "available_points": 8,
-    "current_strenght": 8355,
-    "current_agility": 1233,
-    "current_vitality": 1233,
-    "current_energy": 1233,
-    "current_command": 1233,
+    "current_level": 56,
+    "current_map": "dungeon3",
     "current_coords": [],
-    "mulheper_active": false
+    "current_strenght": 6904,
+    "current_agility": 1007,
+    "current_vitality": 1007,
+    "current_energy": 1007,
+    "current_command": 0,
+    "available_points": 64,
+    "mulheper_active": false,
+    "current_position_elemental": [],
+    "current_position_level": [
+        1368,
+        264,
+        1404,
+        277
+    ],
+    "current_position_available_points": [
+        1368,
+        341,
+        1418,
+        353
+    ],
+    "current_position_reset": [
+        1368,
+        283,
+        1434,
+        315
+    ],
+    "current_position_strenght": [
+        1369,
+        388,
+        1428,
+        420
+    ],
+    "current_position_agility": [
+        1364,
+        442,
+        1436,
+        473
+    ],
+    "current_position_vitality": [
+        1368,
+        526,
+        1441,
+        560
+    ],
+    "current_position_energy": [
+        1369,
+        580,
+        1435,
+        611
+    ],
+    "current_position_command": [],
+    "current_location": [
+        11,
+        77
+    ]
 }

@@ -83,7 +83,251 @@ class Interface:
         _, binary = cv2.threshold(denoised, 127, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         
         return binary
+
+    def get_text_from_screen(self, text_to_catch):
+        self.logging.debug(f"Attempting to locate {text_to_catch} text on screen")
+        try:
+            for attempt in range(5):
+                time.sleep(1)
+                try:
+                    # Capture screen
+                    screen = ImageGrab.grab()
+                    screen_np = np.array(screen)
+                    
+                    # Convert to grayscale (optional but can improve OCR accuracy)
+                    gray = cv2.cvtColor(screen_np, cv2.COLOR_RGB2GRAY)
+                    
+                    # Apply thresholding to get better text recognition (optional)
+                    _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    
+                    # Perform OCR
+                    data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT)
+                    
+                    for i, text in enumerate(data['text']):
+                        if text_to_catch in text:
+                            # Get the coordinates and dimensions
+                            x = data['left'][i]
+                            y = data['top'][i]
+                            w = data['width'][i]
+                            h = data['height'][i]
+                            
+                            # Return rectangle coordinates
+                            rectangle = [x, y, x+w, y+h]
+                            
+                            self.logging.debug(f"Found '{text_to_catch}' at rectangle: {rectangle}")
+                            return rectangle
+                        
+                    self.logging.warning(f"Attempt {attempt + 1}: '{text_to_catch}' text not found")
+                    
+                        
+                except Exception as e:
+                    self.logging.error(f"Error finding '{text_to_catch}' text on attempt {attempt + 1}: {str(e)}")
+            
+            return None
+            
+        except ImportError:
+            self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
+            return None
+        
+    def get_available_points_ocr(self, coords):
+        self.logging.debug("-----Starting get_available_points-----")        
+        try:
+            # Log each coordinate calculation
+            x1 = coords[2] + 270
+            y1 = coords[1] - 4
+            x2 = coords[2] + 330
+            y2 = coords[3] + 4
+            
+            new_coords = [x1, y1, x2, y2]
+            self.logging.debug(f"Created new_coords: {new_coords}")
+            
+            result = self.convert_image_into_number(new_coords, 'available_points')
+            self.logging.debug(f"Result from convert_image_into_number: {result}")
+            
+            return result
+            
+        except Exception as e:
+            self.logging.error(f"Error in get_available_points_ocr: {e}")
+            self.logging.error(f"Error type: {type(e)}")
+            raise
+        
+    def get_level_ocr(self, coords):
+        self.logging.debug("-----Starting get_level-----")        
+        try:
+            # Log each coordinate calculation
+            x1 = coords[2] + 200
+            y1 = coords[1] - 2
+            x2 = coords[2] + 350
+            y2 = coords[3] + 2
+            
+            new_coords = [x1, y1, x2, y2]
+            self.logging.debug(f"Created new_coords: {new_coords}")
+            
+            result = self.convert_image_into_number(new_coords, 'level')
+            self.logging.debug(f"Result from convert_image_into_number: {result}")
+            
+            return result
+            
+        except Exception as e:
+            self.logging.error(f"Error in get_level_ocr: {e}")
+            self.logging.error(f"Error type: {type(e)}")
+            raise
     
+    def get_reset_ocr(self, coords):
+        self.logging.debug("-----Starting get_reset-----")        
+        try:
+            x1 = coords[2] + 200
+            y1 = coords[1] - 4
+            x2 = coords[2] + 280
+            y2 = coords[3] + 4
+            
+            new_coords = [x1, y1, x2, y2]
+            self.logging.debug(f"Created new_coords: {new_coords}")
+            
+            result = self.convert_image_into_number(new_coords, 'reset')
+            self.logging.debug(f"Result from convert_image_into_number: {result}")
+            
+            return result
+            
+        except Exception as e:
+            self.logging.error(f"Error in get_reset_ocr: {e}")
+            self.logging.error(f"Error type: {type(e)}")
+            raise
+    
+    def get_attr_ocr(self, coords, attr):
+        self.logging.debug("-----Starting get_reset-----")        
+        try:
+            x1 = coords[2] + 100
+            y1 = coords[1] - 4
+            x2 = coords[2] + 220
+            y2 = coords[3] + 4
+            
+            new_coords = [x1, y1, x2, y2]
+            self.logging.debug(f"Created new_coords: {new_coords}")
+            
+            result = self.convert_image_into_number(new_coords, attr)
+            self.logging.debug(f"Result from convert_image_into_number: {result}")
+            
+            return result
+            
+        except Exception as e:
+            self.logging.error(f"Error in get_reset_ocr: {e}")
+            self.logging.error(f"Error type: {type(e)}")
+            raise
+        
+    def get_attribute_from_screen(self, attribute):
+        self.logging.debug(f"Attempting to locate {attribute} text on screen")
+        try:
+            for attempt in range(5):
+                time.sleep(1)
+                try:
+                    # Capture screen
+                    screen = ImageGrab.grab()
+                    screen_np = np.array(screen)
+                    
+                    # Convert to grayscale (optional but can improve OCR accuracy)
+                    gray = cv2.cvtColor(screen_np, cv2.COLOR_RGB2GRAY)
+                    
+                    # Apply thresholding to get better text recognition (optional)
+                    _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    
+                    # Perform OCR
+                    data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT)
+                    
+                    # Search for "TEXT" in the recognized text
+                    for i, text in enumerate(data['text']):
+                        if attribute in text:
+                            # Get the coordinates of the found text
+                            x = data['left'][i]
+                            y = data['top'][i]
+                            w = data['width'][i]
+                            h = data['height'][i]
+                            
+                            # Calculate center point
+                            center_x = x + w // 2
+                            center_y = y + h // 2
+                            center_point = (center_x, center_y)
+                            
+                            self.logging.debug(f"Found {attribute} at: {center_point}")
+                            return center_point
+                    
+                    self.logging.warning(f"Attempt {attempt + 1}: '{attribute}' text not found")
+                    
+                        
+                except Exception as e:
+                    self.logging.error(f"Error finding '{attribute}' text on attempt {attempt + 1}: {str(e)}")
+            
+            return None
+            
+        except ImportError:
+            self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
+            return None
+
+    def get_elemental_reference(self):
+        """Localizes the word 'ELEMENTAL' on the screen using OCR."""
+        self.logging.debug("Attempting to locate 'ELEMENTAL' text on screen")
+        
+        try:
+            
+            for attempt in range(5):
+                time.sleep(1)
+                try:
+                    # Capture screen
+                    screen = ImageGrab.grab()
+                    screen_np = np.array(screen)
+                    
+                    # Convert to grayscale (optional but can improve OCR accuracy)
+                    gray = cv2.cvtColor(screen_np, cv2.COLOR_RGB2GRAY)
+                    
+                    # Apply thresholding to get better text recognition (optional)
+                    _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    
+                    # Perform OCR
+                    data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT)
+                    
+                    # Search for "ELEMENTAL" in the recognized text
+                    for i, text in enumerate(data['text']):
+                        if 'ELEMENTAL' in text.upper():
+                            # Get the coordinates of the found text
+                            x = data['left'][i]
+                            y = data['top'][i]
+                            w = data['width'][i]
+                            h = data['height'][i]
+                            
+                            # Calculate center point
+                            center_x = x + w // 2
+                            center_y = y + h // 2
+                            center_point = (center_x, center_y)
+                            
+                            self.logging.debug(f"Found 'ELEMENTAL' at: {center_point}")
+                            return center_point
+                    
+                    self.logging.warning(f"Attempt {attempt + 1}: 'ELEMENTAL' text not found")
+                    
+                    # Handle the last attempt failure
+                    if attempt == 4:
+                        self.logging.warning("Will close all popups.")
+                        self.escape_multiple_times()
+                        #self.get_poweroff_reference()
+                        self.window_stats_open = False
+                        self.open_stats_window()
+                        
+                except Exception as e:
+                    self.logging.error(f"Error finding 'ELEMENTAL' text on attempt {attempt + 1}: {str(e)}")
+                    # Error handling
+                    if attempt == 4:
+                        self.logging.warning("Will close all popups.")
+                        self.escape_multiple_times()
+                        self.get_poweroff_reference()
+                        self.window_stats_open = False
+                        self.open_stats_window()
+            
+            return None
+            
+        except ImportError:
+            self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
+            return None
+    '''
     def get_elemental_reference(self):
         """Localiza el punto de referencia elemental en la pantalla usando OpenCV."""
         self.logging.debug("Attempting to locate elemental reference on the screen")
@@ -146,6 +390,7 @@ class Interface:
         
         return None
 
+    '''
     def get_poweroff_reference(self):
         """Localiza el punto de referencia poweroff en la pantalla usando OpenCV."""
         self.logging.debug("Attempting to locate poweroff reference on the screen")
@@ -198,7 +443,6 @@ class Interface:
                 self.logging.error(f"Error finding poweroff reference on attempt {attempt + 1}: {str(e)}")
         
         return None
-    
     
     def convert_image_into_string(self, coords, image_name, relative_coords=None, with_comma=False):
         self.logging.debug(f"Converting {image_name}...")
@@ -446,3 +690,51 @@ class Interface:
         
     def get_current_coords(self, current_state):
         return current_state["current_location"][0], current_state["current_location"][1]
+    
+    def get_current_stats_elemental(self, current_state):
+        return current_state['current_position_elemental']
+    
+    def set_elemental_reference(self, coords):
+        self.config.update_game_state({'current_position_elemental': coords})
+        
+    def set_reset_reference(self, coords):
+        self.config.update_game_state({'current_position_reset': coords})
+        
+    def set_level_reference(self, coords):
+        self.config.update_game_state({'current_position_level': coords})
+        
+    def set_available_attributes(self, coords):
+        self.config.update_game_state({'current_position_available_points': coords})
+        
+    def set_attribute_reference(self, attr, coords):
+        if attr == "strenght":
+            self.config.update_game_state({'current_position_strenght': coords})
+        if attr == "agility":
+            self.config.update_game_state({'current_position_agility': coords})
+        if attr == "vitality":
+            self.config.update_game_state({'current_position_vitality': coords})
+        if attr == "energy":
+            self.config.update_game_state({'current_position_energy': coords})
+        if attr == "command":
+            self.config.update_game_state({'current_position_command': coords})
+            
+    def get_reset_reference(self, current_state):
+        return current_state["current_position_reset"]
+        
+    def get_level_reference(self, current_state):
+        return current_state["current_position_level"]
+        
+    def get_available_attributes(self, current_state):
+        return current_state["current_position_available_points"]
+        
+    def get_attribute_reference(self, current_state, attr):
+        if attr == "strenght":
+           return current_state["current_position_strenght"]
+        if attr == "agility":
+            return current_state["current_position_agility"]
+        if attr == "vitality":
+           return current_state["current_position_vitality"]
+        if attr == "energy":
+            return current_state["current_position_energy"]
+        if attr == "command":
+            return current_state["current_position_command"]

@@ -53,10 +53,17 @@ class Configuration:
                 "current_energy": 0,
                 "current_command": 0,
                 "available_points": 0,
-                "mulheper_active": False
+                "mulheper_active": False,
+                "current_position_elemental": [],
+                "current_position_level": [],
+                "current_position_available_points": [],
+                "current_position_reset": [],
+                "current_position_strenght": [],
+                "current_position_agility": [],
+                "current_position_vitality": [],
+                "current_position_energy": [],
+                "current_position_command": []
         }
-        
-    
 
     def setup_directories(self):
         """Creates necessary directories for organizing files"""
