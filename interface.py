@@ -59,18 +59,38 @@ class Interface:
     def set_dpis_monitor(self):
         if sys.platform == 'win32':
             try:
-                # Force the process to be DPI aware
+                # Check initial DPI state
+                self.logging.info("Initial DPI settings:")
                 self.get_system_dpi()
-                PROCESS_PER_MONITOR_DPI_AWARE = 2
-                ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)
-                self.logging.info(f"Set {PROCESS_PER_MONITOR_DPI_AWARE} DPI")
+
+                # Try multiple DPI awareness methods
+                try:
+                    # Method 1: Using SetProcessDpiAwareness
+                    PROCESS_PER_MONITOR_DPI_AWARE = 2
+                    result = ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)
+                    self.logging.info(f"SetProcessDpiAwareness result: {result}")
+                except Exception as e1:
+                    self.logging.error(f"Method 1 failed: {e1}")
+                    try:
+                        # Method 2: Using older SetProcessDPIAware
+                        result = ctypes.windll.user32.SetProcessDPIAware()
+                        self.logging.info(f"SetProcessDPIAware result: {result}")
+                    except Exception as e2:
+                        self.logging.error(f"Method 2 failed: {e2}")
+
+                # Verify final DPI state
+                self.logging.info("Final DPI settings:")
                 self.get_system_dpi()
+
             except Exception as e:
                 self.logging.error(f"Failed to set DPI awareness: {e}")
-        
+
     def setup_screen(self):
         """Configura los parámetros de la pantalla del juego"""
         try:
+            # Set DPI awareness BEFORE any window operations
+            self.set_dpis_monitor()
+            
             app_name = self.config.file["application_name"]
             # Get the window by title
             window = gw.getWindowsWithTitle(app_name)[0]
@@ -79,11 +99,6 @@ class Interface:
             self.screen_width = window.width
             self.screen_height = window.height
             self.logging.info(f"Window size: {self.screen_width}x{self.screen_height}")
-            self.set_dpis_monitor()
-            
-            # You can also get position if needed
-            # x, y = window.left, window.top
-            # self.logging.info(f"Window position: {x},{y}")
             
             return True
         except Exception as e:
