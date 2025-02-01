@@ -5,6 +5,7 @@ import cv2
 import time
 import random
 import logging
+import sys
 import keyboard
 import pyautogui
 import pygetwindow as gw
@@ -85,23 +86,10 @@ class Interface:
     def get_text_from_screen(self, text_to_catch):
         self.logging.debug(f"Attempting to locate {text_to_catch} text on screen")
         try:
-            # Get display scaling factor
-            try:
-                import win32gui
-                import win32con
-                dc = win32gui.GetDC(0)
-                dpi_x = win32gui.GetDeviceCaps(dc, win32con.LOGPIXELSX)
-                win32gui.ReleaseDC(0, dc)
-                scale_factor = dpi_x / 96.0
-            except:
-                scale_factor = 1.0
-                
-            self.logging.debug(f"Using scale factor: {scale_factor}")
-
             for attempt in range(5):
                 time.sleep(1)
                 try:
-                    # Use original capture method
+                    # Capture screen with DPI awareness already set
                     screen = ImageGrab.grab()
                     screen_np = np.array(screen)
                     
@@ -116,13 +104,14 @@ class Interface:
                     
                     for i, text in enumerate(data['text']):
                         if text_to_catch in text:
-                            # Get coordinates and adjust for scaling
-                            x = int(data['left'][i] * scale_factor)
-                            y = int(data['top'][i] * scale_factor)
-                            w = int(data['width'][i] * scale_factor)
-                            h = int(data['height'][i] * scale_factor)
+                            # Get the raw coordinates without scaling
+                            x = data['left'][i]
+                            y = data['top'][i]
+                            w = data['width'][i]
+                            h = data['height'][i]
                             
                             rectangle = [x, y, x+w, y+h]
+                            
                             self.logging.debug(f"Found '{text_to_catch}' at rectangle: {rectangle}")
                             return rectangle
                         
@@ -132,11 +121,11 @@ class Interface:
                     self.logging.error(f"Error finding '{text_to_catch}' text on attempt {attempt + 1}: {str(e)}")
             
             return None
-            
+        
         except ImportError:
             self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
             return None
-
+    
     def get_available_points_ocr(self, coords):
         self.logging.debug("-----Starting get_available_points-----")        
         try:
@@ -163,71 +152,29 @@ class Interface:
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
-            # Create a wider search area
-            x1 = coords[2]  # Start right after "Nivel"
-            y1 = coords[1] - 5  # Slightly above
-            x2 = coords[2] + 400  # Search a wider area
-            y2 = coords[3] + 5  # Slightly below
+            scale = self.interface.get_interface_scale()
+            
+            
+            # Log each coordinate calculation
+            x1 = coords[2] + 200
+            y1 = coords[1] - 2
+            x2 = coords[2] + 350
+            y2 = coords[3] + 2
             
             new_coords = [x1, y1, x2, y2]
-            self.logging.debug(f"Original 'Nivel' coords: {coords}")
             self.logging.debug(f"Created new_coords: {new_coords}")
-            
-            # Take a debug screenshot of the area we're scanning
-            screen = ImageGrab.grab()
-            screen_np = np.array(screen)
-            
-            # Draw rectangles to show the areas
-            debug_image = screen_np.copy()
-            
-            # Draw original coords in red
-            cv2.rectangle(debug_image, 
-                        (coords[0], coords[1]), 
-                        (coords[2], coords[3]), 
-                        (255,0,0), 2)
-            
-            # Draw search area in green
-            cv2.rectangle(debug_image, 
-                        (x1, y1), 
-                        (x2, y2), 
-                        (0,255,0), 2)
-            
-            # Save full screenshot with rectangles
-            timestamp = time.strftime("%Y%m%d-%H%M%S")
-            cv2.imwrite(f'debug_level_search_{timestamp}.png', 
-                    cv2.cvtColor(debug_image, cv2.COLOR_RGB2BGR))
-            
-            # Save just the region we're searching
-            region = screen_np[y1:y2, x1:x2]
-            cv2.imwrite(f'debug_level_region_{timestamp}.png', 
-                    cv2.cvtColor(region, cv2.COLOR_RGB2BGR))
-            
-            # Perform OCR with debug info
-            gray_region = cv2.cvtColor(region, cv2.COLOR_RGB2GRAY)
-            _, binary = cv2.threshold(gray_region, 0, 255, 
-                                    cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-            
-            # Save the processed image we're running OCR on
-            cv2.imwrite(f'debug_level_binary_{timestamp}.png', binary)
-            
-            # Run OCR and log all text found
-            data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT)
-            self.logging.debug("All text found in region:")
-            for i, text in enumerate(data['text']):
-                if text.strip():  # Only log non-empty text
-                    self.logging.debug(f"Found text: '{text}' at position: {data['left'][i]}, {data['top'][i]}")
             
             result = self.convert_image_into_number(new_coords, 'level')
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-                
+            
         except Exception as e:
             self.logging.error(f"Error in get_level_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
             self.reload_ui()
             raise
-
+    
     def get_reset_ocr(self, coords):
         self.logging.debug("-----Starting get_reset-----")        
         try:

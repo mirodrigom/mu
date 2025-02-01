@@ -155,6 +155,11 @@ class Configuration:
         if not self.file:
             raise ValueError("Config file not loaded")
         return self.file.get('validation', {})
+    
+    def get_interface_scale(self):
+        if not self.file:
+            raise ValueError("Config file not loaded")
+        return self.file.get('interface_scale', {})
 
     def get_stat_distribution(self):
         if not self.file:

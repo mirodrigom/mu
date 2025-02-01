@@ -261,7 +261,7 @@ class GameBot:
                     #if not coords_available_points:
                     #    time.sleep(1)
                     #    continue
-                    if stats[stat] <= 0:  # Invalid read
+                    if stats[stat] <= 0 and stat != 'available_points':  # Invalid read
                         self.logging.error(f"Invalid {stat} value: {stats[stat]}")
                         if stat == 'level':
                             self.interface.set_level_reference([])

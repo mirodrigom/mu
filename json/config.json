@@ -1,5 +1,6 @@
 {
     "class": "Magic Gladiator",
+    "interface_scale": "125",
     "level_thresholds": {
         "140": {
             "map": "tarkan",

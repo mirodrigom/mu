@@ -11,19 +11,9 @@
     "available_points": 0,
     "mulheper_active": false,
     "current_position_elemental": [],
-    "current_position_level": [
-        1368,
-        255,
-        1403,
-        285
-    ],
+    "current_position_level": [],
     "current_position_available_points": [],
-    "current_position_reset": [
-        1368,
-        283,
-        1434,
-        315
-    ],
+    "current_position_reset": [],
     "current_position_strenght": [],
     "current_position_agility": [],
     "current_position_vitality": [],
