@@ -1,160 +1,28 @@
-2025-01-31 00:43:55,113 - interface - setup_screen - INFO - Window size: 1920x1080
-2025-01-31 00:44:00,115 - __main__ - run - INFO - 1. Read stats
-2025-01-31 00:44:02,115 - interface - open_stats_window - INFO - Open stat window
-2025-01-31 00:44:02,416 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
-2025-01-31 00:44:04,788 - interface - get_text_from_screen - DEBUG - Found 'Nivel' at rectangle: [1490, 408, 1519, 418]
-2025-01-31 00:44:04,790 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:04,790 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:04,790 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:05,149 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
-2025-01-31 00:44:05,150 - interface - get_text_from_screen - DEBUG - Attempting to locate Resetear text on screen
-2025-01-31 00:44:07,458 - interface - get_text_from_screen - DEBUG - Found 'Resetear' at rectangle: [1490, 421, 1547, 448]
-2025-01-31 00:44:07,461 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:07,461 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:07,461 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:07,815 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:07,827 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:11,167 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
-2025-01-31 00:44:11,169 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:11,169 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
-2025-01-31 00:44:11,169 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:11,503 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:11,515 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:11,527 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:13,527 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:13,529 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:13,529 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:13,529 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:13,890 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
-2025-01-31 00:44:13,891 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:13,891 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:13,891 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:14,245 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:14,247 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:16,629 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
-2025-01-31 00:44:16,631 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:16,631 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
-2025-01-31 00:44:16,631 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:16,953 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:16,956 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:16,958 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:18,959 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:18,961 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:18,961 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:18,961 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:19,315 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
-2025-01-31 00:44:19,317 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:19,317 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:19,317 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:19,677 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:19,679 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:22,016 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
-2025-01-31 00:44:22,018 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:22,018 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
-2025-01-31 00:44:22,018 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:22,355 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:22,358 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:22,370 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:24,370 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:24,373 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:24,373 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:24,373 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:24,731 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
-2025-01-31 00:44:24,733 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:24,733 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:24,733 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:25,098 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:25,101 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:27,677 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 460, 1530, 486]
-2025-01-31 00:44:27,682 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:27,683 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 456, 1860, 490]
-2025-01-31 00:44:27,683 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:28,028 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:28,030 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:28,042 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:30,043 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:30,045 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:30,045 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:30,045 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:30,401 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 691
-2025-01-31 00:44:30,402 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:30,402 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:30,402 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:30,758 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:30,761 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:33,761 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
-2025-01-31 00:44:33,763 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:33,763 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
-2025-01-31 00:44:33,763 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:34,093 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:34,095 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:34,097 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:36,098 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:36,100 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:36,100 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:36,100 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:36,469 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
-2025-01-31 00:44:36,471 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:36,471 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:36,471 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:36,830 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:36,832 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:39,168 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1490, 465, 1531, 487]
-2025-01-31 00:44:39,170 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:39,170 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1801, 461, 1861, 491]
-2025-01-31 00:44:39,170 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:39,505 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:39,508 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:39,519 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:41,519 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:41,521 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:41,522 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:41,522 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:41,882 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
-2025-01-31 00:44:41,883 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:41,884 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:41,884 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:42,242 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:42,245 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:44,471 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1490, 469, 1533, 479]
-2025-01-31 00:44:44,473 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:44,474 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1803, 465, 1863, 483]
-2025-01-31 00:44:44,474 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:44,789 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:44,792 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:44,803 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:46,804 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:46,806 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:46,806 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:46,806 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:47,168 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 691
-2025-01-31 00:44:47,170 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:47,170 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:47,170 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:47,531 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:47,533 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:49,939 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1528, 486]
-2025-01-31 00:44:49,940 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:49,941 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1798, 461, 1858, 490]
-2025-01-31 00:44:49,941 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:50,275 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:50,278 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:50,290 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:52,290 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:44:52,292 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:44:52,292 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
-2025-01-31 00:44:52,292 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:44:52,651 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 697
-2025-01-31 00:44:52,652 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:44:52,652 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
-2025-01-31 00:44:52,652 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:44:53,012 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:44:53,014 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:44:55,344 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1490, 469, 1533, 479]
-2025-01-31 00:44:55,346 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:44:55,346 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1803, 465, 1863, 483]
-2025-01-31 00:44:55,346 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:44:55,655 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:44:55,657 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
-2025-01-31 00:44:55,660 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
-2025-01-31 00:44:57,080 - config - on_press - INFO - Bot stopped
+2025-02-01 16:18:31,792 - gameclass - build_character_profile - INFO - ===================
+2025-02-01 16:18:31,792 - gameclass - build_character_profile - INFO - You are a None who born in None with this base attributes ['strenght', 'agility', 'vitality', 'energy']
+2025-02-01 16:18:31,793 - gameclass - build_character_profile - INFO - ===================
+2025-02-01 16:18:36,794 - __main__ - run - INFO - 1. Read stats
+2025-02-01 16:18:38,794 - interface - open_stats_window - INFO - Open stat window
+2025-02-01 16:18:39,101 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
+2025-02-01 16:18:40,917 - interface - get_text_from_screen - WARNING - Attempt 1: 'Nivel' text not found
+2025-02-01 16:18:42,605 - interface - get_text_from_screen - WARNING - Attempt 2: 'Nivel' text not found
+2025-02-01 16:18:44,279 - interface - get_text_from_screen - WARNING - Attempt 3: 'Nivel' text not found
+2025-02-01 16:18:46,180 - interface - get_text_from_screen - WARNING - Attempt 4: 'Nivel' text not found
+2025-02-01 16:18:48,291 - interface - get_text_from_screen - WARNING - Attempt 5: 'Nivel' text not found
+2025-02-01 16:18:48,293 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-02-01 16:18:48,293 - interface - get_level_ocr - ERROR - Error in get_level_ocr: 'NoneType' object is not subscriptable
+2025-02-01 16:18:48,293 - interface - get_level_ocr - ERROR - Error type: <class 'TypeError'>
+2025-02-01 16:18:48,293 - interface - reload_ui - WARNING - Will close all popups.
+2025-02-01 16:18:50,303 - interface - get_text_from_screen - DEBUG - Attempting to locate Salir text on screen
+2025-02-01 16:18:52,064 - interface - get_text_from_screen - WARNING - Attempt 1: 'Salir' text not found
+2025-02-01 16:18:53,754 - interface - get_text_from_screen - WARNING - Attempt 2: 'Salir' text not found
+2025-02-01 16:18:55,460 - interface - get_text_from_screen - WARNING - Attempt 3: 'Salir' text not found
+2025-02-01 16:18:57,226 - interface - get_text_from_screen - WARNING - Attempt 4: 'Salir' text not found
+2025-02-01 16:18:58,917 - interface - get_text_from_screen - WARNING - Attempt 5: 'Salir' text not found
+2025-02-01 16:19:00,919 - interface - open_stats_window - INFO - Open stat window
+2025-02-01 16:19:01,020 - __main__ - read_all_stats - ERROR - Error reading stats: 'NoneType' object is not subscriptable
+2025-02-01 16:19:03,021 - interface - open_stats_window - INFO - Stat window is already open.
+2025-02-01 16:19:03,021 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
+2025-02-01 16:19:04,769 - interface - get_text_from_screen - WARNING - Attempt 1: 'Nivel' text not found
+2025-02-01 16:19:06,745 - interface - get_text_from_screen - WARNING - Attempt 2: 'Nivel' text not found
+2025-02-01 16:19:08,389 - config - on_press - INFO - Bot stopped

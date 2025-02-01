@@ -6,6 +6,7 @@ from pathlearner import PathLearner
 from interface import Interface
 from utils import Utils
 from config import Configuration
+from gameclass import GameClass
 
 class GameBot:
     
@@ -17,6 +18,7 @@ class GameBot:
         self.config = Configuration()
         self.logging = logging.getLogger(__name__)
         self.interface = Interface(self.config)
+        self.gameclass = GameClass()
         self.utils = Utils()
         self.interface.load_ocr_packages()
         
@@ -266,12 +268,8 @@ class GameBot:
                             self.interface.set_available_attributes([])
                         raise ValueError(f"Invalid {stat} value: {stats[stat]}")
 
-                attributes = ['strenght', 'agility', 'vitality', 'energy']
-                
-                if self.config.file["class"] == "Dark Lord":
-                    attributes.append('command')
                 # Attributes
-                for attr in attributes:
+                for attr in self.gameclass.attributes:
                     if attr == 'strenght':
                         coords_attr = self.interface.get_attribute_reference(current_state, attr)
                         if len(coords_attr) == 0:
@@ -348,22 +346,32 @@ class GameBot:
     def check_level_kill_or_reset(self, level):
         for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
             if level >= int(threshold):
-                self.move_to_location(map_name=obj["map"])
-                x = obj["location"][0]
-                y = obj["location"][1]
-                self.move_to_coordinates(x,y)
-                self.check_and_click_play(x,y)
+                if isinstance(obj, list):
+                    location_obj = next((loc for loc in obj if loc["map"] == self.gameclass.start_location), obj[0])
+                    self.move_to_location(map_name=location_obj["map"])
+                    x = location_obj["location"][0]
+                    y = location_obj["location"][1]
+                else:
+                    # Handle single location case as before
+                    self.move_to_location(map_name=obj["map"])
+                    x = obj["location"][0]
+                    y = obj["location"][1]
+                
+                self.move_to_coordinates(x, y)
+                self.check_and_click_play(x, y)
                 break
         
     def lets_kill_some_mobs(self):
         
         current_state = self.config.get_game_state()
         level = self.interface.get_level(current_state)
+        reset = self.interface.get_reset(current_state)
         mu_helper_active = self.interface.get_mu_helper_status(current_state)
         
-        reset_level = self.config.file['reset_level']
+        reset_level = self.gameclass.set_level_to_reset(reset)
         max_level = self.config.file['max_level']
-        
+        self.gameclass.set_level_to_reset()
+
         # Reset
         if level >= reset_level <= max_level:
             self.interface.set_mu_helper_status(False)
@@ -821,7 +829,7 @@ class GameBot:
         self.config.update_game_state({
             'current_reset': new_reset,
             'current_level': 0,
-            'current_map': 'lorencia'
+            'current_map': self.gameclass.start_location
         })
         self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
         self.distribute_attributes()

@@ -5,7 +5,9 @@ import cv2
 import time
 import logging
 import random
+import sys
 import keyboard
+import ctypes
 import pyautogui
 import pygetwindow as gw
 
@@ -24,6 +26,16 @@ class Interface:
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
         self.setup_screen()
+
+    def set_dpis_monitor(self):
+        if sys.platform == 'win32':
+            try:
+                # Force the process to be DPI aware
+                PROCESS_PER_MONITOR_DPI_AWARE = 2
+                ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)
+                self.logging.info(f"Set {PROCESS_PER_MONITOR_DPI_AWARE} DPI")
+            except Exception as e:
+                self.logging.error(f"Failed to set DPI awareness: {e}")
         
     def setup_screen(self):
         """Configura los parámetros de la pantalla del juego"""
@@ -36,6 +48,7 @@ class Interface:
             self.screen_width = window.width
             self.screen_height = window.height
             self.logging.info(f"Window size: {self.screen_width}x{self.screen_height}")
+            self.set_dpis_monitor()
             
             # You can also get position if needed
             # x, y = window.left, window.top
@@ -90,14 +103,14 @@ class Interface:
             for attempt in range(5):
                 time.sleep(1)
                 try:
-                    # Capture screen
+                    # Capture screen with DPI awareness already set
                     screen = ImageGrab.grab()
                     screen_np = np.array(screen)
                     
-                    # Convert to grayscale (optional but can improve OCR accuracy)
+                    # Convert to grayscale
                     gray = cv2.cvtColor(screen_np, cv2.COLOR_RGB2GRAY)
                     
-                    # Apply thresholding to get better text recognition (optional)
+                    # Apply thresholding
                     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                     
                     # Perform OCR
@@ -105,13 +118,12 @@ class Interface:
                     
                     for i, text in enumerate(data['text']):
                         if text_to_catch in text:
-                            # Get the coordinates and dimensions
+                            # Get the raw coordinates without scaling
                             x = data['left'][i]
                             y = data['top'][i]
                             w = data['width'][i]
                             h = data['height'][i]
                             
-                            # Return rectangle coordinates
                             rectangle = [x, y, x+w, y+h]
                             
                             self.logging.debug(f"Found '{text_to_catch}' at rectangle: {rectangle}")
@@ -119,16 +131,15 @@ class Interface:
                         
                     self.logging.warning(f"Attempt {attempt + 1}: '{text_to_catch}' text not found")
                     
-                        
                 except Exception as e:
                     self.logging.error(f"Error finding '{text_to_catch}' text on attempt {attempt + 1}: {str(e)}")
             
             return None
-            
+        
         except ImportError:
             self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
             return None
-        
+
     def get_available_points_ocr(self, coords):
         self.logging.debug("-----Starting get_available_points-----")        
         try:
@@ -488,10 +499,10 @@ class Interface:
             megamu_window.activate()
             return True
         except IndexError:
-            print("MEGAMU window not found")
+            self.logging.error("MEGAMU window not found")
             return False
         except Exception as e:
-            print(f"Error focusing MEGAMU: {e}")
+            self.logging.error(f"Error focusing MEGAMU: {e}")
             return False
     
     
@@ -571,7 +582,6 @@ class Interface:
         self.enter()
         self.execute_command('/reset')
         self.enter()
-        self.set_current_map(map_name = "lorencia")
         
     def command_add_attributes(self, attribute, points=0, str_attr=None, agi_attr=None, vit_attr=None, ene_attr=None, com_attr=None):
         if attribute == "strenght":
@@ -691,6 +701,9 @@ class Interface:
         
     def get_level(self, current_state):
         return current_state["current_level"]
+    
+    def get_reset(self, current_state):
+        return current_state["current_reset"]
     
     def set_level(self, level):
         self.config.update_game_state({'level': level})

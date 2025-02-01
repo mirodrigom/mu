@@ -41,7 +41,7 @@ class PathLearner:
             self.obstacles.add((x, y))
     
     def record_good_path(self, game_bot, map_name, duration=10, interval=1):
-        print(f"Recording a good path for {map_name} for {duration} seconds at {interval} second intervals.")
+        self.logging.info(f"Recording a good path for {map_name} for {duration} seconds at {interval} second intervals.")
         good_path = []
         start_time = time.time()
         
@@ -59,9 +59,9 @@ class PathLearner:
             self.good_paths.setdefault(map_name, []).append({'points': good_path, 'timestamp': time.time()})
             with open(f"{map_name}.json", 'w') as f:
                 json.dump(self.good_paths[map_name], f)
-            print(f"Good path for {map_name} saved.")
+            self.logging.info(f"Good path for {map_name} saved.")
         else:
-            print(f"No points recorded for {map_name}. Path not saved.")
+            self.logging.info(f"No points recorded for {map_name}. Path not saved.")
 
     def save_path(self, success: bool = True):
         if self.current_path:
