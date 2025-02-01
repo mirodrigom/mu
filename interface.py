@@ -152,7 +152,7 @@ class Interface:
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
-            scale = self.interface.get_interface_scale()
+            scale = self.config.get_interface_scale()
             
             
             # Log each coordinate calculation
