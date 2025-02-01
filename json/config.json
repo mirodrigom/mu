@@ -3,16 +3,41 @@
     "level_thresholds": {
         "140": {
             "map": "tarkan",
-            "location": [123,91]
+            "location": [
+                123,
+                91
+            ]
         },
         "50": {
             "map": "dungeon3",
-            "location": [32,63]
+            "location": [
+                32,
+                63
+            ]
         },
-        "0": {
-            "map": "lorencia",
-            "location": [128, 200]
-        }
+        "0": [
+            {
+                "map": "lorencia",
+                "location": [
+                    128,
+                    200
+                ]
+            },
+            {
+                "map": "noria",
+                "location": [
+                    136,
+                    111
+                ]
+            },
+            {
+                "map": "elbeland",
+                "location": [
+                    114,
+                    217
+                ]
+            }
+        ]
     },
     "application_name": "MEGAMU",
     "stat_distribution": {
@@ -27,13 +52,33 @@
     "error_threshold": 3,
     "check_interval": 5,
     "ocr_coordinates": {
-        "position": [255, 26, 329, 48]
+        "position": [
+            255,
+            26,
+            329,
+            48
+        ]
     },
     "validation": {
-        "strenght": {"min": 1, "max": 32767},
-        "agility": {"min": 1, "max": 32767},
-        "vitality": {"min": 1, "max": 32767},
-        "energy": {"min": 1, "max": 32767},
-        "command": {"min": 1, "max": 32767}
+        "strenght": {
+            "min": 1,
+            "max": 32767
+        },
+        "agility": {
+            "min": 1,
+            "max": 32767
+        },
+        "vitality": {
+            "min": 1,
+            "max": 32767
+        },
+        "energy": {
+            "min": 1,
+            "max": 32767
+        },
+        "command": {
+            "min": 1,
+            "max": 32767
+        }
     }
 }

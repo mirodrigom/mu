@@ -140,6 +140,11 @@ class Configuration:
         # Suppress PIL and Tesseract debug logs
         logging.getLogger('PIL').setLevel(logging.WARNING)
         logging.getLogger('pytesseract').setLevel(logging.WARNING)
+
+    def get_class(self):
+        if not self.file:
+            raise ValueError("Config file not loaded")
+        return self.file['class']
         
     def get_ocr_coordinates(self):
         if not self.file:

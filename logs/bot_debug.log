@@ -1,1339 +1,160 @@
-2025-01-31 00:33:54,708 - interface - setup_screen - INFO - Window size: 1920x1080
-2025-01-31 00:33:59,709 - __main__ - run - INFO - 1. Read stats
-2025-01-31 00:34:01,709 - interface - open_stats_window - INFO - Open stat window
-2025-01-31 00:34:01,864 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
-2025-01-31 00:34:03,302 - interface - get_text_from_screen - DEBUG - Found 'Nivel' at rectangle: [1368, 254, 1407, 286]
-2025-01-31 00:34:03,304 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:34:03,304 - interface - get_level_ocr - DEBUG - Created new_coords: [1607, 252, 1757, 288]
-2025-01-31 00:34:03,304 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:34:03,437 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 0
-2025-01-31 00:34:03,437 - __main__ - read_all_stats - ERROR - Invalid level value: 0
-2025-01-31 00:34:03,442 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid level value: 0
-2025-01-31 00:34:05,443 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:34:05,443 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
-2025-01-31 00:34:06,895 - interface - get_text_from_screen - WARNING - Attempt 1: 'Nivel' text not found
-2025-01-31 00:34:08,334 - interface - get_text_from_screen - WARNING - Attempt 2: 'Nivel' text not found
-2025-01-31 00:34:09,749 - interface - get_text_from_screen - WARNING - Attempt 3: 'Nivel' text not found
-2025-01-31 00:34:11,123 - interface - get_text_from_screen - WARNING - Attempt 4: 'Nivel' text not found
-2025-01-31 00:34:12,502 - interface - get_text_from_screen - WARNING - Attempt 5: 'Nivel' text not found
-2025-01-31 00:34:12,503 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:34:12,503 - interface - get_level_ocr - ERROR - Error in get_level_ocr: 'NoneType' object is not subscriptable
-2025-01-31 00:34:12,503 - interface - get_level_ocr - ERROR - Error type: <class 'TypeError'>
-2025-01-31 00:34:12,503 - __main__ - read_all_stats - ERROR - Error reading stats: 'NoneType' object is not subscriptable
-2025-01-31 00:34:14,504 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:34:14,504 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
-2025-01-31 00:34:15,883 - interface - get_text_from_screen - WARNING - Attempt 1: 'Nivel' text not found
-2025-01-31 00:34:17,298 - interface - get_text_from_screen - WARNING - Attempt 2: 'Nivel' text not found
-2025-01-31 00:34:18,700 - interface - get_text_from_screen - DEBUG - Found 'Nivel' at rectangle: [1368, 264, 1404, 277]
-2025-01-31 00:34:18,701 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:34:18,701 - interface - get_level_ocr - DEBUG - Created new_coords: [1604, 262, 1754, 279]
-2025-01-31 00:34:18,701 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:34:18,825 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 1
-2025-01-31 00:34:18,826 - interface - get_text_from_screen - DEBUG - Attempting to locate Resetear text on screen
-2025-01-31 00:34:20,272 - interface - get_text_from_screen - DEBUG - Found 'Resetear' at rectangle: [1368, 283, 1434, 315]
-2025-01-31 00:34:20,273 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:20,273 - interface - get_reset_ocr - DEBUG - Created new_coords: [1634, 279, 1714, 319]
-2025-01-31 00:34:20,273 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:34:20,405 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:34:20,406 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
-2025-01-31 00:34:21,831 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1368, 341, 1418, 353]
-2025-01-31 00:34:21,831 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:34:21,831 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1688, 337, 1748, 357]
-2025-01-31 00:34:21,831 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:34:21,957 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 1
-2025-01-31 00:34:21,957 - interface - get_text_from_screen - DEBUG - Attempting to locate Fuerza text on screen
-2025-01-31 00:34:23,393 - interface - get_text_from_screen - DEBUG - Found 'Fuerza' at rectangle: [1369, 388, 1428, 420]
-2025-01-31 00:34:23,394 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:23,394 - interface - get_attr_ocr - DEBUG - Created new_coords: [1528, 384, 1648, 424]
-2025-01-31 00:34:23,394 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-31 00:34:23,520 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 6678
-2025-01-31 00:34:23,520 - interface - get_text_from_screen - DEBUG - Attempting to locate Agilidad text on screen
-2025-01-31 00:34:24,950 - interface - get_text_from_screen - DEBUG - Found 'Agilidad' at rectangle: [1364, 442, 1436, 473]
-2025-01-31 00:34:24,952 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:24,952 - interface - get_attr_ocr - DEBUG - Created new_coords: [1536, 438, 1656, 477]
-2025-01-31 00:34:24,952 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-31 00:34:25,080 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:34:25,080 - interface - get_text_from_screen - DEBUG - Attempting to locate Vitalidad text on screen
-2025-01-31 00:34:26,469 - interface - get_text_from_screen - DEBUG - Found 'Vitalidad' at rectangle: [1368, 526, 1441, 560]
-2025-01-31 00:34:26,470 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:26,470 - interface - get_attr_ocr - DEBUG - Created new_coords: [1541, 522, 1661, 564]
-2025-01-31 00:34:26,470 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-31 00:34:26,604 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:34:26,604 - interface - get_text_from_screen - DEBUG - Attempting to locate Energia text on screen
-2025-01-31 00:34:28,032 - interface - get_text_from_screen - WARNING - Attempt 1: 'Energia' text not found
-2025-01-31 00:34:29,426 - interface - get_text_from_screen - WARNING - Attempt 2: 'Energia' text not found
-2025-01-31 00:34:30,840 - interface - get_text_from_screen - DEBUG - Found 'Energia' at rectangle: [1369, 580, 1435, 611]
-2025-01-31 00:34:30,841 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:30,841 - interface - get_attr_ocr - DEBUG - Created new_coords: [1535, 576, 1655, 615]
-2025-01-31 00:34:30,841 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-31 00:34:30,969 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:34:30,970 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-31 00:34:30,970 - __main__ - read_all_stats - INFO - Available Points: 1
-2025-01-31 00:34:30,970 - __main__ - read_all_stats - INFO - Strength: 6678
-2025-01-31 00:34:30,970 - __main__ - read_all_stats - INFO - Agility: 975
-2025-01-31 00:34:30,970 - __main__ - read_all_stats - INFO - Vitality: 975
-2025-01-31 00:34:30,970 - __main__ - read_all_stats - INFO - Command: 0
-2025-01-31 00:34:30,970 - __main__ - run - INFO - 2. Assign attributes
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Starting distribution of 1 available points
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Stat distribution config: {'strenght': 0.7, 'agility': 0.1, 'vitality': 0.1, 'energy': 0.1}
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Skipping strenght - no points to allocate (ratio: 0.7)
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Skipping agility - no points to allocate (ratio: 0.1)
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Skipping vitality - no points to allocate (ratio: 0.1)
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Skipping energy - no points to allocate (ratio: 0.1)
-2025-01-31 00:34:30,975 - __main__ - distribute_attributes - INFO - Distribution complete, reading final stats
-2025-01-31 00:34:30,975 - __main__ - run - INFO - 3. Show last stats after add attributes
-2025-01-31 00:34:32,976 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:34:32,976 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:34:32,976 - interface - get_level_ocr - DEBUG - Created new_coords: [1604, 262, 1754, 279]
-2025-01-31 00:34:32,976 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:34:33,094 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 1
-2025-01-31 00:34:33,095 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:33,095 - interface - get_reset_ocr - DEBUG - Created new_coords: [1634, 279, 1714, 319]
-2025-01-31 00:34:33,095 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:34:33,211 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:34:33,213 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:34:33,213 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1688, 337, 1748, 357]
-2025-01-31 00:34:33,213 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:34:33,318 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 1
-2025-01-31 00:34:33,320 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:33,320 - interface - get_attr_ocr - DEBUG - Created new_coords: [1528, 384, 1648, 424]
-2025-01-31 00:34:33,320 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-31 00:34:33,444 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 6678
-2025-01-31 00:34:33,445 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:33,445 - interface - get_attr_ocr - DEBUG - Created new_coords: [1536, 438, 1656, 477]
-2025-01-31 00:34:33,445 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-31 00:34:33,567 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:34:33,568 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:33,568 - interface - get_attr_ocr - DEBUG - Created new_coords: [1541, 522, 1661, 564]
-2025-01-31 00:34:33,568 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-31 00:34:33,694 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:34:33,695 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:34:33,695 - interface - get_attr_ocr - DEBUG - Created new_coords: [1535, 576, 1655, 615]
-2025-01-31 00:34:33,695 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-31 00:34:33,822 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:34:33,822 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-31 00:34:33,822 - __main__ - read_all_stats - INFO - Available Points: 1
-2025-01-31 00:34:33,822 - __main__ - read_all_stats - INFO - Strength: 6678
-2025-01-31 00:34:33,822 - __main__ - read_all_stats - INFO - Agility: 975
-2025-01-31 00:34:33,822 - __main__ - read_all_stats - INFO - Vitality: 975
-2025-01-31 00:34:33,822 - __main__ - read_all_stats - INFO - Command: 0
-2025-01-31 00:34:33,823 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:34:34,425 - interface - execute_command - DEBUG - Command /move lorencia is executing
-2025-01-31 00:34:38,444 - interface - open_stats_window - INFO - Open stat window
-2025-01-31 00:34:38,546 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:34:38,646 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:38,772 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,120'
-2025-01-31 00:34:38,772 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 120]
-2025-01-31 00:34:38,773 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [147, 120] (attempt 1)
-2025-01-31 00:34:38,878 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:39,001 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,126'
-2025-01-31 00:34:39,001 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 126]
-2025-01-31 00:34:39,002 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [147, 126] (attempt 1)
-2025-01-31 00:34:39,102 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:39,243 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,120'
-2025-01-31 00:34:39,243 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 120]
-2025-01-31 00:34:39,243 - __main__ - move_to_coordinates - INFO - [POS] Current:[147,120] → Target:[128,200] | Δ[-19,80] | Dist:99 | Last move: None
-2025-01-31 00:34:39,695 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:39,821 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,121'
-2025-01-31 00:34:39,821 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 121]
-2025-01-31 00:34:39,822 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [146, 121] (attempt 1)
-2025-01-31 00:34:39,922 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:40,052 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,122'
-2025-01-31 00:34:40,052 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 122]
-2025-01-31 00:34:40,052 - __main__ - move_to_coordinates - INFO - [POS] Current:[145,122] → Target:[128,200] | Δ[-17,78] | Dist:95 | Last move: diagonal_NW
-2025-01-31 00:34:40,505 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:40,639 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '144,123'
-2025-01-31 00:34:40,639 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [144, 123]
-2025-01-31 00:34:40,640 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [144, 123] (attempt 1)
-2025-01-31 00:34:40,740 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:40,868 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '144,123'
-2025-01-31 00:34:40,869 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [144, 123]
-2025-01-31 00:34:40,869 - __main__ - move_to_coordinates - INFO - [POS] Current:[144,123] → Target:[128,200] | Δ[-16,77] | Dist:93 | Last move: diagonal_NW
-2025-01-31 00:34:41,321 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:41,453 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '143,124'
-2025-01-31 00:34:41,453 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [143, 124]
-2025-01-31 00:34:41,454 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [143, 124] (attempt 1)
-2025-01-31 00:34:41,554 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:41,687 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142,125'
-2025-01-31 00:34:41,687 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 125]
-2025-01-31 00:34:41,687 - __main__ - move_to_coordinates - INFO - [POS] Current:[142,125] → Target:[128,200] | Δ[-14,75] | Dist:89 | Last move: diagonal_NW
-2025-01-31 00:34:42,140 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:42,269 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,126'
-2025-01-31 00:34:42,269 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 126]
-2025-01-31 00:34:42,269 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [141, 126] (attempt 1)
-2025-01-31 00:34:42,370 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:42,497 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '140,127'
-2025-01-31 00:34:42,497 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [140, 127]
-2025-01-31 00:34:42,497 - __main__ - move_to_coordinates - INFO - [POS] Current:[140,127] → Target:[128,200] | Δ[-12,73] | Dist:85 | Last move: diagonal_NW
-2025-01-31 00:34:42,950 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:43,074 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '139,128'
-2025-01-31 00:34:43,074 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [139, 128]
-2025-01-31 00:34:43,074 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [139, 128] (attempt 1)
-2025-01-31 00:34:43,175 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:43,303 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '139,129'
-2025-01-31 00:34:43,303 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [139, 129]
-2025-01-31 00:34:43,303 - __main__ - move_to_coordinates - INFO - [POS] Current:[139,129] → Target:[128,200] | Δ[-11,71] | Dist:82 | Last move: diagonal_NW
-2025-01-31 00:34:43,755 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:43,887 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,131'
-2025-01-31 00:34:43,887 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 131]
-2025-01-31 00:34:43,888 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 131] (attempt 1)
-2025-01-31 00:34:43,988 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:44,120 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,131'
-2025-01-31 00:34:44,120 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 131]
-2025-01-31 00:34:44,120 - __main__ - move_to_coordinates - INFO - [POS] Current:[137,131] → Target:[128,200] | Δ[-9,69] | Dist:78 | Last move: diagonal_NW
-2025-01-31 00:34:44,572 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:44,706 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '135,131'
-2025-01-31 00:34:44,706 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [135, 131]
-2025-01-31 00:34:44,707 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [135, 131] (attempt 1)
-2025-01-31 00:34:44,807 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:44,935 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '135,131'
-2025-01-31 00:34:44,935 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [135, 131]
-2025-01-31 00:34:44,935 - __main__ - move_to_coordinates - INFO - [POS] Current:[135,131] → Target:[128,200] | Δ[-7,69] | Dist:76 | Last move: diagonal_NW
-2025-01-31 00:34:45,388 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:45,512 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '133,133'
-2025-01-31 00:34:45,512 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [133, 133]
-2025-01-31 00:34:45,512 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [133, 133] (attempt 1)
-2025-01-31 00:34:45,613 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:45,744 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '133,133'
-2025-01-31 00:34:45,744 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [133, 133]
-2025-01-31 00:34:45,744 - __main__ - move_to_coordinates - INFO - [POS] Current:[133,133] → Target:[128,200] | Δ[-5,67] | Dist:72 | Last move: diagonal_NW
-2025-01-31 00:34:46,196 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:46,325 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,134'
-2025-01-31 00:34:46,325 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 134]
-2025-01-31 00:34:46,325 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 134] (attempt 1)
-2025-01-31 00:34:46,426 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:46,554 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,135'
-2025-01-31 00:34:46,554 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 135]
-2025-01-31 00:34:46,554 - __main__ - move_to_coordinates - INFO - [POS] Current:[131,135] → Target:[128,200] | Δ[-3,65] | Dist:68 | Last move: diagonal_NW
-2025-01-31 00:34:46,956 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:47,086 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,136'
-2025-01-31 00:34:47,086 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 136]
-2025-01-31 00:34:47,086 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 136] (attempt 1)
-2025-01-31 00:34:47,187 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:47,307 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,136'
-2025-01-31 00:34:47,307 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 136]
-2025-01-31 00:34:47,307 - __main__ - move_to_coordinates - INFO - [POS] Current:[131,136] → Target:[128,200] | Δ[-3,64] | Dist:67 | Last move: cardinal_N
-2025-01-31 00:34:47,709 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:47,837 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,138'
-2025-01-31 00:34:47,837 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 138]
-2025-01-31 00:34:47,838 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 138] (attempt 1)
-2025-01-31 00:34:47,938 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:48,069 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,139'
-2025-01-31 00:34:48,069 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 139]
-2025-01-31 00:34:48,069 - __main__ - move_to_coordinates - INFO - [POS] Current:[131,139] → Target:[128,200] | Δ[-3,61] | Dist:64 | Last move: cardinal_N
-2025-01-31 00:34:48,471 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:48,604 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '31,140'
-2025-01-31 00:34:48,604 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [31, 140]
-2025-01-31 00:34:48,604 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [31, 140] (attempt 1)
-2025-01-31 00:34:48,705 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:48,830 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:34:48,830 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:34:49,831 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:34:49,832 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:34:51,832 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:34:51,832 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:34:51,932 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:52,055 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:34:52,055 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:34:55,060 - interface - scroll - INFO - Scrolled by: -141 units (random)
-2025-01-31 00:34:56,161 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:56,286 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,143'
-2025-01-31 00:34:56,286 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 143]
-2025-01-31 00:34:56,287 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 143] (attempt 2)
-2025-01-31 00:34:56,392 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:56,516 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,143'
-2025-01-31 00:34:56,516 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 143]
-2025-01-31 00:34:56,517 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 143] (attempt 1)
-2025-01-31 00:34:56,617 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:56,742 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,143'
-2025-01-31 00:34:56,742 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 143]
-2025-01-31 00:34:56,742 - __main__ - move_to_coordinates - INFO - [POS] Current:[131,143] → Target:[128,200] | Δ[-3,57] | Dist:60 | Last move: None
-2025-01-31 00:34:57,145 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:57,269 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,144'
-2025-01-31 00:34:57,269 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 144]
-2025-01-31 00:34:57,270 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 144] (attempt 1)
-2025-01-31 00:34:57,370 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:57,514 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,145'
-2025-01-31 00:34:57,514 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 145]
-2025-01-31 00:34:57,514 - __main__ - move_to_coordinates - INFO - [POS] Current:[131,145] → Target:[128,200] | Δ[-3,55] | Dist:58 | Last move: cardinal_N
-2025-01-31 00:34:57,916 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:34:58,038 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:34:58,038 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:35:01,043 - interface - scroll - INFO - Scrolled by: 13 units (random)
-2025-01-31 00:35:02,144 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:02,269 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,148'
-2025-01-31 00:35:02,269 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 148]
-2025-01-31 00:35:02,269 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 148] (attempt 2)
-2025-01-31 00:35:02,369 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:02,492 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,148'
-2025-01-31 00:35:02,493 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 148]
-2025-01-31 00:35:02,493 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,148] → Target:[128,200] | Δ[-2,52] | Dist:54 | Last move: cardinal_N
-2025-01-31 00:35:02,895 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:03,019 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,148'
-2025-01-31 00:35:03,019 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 148]
-2025-01-31 00:35:03,020 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 148] (attempt 1)
-2025-01-31 00:35:03,120 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:03,240 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,149'
-2025-01-31 00:35:03,240 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 149]
-2025-01-31 00:35:03,241 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,149] → Target:[128,200] | Δ[-4,51] | Dist:55 | Last move: cardinal_N
-2025-01-31 00:35:03,693 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:03,820 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:03,821 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:03,821 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 150] (attempt 1)
-2025-01-31 00:35:03,922 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:04,051 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:04,052 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:04,052 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,150] → Target:[128,200] | Δ[-4,50] | Dist:54 | Last move: diagonal_NW
-2025-01-31 00:35:04,504 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:04,635 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:04,635 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:04,636 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 150] (attempt 1)
-2025-01-31 00:35:04,737 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:04,860 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:04,860 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:04,860 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,150] → Target:[128,200] | Δ[-4,50] | Dist:54 | Last move: diagonal_NW
-2025-01-31 00:35:04,860 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:04,860 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:05,411 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:05,532 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:05,532 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:05,533 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 150] (attempt 1)
-2025-01-31 00:35:05,633 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:05,759 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:05,760 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:05,760 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,150] → Target:[128,200] | Δ[-4,50] | Dist:54[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:05,760 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:05,760 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:06,312 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:06,435 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:06,435 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:06,435 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 150] (attempt 1)
-2025-01-31 00:35:06,535 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:06,659 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,150'
-2025-01-31 00:35:06,659 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 150]
-2025-01-31 00:35:06,659 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,150] → Target:[128,200] | Δ[-4,50] | Dist:54[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:06,659 - __main__ - move_to_coordinates - WARNING - [STUCK] 🚫 Stuck for 3 moves at [132,150] Time since last movement: 0.7s
-2025-01-31 00:35:06,659 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:06,659 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:07,161 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:07,285 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,151'
-2025-01-31 00:35:07,286 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 151]
-2025-01-31 00:35:07,286 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 151] (attempt 1)
-2025-01-31 00:35:07,387 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:07,516 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,153'
-2025-01-31 00:35:07,516 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 153]
-2025-01-31 00:35:07,516 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,153] → Target:[128,200] | Δ[-4,47] | Dist:51[Blocked: E] | Last move: escape_N
-2025-01-31 00:35:07,516 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:07,516 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:08,068 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:08,192 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,153'
-2025-01-31 00:35:08,192 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 153]
-2025-01-31 00:35:08,192 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 153] (attempt 1)
-2025-01-31 00:35:08,292 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:08,419 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,153'
-2025-01-31 00:35:08,419 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 153]
-2025-01-31 00:35:08,419 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,153] → Target:[128,200] | Δ[-4,47] | Dist:51[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:08,419 - __main__ - move_to_coordinates - WARNING - [STUCK] 🚫 Stuck for 3 moves at [132,153] Time since last movement: 0.8s
-2025-01-31 00:35:08,419 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:08,419 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:08,921 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:09,052 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,155'
-2025-01-31 00:35:09,052 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 155]
-2025-01-31 00:35:09,053 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 155] (attempt 1)
-2025-01-31 00:35:09,153 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:09,296 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,155'
-2025-01-31 00:35:09,296 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 155]
-2025-01-31 00:35:09,296 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,155] → Target:[128,200] | Δ[-4,45] | Dist:49[Blocked: E] | Last move: escape_N
-2025-01-31 00:35:09,296 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:09,297 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:09,999 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:10,126 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,156'
-2025-01-31 00:35:10,126 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 156]
-2025-01-31 00:35:10,126 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 156] (attempt 1)
-2025-01-31 00:35:10,226 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:10,351 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,156'
-2025-01-31 00:35:10,351 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 156]
-2025-01-31 00:35:10,351 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,156] → Target:[128,200] | Δ[-4,44] | Dist:48[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:10,351 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:10,351 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:11,054 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:11,186 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,156'
-2025-01-31 00:35:11,186 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 156]
-2025-01-31 00:35:11,186 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 156] (attempt 1)
-2025-01-31 00:35:11,287 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:11,416 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,156'
-2025-01-31 00:35:11,416 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 156]
-2025-01-31 00:35:11,416 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,156] → Target:[128,200] | Δ[-4,44] | Dist:48[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:11,416 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:11,416 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:12,119 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:12,242 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,156'
-2025-01-31 00:35:12,242 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 156]
-2025-01-31 00:35:12,242 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 156] (attempt 1)
-2025-01-31 00:35:12,343 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:12,469 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,156'
-2025-01-31 00:35:12,469 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 156]
-2025-01-31 00:35:12,469 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,156] → Target:[128,200] | Δ[-4,44] | Dist:48[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:12,469 - __main__ - move_to_coordinates - WARNING - [STUCK] 🚫 Stuck for 3 moves at [132,156] Time since last movement: 0.9s
-2025-01-31 00:35:12,469 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:12,469 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:13,121 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:13,252 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,158'
-2025-01-31 00:35:13,253 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 158]
-2025-01-31 00:35:13,253 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 158] (attempt 1)
-2025-01-31 00:35:13,353 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:13,484 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132159'
-2025-01-31 00:35:13,484 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:35:14,486 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:35:14,487 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:35:16,487 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:35:16,487 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:35:16,588 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:16,718 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:16,719 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:16,719 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 160] (attempt 1)
-2025-01-31 00:35:16,824 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:16,949 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132, 160'
-2025-01-31 00:35:16,949 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:16,950 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 160] (attempt 1)
-2025-01-31 00:35:17,050 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:17,173 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:17,173 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:17,173 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,160] → Target:[128,200] | Δ[-4,40] | Dist:44 | Last move: None
-2025-01-31 00:35:17,726 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:17,850 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:17,850 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:17,851 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 160] (attempt 1)
-2025-01-31 00:35:17,951 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:18,075 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:18,075 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:18,075 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,160] → Target:[128,200] | Δ[-4,40] | Dist:44 | Last move: diagonal_NW
-2025-01-31 00:35:18,777 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:18,897 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:18,897 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:18,897 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 160] (attempt 1)
-2025-01-31 00:35:18,998 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:19,126 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132, 160'
-2025-01-31 00:35:19,126 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:19,126 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,160] → Target:[128,200] | Δ[-4,40] | Dist:44 | Last move: diagonal_NW
-2025-01-31 00:35:19,829 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:19,959 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:19,959 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:19,960 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 160] (attempt 1)
-2025-01-31 00:35:20,060 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:20,190 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,160'
-2025-01-31 00:35:20,190 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 160]
-2025-01-31 00:35:20,190 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,160] → Target:[128,200] | Δ[-4,40] | Dist:44 | Last move: diagonal_NW
-2025-01-31 00:35:20,190 - __main__ - move_to_coordinates - WARNING - [STUCK] 🚫 Stuck for 3 moves at [132,160] Time since last movement: 0.9s
-2025-01-31 00:35:20,843 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:20,967 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,162'
-2025-01-31 00:35:20,967 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 162]
-2025-01-31 00:35:20,968 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 162] (attempt 1)
-2025-01-31 00:35:21,068 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:21,203 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,163'
-2025-01-31 00:35:21,203 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 163]
-2025-01-31 00:35:21,203 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,163] → Target:[128,200] | Δ[-4,37] | Dist:41 | Last move: escape_N
-2025-01-31 00:35:21,203 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:21,203 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:21,905 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:22,034 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '133,165'
-2025-01-31 00:35:22,034 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [133, 165]
-2025-01-31 00:35:22,034 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [133, 165] (attempt 1)
-2025-01-31 00:35:22,135 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:22,260 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,166'
-2025-01-31 00:35:22,260 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 166]
-2025-01-31 00:35:22,260 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,166] → Target:[128,200] | Δ[-4,34] | Dist:38[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:22,260 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:22,260 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:22,962 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:23,091 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,168'
-2025-01-31 00:35:23,091 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 168]
-2025-01-31 00:35:23,091 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 168] (attempt 1)
-2025-01-31 00:35:23,192 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:23,319 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,168'
-2025-01-31 00:35:23,319 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 168]
-2025-01-31 00:35:23,319 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,168] → Target:[128,200] | Δ[-4,32] | Dist:36[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:23,319 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=132
-2025-01-31 00:35:23,319 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:23,872 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:23,992 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '131,171'
-2025-01-31 00:35:23,992 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [131, 171]
-2025-01-31 00:35:23,993 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [131, 171] (attempt 1)
-2025-01-31 00:35:24,093 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:24,219 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,171'
-2025-01-31 00:35:24,219 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 171]
-2025-01-31 00:35:24,219 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,171] → Target:[128,200] | Δ[-2,29] | Dist:31[Blocked: E] | Last move: diagonal_NW
-2025-01-31 00:35:24,219 - __main__ - detect_wall - WARNING - [WALL] ⬅️ West movement blocked at x=130
-2025-01-31 00:35:24,219 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E', 'W'}
-2025-01-31 00:35:24,722 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:24,850 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '129,172'
-2025-01-31 00:35:24,850 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [129, 172]
-2025-01-31 00:35:24,851 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [129, 172] (attempt 1)
-2025-01-31 00:35:24,951 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:25,070 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:35:25,070 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:35:26,072 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:35:26,072 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:35:28,073 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:35:28,073 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:35:28,173 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:28,303 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,175'
-2025-01-31 00:35:28,303 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 175]
-2025-01-31 00:35:28,304 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 175] (attempt 1)
-2025-01-31 00:35:28,409 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:28,532 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,175'
-2025-01-31 00:35:28,532 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 175]
-2025-01-31 00:35:28,532 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 175] (attempt 1)
-2025-01-31 00:35:28,633 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:28,756 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,175'
-2025-01-31 00:35:28,756 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 175]
-2025-01-31 00:35:28,756 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,175] → Target:[128,200] | Δ[-2,25] | Dist:27 | Last move: None
-2025-01-31 00:35:29,258 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:29,385 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,177'
-2025-01-31 00:35:29,385 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 177]
-2025-01-31 00:35:29,385 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 177] (attempt 1)
-2025-01-31 00:35:29,486 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:29,617 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,177'
-2025-01-31 00:35:29,617 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 177]
-2025-01-31 00:35:29,617 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,177] → Target:[128,200] | Δ[-2,23] | Dist:25 | Last move: cardinal_N
-2025-01-31 00:35:30,119 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:30,250 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,180'
-2025-01-31 00:35:30,250 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 180]
-2025-01-31 00:35:30,251 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 180] (attempt 1)
-2025-01-31 00:35:30,351 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:30,479 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,180'
-2025-01-31 00:35:30,479 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 180]
-2025-01-31 00:35:30,479 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,180] → Target:[128,200] | Δ[-2,20] | Dist:22 | Last move: cardinal_N
-2025-01-31 00:35:30,982 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:31,106 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,183'
-2025-01-31 00:35:31,107 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 183]
-2025-01-31 00:35:31,107 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 183] (attempt 1)
-2025-01-31 00:35:31,207 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:31,337 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,184'
-2025-01-31 00:35:31,337 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 184]
-2025-01-31 00:35:31,337 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,184] → Target:[128,200] | Δ[-2,16] | Dist:18 | Last move: cardinal_N
-2025-01-31 00:35:31,839 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:31,967 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,186'
-2025-01-31 00:35:31,967 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 186]
-2025-01-31 00:35:31,967 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 186] (attempt 1)
-2025-01-31 00:35:32,068 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:32,191 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,188'
-2025-01-31 00:35:32,191 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 188]
-2025-01-31 00:35:32,191 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,188] → Target:[128,200] | Δ[-2,12] | Dist:14 | Last move: cardinal_N
-2025-01-31 00:35:32,191 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=130
-2025-01-31 00:35:32,191 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:32,693 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:32,818 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,190'
-2025-01-31 00:35:32,818 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 190]
-2025-01-31 00:35:32,818 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 190] (attempt 1)
-2025-01-31 00:35:32,918 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:33,042 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,191'
-2025-01-31 00:35:33,042 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 191]
-2025-01-31 00:35:33,042 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,191] → Target:[128,200] | Δ[-2,9] | Dist:11[Blocked: E] | Last move: cardinal_N
-2025-01-31 00:35:33,042 - __main__ - detect_wall - WARNING - [WALL] ➡️ East movement blocked at x=130
-2025-01-31 00:35:33,042 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'E'}
-2025-01-31 00:35:33,545 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:33,668 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,194'
-2025-01-31 00:35:33,668 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 194]
-2025-01-31 00:35:33,669 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 194] (attempt 1)
-2025-01-31 00:35:33,769 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:33,906 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,194'
-2025-01-31 00:35:33,906 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 194]
-2025-01-31 00:35:33,906 - __main__ - move_to_coordinates - INFO - [POS] Current:[130,194] → Target:[128,200] | Δ[-2,6] | Dist:8[Blocked: E] | Last move: cardinal_N
-2025-01-31 00:35:33,906 - __main__ - move_to_coordinates - INFO - [MOVEMENT] ✅ Reached destination!
-2025-01-31 00:35:34,007 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:34,134 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,195'
-2025-01-31 00:35:34,134 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 195]
-2025-01-31 00:35:34,134 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 195] (attempt 1)
-2025-01-31 00:35:34,145 - __main__ - check_and_click_play - INFO - Play button clicked - was inactive (green)
-2025-01-31 00:35:34,245 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:34,372 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,195'
-2025-01-31 00:35:34,372 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 195]
-2025-01-31 00:35:34,372 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 195] (attempt 1)
-2025-01-31 00:35:34,373 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:35:34,373 - __main__ - run - INFO - 2. Wait 5 seconds until check and add stats
-2025-01-31 00:35:41,374 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:35:41,374 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:35:41,374 - interface - get_level_ocr - DEBUG - Created new_coords: [1604, 262, 1754, 279]
-2025-01-31 00:35:41,374 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:35:41,503 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 7
-2025-01-31 00:35:41,504 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:35:41,504 - interface - get_reset_ocr - DEBUG - Created new_coords: [1634, 279, 1714, 319]
-2025-01-31 00:35:41,504 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:35:41,637 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:35:41,638 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:35:41,638 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1688, 337, 1748, 357]
-2025-01-31 00:35:41,638 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:35:41,764 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 43
-2025-01-31 00:35:41,766 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:35:41,766 - interface - get_attr_ocr - DEBUG - Created new_coords: [1528, 384, 1648, 424]
-2025-01-31 00:35:41,766 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-31 00:35:41,895 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 6678
-2025-01-31 00:35:41,895 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:35:41,895 - interface - get_attr_ocr - DEBUG - Created new_coords: [1536, 438, 1656, 477]
-2025-01-31 00:35:41,895 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-31 00:35:42,024 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:35:42,024 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:35:42,024 - interface - get_attr_ocr - DEBUG - Created new_coords: [1541, 522, 1661, 564]
-2025-01-31 00:35:42,024 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-31 00:35:42,147 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:35:42,148 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:35:42,148 - interface - get_attr_ocr - DEBUG - Created new_coords: [1535, 576, 1655, 615]
-2025-01-31 00:35:42,148 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-31 00:35:42,277 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 975
-2025-01-31 00:35:42,278 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-31 00:35:42,278 - __main__ - read_all_stats - INFO - Available Points: 43
-2025-01-31 00:35:42,278 - __main__ - read_all_stats - INFO - Strength: 6678
-2025-01-31 00:35:42,278 - __main__ - read_all_stats - INFO - Agility: 975
-2025-01-31 00:35:42,278 - __main__ - read_all_stats - INFO - Vitality: 975
-2025-01-31 00:35:42,278 - __main__ - read_all_stats - INFO - Command: 0
-2025-01-31 00:35:42,285 - __main__ - distribute_attributes - INFO - Starting distribution of 43 available points
-2025-01-31 00:35:42,285 - __main__ - distribute_attributes - INFO - Stat distribution config: {'strenght': 0.7, 'agility': 0.1, 'vitality': 0.1, 'energy': 0.1}
-2025-01-31 00:35:42,887 - interface - execute_command - DEBUG - Command /s 30 is executing
-2025-01-31 00:35:44,693 - __main__ - distribute_attributes - INFO - Allocating 30 points to strenght
-2025-01-31 00:35:45,295 - interface - execute_command - DEBUG - Command /a 4 is executing
-2025-01-31 00:35:47,000 - __main__ - distribute_attributes - INFO - Allocating 4 points to agility
-2025-01-31 00:35:47,602 - interface - execute_command - DEBUG - Command /v 4 is executing
-2025-01-31 00:35:49,307 - __main__ - distribute_attributes - INFO - Allocating 4 points to vitality
-2025-01-31 00:35:49,908 - interface - execute_command - DEBUG - Command /e 4 is executing
-2025-01-31 00:35:51,613 - __main__ - distribute_attributes - INFO - Allocating 4 points to energy
-2025-01-31 00:35:51,614 - __main__ - distribute_attributes - INFO - Distribution complete, reading final stats
-2025-01-31 00:35:51,614 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:35:51,614 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:35:53,615 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:35:53,615 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:35:53,715 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:53,842 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '130,195'
-2025-01-31 00:35:53,842 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [130, 195]
-2025-01-31 00:35:53,842 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [130, 195] (attempt 1)
-2025-01-31 00:35:53,943 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:54,069 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '129,194'
-2025-01-31 00:35:54,069 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [129, 194]
-2025-01-31 00:35:54,069 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [129, 194] (attempt 1)
-2025-01-31 00:35:54,169 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:54,302 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '129,194'
-2025-01-31 00:35:54,302 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [129, 194]
-2025-01-31 00:35:54,302 - __main__ - move_to_coordinates - INFO - [POS] Current:[129,194] → Target:[128,200] | Δ[-1,6] | Dist:7 | Last move: None
-2025-01-31 00:35:54,302 - __main__ - move_to_coordinates - INFO - [MOVEMENT] ✅ Reached destination!
-2025-01-31 00:35:54,402 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:54,537 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '128,193'
-2025-01-31 00:35:54,537 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [128, 193]
-2025-01-31 00:35:54,537 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [128, 193] (attempt 1)
-2025-01-31 00:35:54,542 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:35:54,642 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:35:54,775 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '127,193'
-2025-01-31 00:35:54,775 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [127, 193]
-2025-01-31 00:35:54,775 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [127, 193] (attempt 1)
-2025-01-31 00:35:54,780 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:35:54,780 - __main__ - run - INFO - 2. Wait 5 seconds until check and add stats
-2025-01-31 00:36:01,781 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:36:01,781 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:36:01,781 - interface - get_level_ocr - DEBUG - Created new_coords: [1604, 262, 1754, 279]
-2025-01-31 00:36:01,781 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:36:01,910 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 14
-2025-01-31 00:36:01,911 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:36:01,911 - interface - get_reset_ocr - DEBUG - Created new_coords: [1634, 279, 1714, 319]
-2025-01-31 00:36:01,911 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:36:02,037 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:36:02,038 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:36:02,038 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1688, 337, 1748, 357]
-2025-01-31 00:36:02,038 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:36:02,163 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 50
-2025-01-31 00:36:02,165 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:36:02,165 - interface - get_attr_ocr - DEBUG - Created new_coords: [1528, 384, 1648, 424]
-2025-01-31 00:36:02,165 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-31 00:36:02,302 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 6708
-2025-01-31 00:36:02,303 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:36:02,303 - interface - get_attr_ocr - DEBUG - Created new_coords: [1536, 438, 1656, 477]
-2025-01-31 00:36:02,303 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-31 00:36:02,445 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 979
-2025-01-31 00:36:02,446 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:36:02,446 - interface - get_attr_ocr - DEBUG - Created new_coords: [1541, 522, 1661, 564]
-2025-01-31 00:36:02,446 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-31 00:36:02,585 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 979
-2025-01-31 00:36:02,586 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:36:02,586 - interface - get_attr_ocr - DEBUG - Created new_coords: [1535, 576, 1655, 615]
-2025-01-31 00:36:02,586 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-31 00:36:02,728 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 979
-2025-01-31 00:36:02,729 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-31 00:36:02,729 - __main__ - read_all_stats - INFO - Available Points: 50
-2025-01-31 00:36:02,729 - __main__ - read_all_stats - INFO - Strength: 6708
-2025-01-31 00:36:02,729 - __main__ - read_all_stats - INFO - Agility: 979
-2025-01-31 00:36:02,729 - __main__ - read_all_stats - INFO - Vitality: 979
-2025-01-31 00:36:02,729 - __main__ - read_all_stats - INFO - Command: 0
-2025-01-31 00:36:02,736 - __main__ - distribute_attributes - INFO - Starting distribution of 50 available points
-2025-01-31 00:36:02,736 - __main__ - distribute_attributes - INFO - Stat distribution config: {'strenght': 0.7, 'agility': 0.1, 'vitality': 0.1, 'energy': 0.1}
-2025-01-31 00:36:03,338 - interface - execute_command - DEBUG - Command /s 35 is executing
-2025-01-31 00:36:05,143 - __main__ - distribute_attributes - INFO - Allocating 35 points to strenght
-2025-01-31 00:36:05,745 - interface - execute_command - DEBUG - Command /a 5 is executing
-2025-01-31 00:36:07,450 - __main__ - distribute_attributes - INFO - Allocating 5 points to agility
-2025-01-31 00:36:08,052 - interface - execute_command - DEBUG - Command /v 5 is executing
-2025-01-31 00:36:09,756 - __main__ - distribute_attributes - INFO - Allocating 5 points to vitality
-2025-01-31 00:36:10,357 - interface - execute_command - DEBUG - Command /e 5 is executing
-2025-01-31 00:36:12,062 - __main__ - distribute_attributes - INFO - Allocating 5 points to energy
-2025-01-31 00:36:12,062 - __main__ - distribute_attributes - INFO - Distribution complete, reading final stats
-2025-01-31 00:36:12,062 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:36:12,063 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:36:14,063 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:36:14,063 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:36:14,163 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:14,291 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,183'
-2025-01-31 00:36:14,291 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 183]
-2025-01-31 00:36:14,291 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [146, 183] (attempt 1)
-2025-01-31 00:36:14,398 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:14,526 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,182'
-2025-01-31 00:36:14,526 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 182]
-2025-01-31 00:36:14,526 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [146, 182] (attempt 1)
-2025-01-31 00:36:14,627 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:14,756 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,182'
-2025-01-31 00:36:14,756 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 182]
-2025-01-31 00:36:14,756 - __main__ - move_to_coordinates - INFO - [POS] Current:[146,182] → Target:[128,200] | Δ[-18,18] | Dist:36 | Last move: None
-2025-01-31 00:36:15,308 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:15,434 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '1455381'
-2025-01-31 00:36:15,434 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:36:18,440 - interface - scroll - INFO - Scrolled by: -745 units (random)
-2025-01-31 00:36:19,541 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:19,676 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,182'
-2025-01-31 00:36:19,676 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 182]
-2025-01-31 00:36:19,676 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 182] (attempt 2)
-2025-01-31 00:36:19,777 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:19,916 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,182'
-2025-01-31 00:36:19,916 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 182]
-2025-01-31 00:36:19,916 - __main__ - move_to_coordinates - INFO - [POS] Current:[137,182] → Target:[128,200] | Δ[-9,18] | Dist:27 | Last move: diagonal_NW
-2025-01-31 00:36:20,469 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:20,599 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,181'
-2025-01-31 00:36:20,599 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 181]
-2025-01-31 00:36:20,599 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 181] (attempt 1)
-2025-01-31 00:36:20,700 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:20,827 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,181'
-2025-01-31 00:36:20,828 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 181]
-2025-01-31 00:36:20,828 - __main__ - move_to_coordinates - INFO - [POS] Current:[137,181] → Target:[128,200] | Δ[-9,19] | Dist:28 | Last move: diagonal_NW
-2025-01-31 00:36:21,381 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:21,525 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,181'
-2025-01-31 00:36:21,525 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 181]
-2025-01-31 00:36:21,526 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 181] (attempt 1)
-2025-01-31 00:36:21,626 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:21,749 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,181'
-2025-01-31 00:36:21,749 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 181]
-2025-01-31 00:36:21,749 - __main__ - move_to_coordinates - INFO - [POS] Current:[137,181] → Target:[128,200] | Δ[-9,19] | Dist:28 | Last move: diagonal_NW
-2025-01-31 00:36:22,451 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:22,584 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,182'
-2025-01-31 00:36:22,584 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 182]
-2025-01-31 00:36:22,585 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 182] (attempt 1)
-2025-01-31 00:36:22,685 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:22,814 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '136,181'
-2025-01-31 00:36:22,814 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [136, 181]
-2025-01-31 00:36:22,814 - __main__ - move_to_coordinates - INFO - [POS] Current:[136,181] → Target:[128,200] | Δ[-8,19] | Dist:27 | Last move: diagonal_NW
-2025-01-31 00:36:22,814 - __main__ - detect_wall - WARNING - [WALL] ⬇️ South movement blocked at y=181
-2025-01-31 00:36:22,814 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'S'}
-2025-01-31 00:36:23,366 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:23,485 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '134,181'
-2025-01-31 00:36:23,485 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [134, 181]
-2025-01-31 00:36:23,485 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [134, 181] (attempt 1)
-2025-01-31 00:36:23,586 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:23,716 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '134,181'
-2025-01-31 00:36:23,716 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [134, 181]
-2025-01-31 00:36:23,716 - __main__ - move_to_coordinates - INFO - [POS] Current:[134,181] → Target:[128,200] | Δ[-6,19] | Dist:25[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:23,716 - __main__ - detect_wall - WARNING - [WALL] ⬇️ South movement blocked at y=181
-2025-01-31 00:36:23,716 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'S'}
-2025-01-31 00:36:24,269 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:24,400 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '134,181'
-2025-01-31 00:36:24,401 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [134, 181]
-2025-01-31 00:36:24,402 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [134, 181] (attempt 1)
-2025-01-31 00:36:24,502 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:24,630 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '133,180'
-2025-01-31 00:36:24,631 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [133, 180]
-2025-01-31 00:36:24,631 - __main__ - move_to_coordinates - INFO - [POS] Current:[133,180] → Target:[128,200] | Δ[-5,20] | Dist:25[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:24,631 - __main__ - detect_wall - WARNING - [WALL] ⬇️ South movement blocked at y=180
-2025-01-31 00:36:24,631 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'S'}
-2025-01-31 00:36:25,183 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:25,309 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,179'
-2025-01-31 00:36:25,309 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 179]
-2025-01-31 00:36:25,309 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 179] (attempt 1)
-2025-01-31 00:36:25,409 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:25,550 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,179'
-2025-01-31 00:36:25,550 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 179]
-2025-01-31 00:36:25,550 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,179] → Target:[128,200] | Δ[-4,21] | Dist:25[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:25,550 - __main__ - detect_wall - WARNING - [WALL] ⬇️ South movement blocked at y=179
-2025-01-31 00:36:25,550 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'S'}
-2025-01-31 00:36:26,103 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:26,232 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,179'
-2025-01-31 00:36:26,232 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 179]
-2025-01-31 00:36:26,233 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [132, 179] (attempt 1)
-2025-01-31 00:36:26,333 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:26,455 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '132,179'
-2025-01-31 00:36:26,455 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [132, 179]
-2025-01-31 00:36:26,455 - __main__ - move_to_coordinates - INFO - [POS] Current:[132,179] → Target:[128,200] | Δ[-4,21] | Dist:25[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:26,455 - __main__ - detect_wall - WARNING - [WALL] ⬇️ South movement blocked at y=179
-2025-01-31 00:36:26,455 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'S'}
-2025-01-31 00:36:27,158 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:27,287 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '134,177'
-2025-01-31 00:36:27,287 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [134, 177]
-2025-01-31 00:36:27,287 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [134, 177] (attempt 1)
-2025-01-31 00:36:27,388 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:27,519 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '134,177'
-2025-01-31 00:36:27,519 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [134, 177]
-2025-01-31 00:36:27,519 - __main__ - move_to_coordinates - INFO - [POS] Current:[134,177] → Target:[128,200] | Δ[-6,23] | Dist:29[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:28,071 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:28,200 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,176'
-2025-01-31 00:36:28,200 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 176]
-2025-01-31 00:36:28,201 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 176] (attempt 1)
-2025-01-31 00:36:28,301 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:28,444 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,176'
-2025-01-31 00:36:28,444 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 176]
-2025-01-31 00:36:28,444 - __main__ - move_to_coordinates - INFO - [POS] Current:[137,176] → Target:[128,200] | Δ[-9,24] | Dist:33[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:28,997 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:29,131 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,176'
-2025-01-31 00:36:29,131 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 176]
-2025-01-31 00:36:29,132 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 176] (attempt 1)
-2025-01-31 00:36:29,232 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:29,353 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,176'
-2025-01-31 00:36:29,353 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 176]
-2025-01-31 00:36:29,353 - __main__ - move_to_coordinates - INFO - [POS] Current:[137,176] → Target:[128,200] | Δ[-9,24] | Dist:33[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:30,056 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:30,183 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '140,175'
-2025-01-31 00:36:30,183 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [140, 175]
-2025-01-31 00:36:30,184 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [140, 175] (attempt 1)
-2025-01-31 00:36:30,285 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:30,417 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,175'
-2025-01-31 00:36:30,417 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 175]
-2025-01-31 00:36:30,417 - __main__ - move_to_coordinates - INFO - [POS] Current:[141,175] → Target:[128,200] | Δ[-13,25] | Dist:38[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:30,970 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:31,097 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,176'
-2025-01-31 00:36:31,097 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 176]
-2025-01-31 00:36:31,098 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [141, 176] (attempt 1)
-2025-01-31 00:36:31,198 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:31,320 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,176'
-2025-01-31 00:36:31,320 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 176]
-2025-01-31 00:36:31,320 - __main__ - move_to_coordinates - INFO - [POS] Current:[141,176] → Target:[128,200] | Δ[-13,24] | Dist:37[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:31,873 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:32,000 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '143,178'
-2025-01-31 00:36:32,000 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [143, 178]
-2025-01-31 00:36:32,000 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [143, 178] (attempt 1)
-2025-01-31 00:36:32,101 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:32,237 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '143,178'
-2025-01-31 00:36:32,237 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [143, 178]
-2025-01-31 00:36:32,237 - __main__ - move_to_coordinates - INFO - [POS] Current:[143,178] → Target:[128,200] | Δ[-15,22] | Dist:37[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:32,789 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:32,919 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142,179'
-2025-01-31 00:36:32,919 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 179]
-2025-01-31 00:36:32,920 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [142, 179] (attempt 1)
-2025-01-31 00:36:33,020 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:33,152 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,180'
-2025-01-31 00:36:33,152 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 180]
-2025-01-31 00:36:33,152 - __main__ - move_to_coordinates - INFO - [POS] Current:[141,180] → Target:[128,200] | Δ[-13,20] | Dist:33[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:33,705 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:33,835 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,181'
-2025-01-31 00:36:33,835 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 181]
-2025-01-31 00:36:33,836 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [141, 181] (attempt 1)
-2025-01-31 00:36:33,936 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:34,066 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142,181'
-2025-01-31 00:36:34,066 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 181]
-2025-01-31 00:36:34,067 - __main__ - move_to_coordinates - INFO - [POS] Current:[142,181] → Target:[128,200] | Δ[-14,19] | Dist:33[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:34,619 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:34,752 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,185'
-2025-01-31 00:36:34,752 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 185]
-2025-01-31 00:36:34,752 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [145, 185] (attempt 1)
-2025-01-31 00:36:34,852 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:34,979 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,181'
-2025-01-31 00:36:34,980 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 181]
-2025-01-31 00:36:34,980 - __main__ - move_to_coordinates - INFO - [POS] Current:[146,181] → Target:[128,200] | Δ[-18,19] | Dist:37[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:35,532 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:35,657 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,181'
-2025-01-31 00:36:35,657 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 181]
-2025-01-31 00:36:35,657 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [147, 181] (attempt 1)
-2025-01-31 00:36:35,758 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:35,881 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,181'
-2025-01-31 00:36:35,881 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 181]
-2025-01-31 00:36:35,881 - __main__ - move_to_coordinates - INFO - [POS] Current:[147,181] → Target:[128,200] | Δ[-19,19] | Dist:38[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:36,434 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:36,568 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,181'
-2025-01-31 00:36:36,568 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 181]
-2025-01-31 00:36:36,569 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [147, 181] (attempt 1)
-2025-01-31 00:36:36,669 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:36,799 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,182'
-2025-01-31 00:36:36,799 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 182]
-2025-01-31 00:36:36,799 - __main__ - move_to_coordinates - INFO - [POS] Current:[146,182] → Target:[128,200] | Δ[-18,18] | Dist:36[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:37,351 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:37,480 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '144,184'
-2025-01-31 00:36:37,480 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [144, 184]
-2025-01-31 00:36:37,480 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [144, 184] (attempt 1)
-2025-01-31 00:36:37,581 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:37,725 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '143,185'
-2025-01-31 00:36:37,725 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [143, 185]
-2025-01-31 00:36:37,725 - __main__ - move_to_coordinates - INFO - [POS] Current:[143,185] → Target:[128,200] | Δ[-15,15] | Dist:30[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:38,277 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:38,403 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '143,185'
-2025-01-31 00:36:38,403 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [143, 185]
-2025-01-31 00:36:38,404 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [143, 185] (attempt 1)
-2025-01-31 00:36:38,504 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:38,633 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142,186'
-2025-01-31 00:36:38,633 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 186]
-2025-01-31 00:36:38,633 - __main__ - move_to_coordinates - INFO - [POS] Current:[142,186] → Target:[128,200] | Δ[-14,14] | Dist:28[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:39,185 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:39,313 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,187'
-2025-01-31 00:36:39,313 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 187]
-2025-01-31 00:36:39,314 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [141, 187] (attempt 1)
-2025-01-31 00:36:39,414 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:39,543 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,188'
-2025-01-31 00:36:39,543 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 188]
-2025-01-31 00:36:39,543 - __main__ - move_to_coordinates - INFO - [POS] Current:[141,188] → Target:[128,200] | Δ[-13,12] | Dist:25[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:40,096 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:40,221 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '140489'
-2025-01-31 00:36:40,221 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:36:43,226 - interface - scroll - INFO - Scrolled by: 838 units (random)
-2025-01-31 00:36:44,326 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:44,456 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142, 186'
-2025-01-31 00:36:44,456 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 186]
-2025-01-31 00:36:44,456 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [142, 186] (attempt 2)
-2025-01-31 00:36:44,557 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:44,683 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142,186'
-2025-01-31 00:36:44,683 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 186]
-2025-01-31 00:36:44,683 - __main__ - move_to_coordinates - INFO - [POS] Current:[142,186] → Target:[128,200] | Δ[-14,14] | Dist:28[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:45,235 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:45,362 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,187'
-2025-01-31 00:36:45,362 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 187]
-2025-01-31 00:36:45,363 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [141, 187] (attempt 1)
-2025-01-31 00:36:45,463 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:45,589 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '142,186'
-2025-01-31 00:36:45,589 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [142, 186]
-2025-01-31 00:36:45,589 - __main__ - move_to_coordinates - INFO - [POS] Current:[142,186] → Target:[128,200] | Δ[-14,14] | Dist:28[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:46,291 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:46,414 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '144,187'
-2025-01-31 00:36:46,414 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [144, 187]
-2025-01-31 00:36:46,415 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [144, 187] (attempt 1)
-2025-01-31 00:36:46,515 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:46,640 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '45,188'
-2025-01-31 00:36:46,640 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [45, 188]
-2025-01-31 00:36:46,640 - __main__ - move_to_coordinates - INFO - [POS] Current:[45,188] → Target:[128,200] | Δ[83,12] | Dist:95[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:47,093 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:47,224 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:47,224 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:47,224 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [145, 188] (attempt 1)
-2025-01-31 00:36:47,324 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:47,447 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:47,447 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:47,447 - __main__ - move_to_coordinates - INFO - [POS] Current:[145,188] → Target:[128,200] | Δ[-17,12] | Dist:29[Blocked: S] | Last move: diagonal_NE
-2025-01-31 00:36:48,000 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:48,133 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:48,133 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:48,133 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [145, 188] (attempt 1)
-2025-01-31 00:36:48,234 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:48,366 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:48,367 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:48,367 - __main__ - move_to_coordinates - INFO - [POS] Current:[145,188] → Target:[128,200] | Δ[-17,12] | Dist:29[Blocked: S] | Last move: diagonal_NW
-2025-01-31 00:36:49,069 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:49,201 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:49,201 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:49,201 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [145, 188] (attempt 1)
-2025-01-31 00:36:49,301 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:49,425 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:36:49,426 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:36:50,427 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:36:50,427 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:36:52,428 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:36:52,428 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:36:52,528 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:52,655 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:52,655 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:52,655 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [145, 188] (attempt 1)
-2025-01-31 00:36:52,756 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:52,882 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '145,188'
-2025-01-31 00:36:52,882 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [145, 188]
-2025-01-31 00:36:52,882 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [145, 188] (attempt 1)
-2025-01-31 00:36:52,983 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:53,103 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '146,189'
-2025-01-31 00:36:53,103 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [146, 189]
-2025-01-31 00:36:53,103 - __main__ - move_to_coordinates - INFO - [POS] Current:[146,189] → Target:[128,200] | Δ[-18,11] | Dist:29 | Last move: None
-2025-01-31 00:36:53,656 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:53,784 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '148,190'
-2025-01-31 00:36:53,784 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [148, 190]
-2025-01-31 00:36:53,784 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [148, 190] (attempt 1)
-2025-01-31 00:36:53,885 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:54,014 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '148,190'
-2025-01-31 00:36:54,014 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [148, 190]
-2025-01-31 00:36:54,014 - __main__ - move_to_coordinates - INFO - [POS] Current:[148,190] → Target:[128,200] | Δ[-20,10] | Dist:30 | Last move: diagonal_NW
-2025-01-31 00:36:54,567 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:54,697 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '149,192'
-2025-01-31 00:36:54,697 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [149, 192]
-2025-01-31 00:36:54,698 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [149, 192] (attempt 1)
-2025-01-31 00:36:54,798 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:54,922 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '149,192'
-2025-01-31 00:36:54,922 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [149, 192]
-2025-01-31 00:36:54,922 - __main__ - move_to_coordinates - INFO - [POS] Current:[149,192] → Target:[128,200] | Δ[-21,8] | Dist:29 | Last move: diagonal_NW
-2025-01-31 00:36:55,474 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:55,598 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '149,192'
-2025-01-31 00:36:55,598 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [149, 192]
-2025-01-31 00:36:55,599 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [149, 192] (attempt 1)
-2025-01-31 00:36:55,699 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:55,821 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '149,192'
-2025-01-31 00:36:55,821 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [149, 192]
-2025-01-31 00:36:55,821 - __main__ - move_to_coordinates - INFO - [POS] Current:[149,192] → Target:[128,200] | Δ[-21,8] | Dist:29 | Last move: diagonal_NW
-2025-01-31 00:36:56,523 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:56,646 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '150,192'
-2025-01-31 00:36:56,647 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [150, 192]
-2025-01-31 00:36:56,647 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [150, 192] (attempt 1)
-2025-01-31 00:36:56,748 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:56,876 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '150,192'
-2025-01-31 00:36:56,876 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [150, 192]
-2025-01-31 00:36:56,876 - __main__ - move_to_coordinates - INFO - [POS] Current:[150,192] → Target:[128,200] | Δ[-22,8] | Dist:30 | Last move: diagonal_NW
-2025-01-31 00:36:57,429 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:57,555 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '152,192'
-2025-01-31 00:36:57,555 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [152, 192]
-2025-01-31 00:36:57,555 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [152, 192] (attempt 1)
-2025-01-31 00:36:57,655 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:57,781 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '152,192'
-2025-01-31 00:36:57,782 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [152, 192]
-2025-01-31 00:36:57,782 - __main__ - move_to_coordinates - INFO - [POS] Current:[152,192] → Target:[128,200] | Δ[-24,8] | Dist:32 | Last move: diagonal_NW
-2025-01-31 00:36:57,782 - __main__ - detect_wall - WARNING - [WALL] ⬆️ North movement blocked at y=192
-2025-01-31 00:36:57,782 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'N'}
-2025-01-31 00:36:58,334 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:58,465 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '154,192'
-2025-01-31 00:36:58,465 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [154, 192]
-2025-01-31 00:36:58,466 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [154, 192] (attempt 1)
-2025-01-31 00:36:58,566 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:58,703 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '154,192'
-2025-01-31 00:36:58,703 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [154, 192]
-2025-01-31 00:36:58,703 - __main__ - move_to_coordinates - INFO - [POS] Current:[154,192] → Target:[128,200] | Δ[-26,8] | Dist:34[Blocked: N] | Last move: diagonal_NW
-2025-01-31 00:36:58,704 - __main__ - detect_wall - WARNING - [WALL] ⬆️ North movement blocked at y=192
-2025-01-31 00:36:58,704 - __main__ - move_to_coordinates - WARNING - [WALL] Detected blocked directions: {'N'}
-2025-01-31 00:36:59,257 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:59,385 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '155,192'
-2025-01-31 00:36:59,385 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [155, 192]
-2025-01-31 00:36:59,386 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [155, 192] (attempt 1)
-2025-01-31 00:36:59,486 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:36:59,616 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '155,192,'
-2025-01-31 00:36:59,616 - __main__ - _fetch_position - DEBUG - [POSITION] Failed to parse comma format: too many values to unpack (expected 2)
-2025-01-31 00:36:59,616 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:37:00,617 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:37:00,618 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:37:02,618 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:37:02,618 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:37:02,719 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:02,851 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '160,391'
-2025-01-31 00:37:02,851 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [160, 391]
-2025-01-31 00:37:02,851 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [160, 391] (attempt 1)
-2025-01-31 00:37:02,956 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:03,083 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '160,91,'
-2025-01-31 00:37:03,083 - __main__ - _fetch_position - DEBUG - [POSITION] Failed to parse comma format: too many values to unpack (expected 2)
-2025-01-31 00:37:03,083 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:37:06,088 - interface - scroll - INFO - Scrolled by: 691 units (random)
-2025-01-31 00:37:07,189 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:07,318 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '154,192'
-2025-01-31 00:37:07,318 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [154, 192]
-2025-01-31 00:37:07,319 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [154, 192] (attempt 2)
-2025-01-31 00:37:07,419 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:07,552 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '154,192'
-2025-01-31 00:37:07,552 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [154, 192]
-2025-01-31 00:37:07,552 - __main__ - move_to_coordinates - INFO - [POS] Current:[154,192] → Target:[128,200] | Δ[-26,8] | Dist:34 | Last move: None
-2025-01-31 00:37:08,105 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:08,230 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '154,192'
-2025-01-31 00:37:08,230 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [154, 192]
-2025-01-31 00:37:08,230 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [154, 192] (attempt 1)
-2025-01-31 00:37:08,330 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:08,451 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '154,192'
-2025-01-31 00:37:08,451 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [154, 192]
-2025-01-31 00:37:08,451 - __main__ - move_to_coordinates - INFO - [POS] Current:[154,192] → Target:[128,200] | Δ[-26,8] | Dist:34 | Last move: diagonal_NW
-2025-01-31 00:37:09,154 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:09,279 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '152,194'
-2025-01-31 00:37:09,279 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [152, 194]
-2025-01-31 00:37:09,280 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [152, 194] (attempt 1)
-2025-01-31 00:37:09,380 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:09,504 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '152,194'
-2025-01-31 00:37:09,504 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [152, 194]
-2025-01-31 00:37:09,504 - __main__ - move_to_coordinates - INFO - [POS] Current:[152,194] → Target:[128,200] | Δ[-24,6] | Dist:30 | Last move: diagonal_NW
-2025-01-31 00:37:10,057 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:10,180 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '150,196'
-2025-01-31 00:37:10,181 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [150, 196]
-2025-01-31 00:37:10,181 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [150, 196] (attempt 1)
-2025-01-31 00:37:10,281 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:10,403 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '150,196'
-2025-01-31 00:37:10,403 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [150, 196]
-2025-01-31 00:37:10,403 - __main__ - move_to_coordinates - INFO - [POS] Current:[150,196] → Target:[128,200] | Δ[-22,4] | Dist:26 | Last move: diagonal_NW
-2025-01-31 00:37:10,956 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:11,083 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,199'
-2025-01-31 00:37:11,083 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 199]
-2025-01-31 00:37:11,083 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [147, 199] (attempt 1)
-2025-01-31 00:37:11,183 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:11,312 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '147,199'
-2025-01-31 00:37:11,312 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [147, 199]
-2025-01-31 00:37:11,312 - __main__ - move_to_coordinates - INFO - [POS] Current:[147,199] → Target:[128,200] | Δ[-19,1] | Dist:20 | Last move: diagonal_NW
-2025-01-31 00:37:11,815 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:11,935 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '144,199'
-2025-01-31 00:37:11,935 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [144, 199]
-2025-01-31 00:37:11,936 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [144, 199] (attempt 1)
-2025-01-31 00:37:12,036 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:12,164 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '144,199'
-2025-01-31 00:37:12,164 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [144, 199]
-2025-01-31 00:37:12,164 - __main__ - move_to_coordinates - INFO - [POS] Current:[144,199] → Target:[128,200] | Δ[-16,1] | Dist:17 | Last move: cardinal_W
-2025-01-31 00:37:12,666 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:12,796 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,198'
-2025-01-31 00:37:12,796 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 198]
-2025-01-31 00:37:12,797 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [141, 198] (attempt 1)
-2025-01-31 00:37:12,897 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:13,019 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '141,198'
-2025-01-31 00:37:13,019 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [141, 198]
-2025-01-31 00:37:13,019 - __main__ - move_to_coordinates - INFO - [POS] Current:[141,198] → Target:[128,200] | Δ[-13,2] | Dist:15 | Last move: cardinal_W
-2025-01-31 00:37:13,521 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:13,647 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '140,198'
-2025-01-31 00:37:13,647 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [140, 198]
-2025-01-31 00:37:13,648 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [140, 198] (attempt 1)
-2025-01-31 00:37:13,749 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:13,870 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '140,198'
-2025-01-31 00:37:13,870 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [140, 198]
-2025-01-31 00:37:13,870 - __main__ - move_to_coordinates - INFO - [POS] Current:[140,198] → Target:[128,200] | Δ[-12,2] | Dist:14 | Last move: cardinal_W
-2025-01-31 00:37:14,372 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:14,500 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,499'
-2025-01-31 00:37:14,500 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 499]
-2025-01-31 00:37:14,501 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [138, 499] (attempt 1)
-2025-01-31 00:37:14,601 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:14,731 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,499'
-2025-01-31 00:37:14,731 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 499]
-2025-01-31 00:37:14,731 - __main__ - move_to_coordinates - INFO - [POS] Current:[138,499] → Target:[128,200] | Δ[-10,-299] | Dist:309 | Last move: cardinal_W
-2025-01-31 00:37:15,184 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:15,315 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138, 199'
-2025-01-31 00:37:15,315 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 199]
-2025-01-31 00:37:15,316 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [138, 199] (attempt 1)
-2025-01-31 00:37:15,416 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:15,547 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '238, 199'
-2025-01-31 00:37:15,547 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [238, 199]
-2025-01-31 00:37:15,547 - __main__ - move_to_coordinates - INFO - [POS] Current:[238,199] → Target:[128,200] | Δ[-110,1] | Dist:111 | Last move: diagonal_SW
-2025-01-31 00:37:15,949 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:16,081 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,199'
-2025-01-31 00:37:16,081 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 199]
-2025-01-31 00:37:16,081 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [138, 199] (attempt 1)
-2025-01-31 00:37:16,182 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:16,306 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,199'
-2025-01-31 00:37:16,306 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 199]
-2025-01-31 00:37:16,306 - __main__ - move_to_coordinates - INFO - [POS] Current:[138,199] → Target:[128,200] | Δ[-10,1] | Dist:11 | Last move: cardinal_W
-2025-01-31 00:37:16,808 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:16,935 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,200'
-2025-01-31 00:37:16,935 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 200]
-2025-01-31 00:37:16,935 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 200] (attempt 1)
-2025-01-31 00:37:17,036 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:17,172 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '136,201'
-2025-01-31 00:37:17,172 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [136, 201]
-2025-01-31 00:37:17,172 - __main__ - move_to_coordinates - INFO - [POS] Current:[136,201] → Target:[128,200] | Δ[-8,-1] | Dist:9 | Last move: cardinal_W
-2025-01-31 00:37:17,172 - __main__ - move_to_coordinates - INFO - [MOVEMENT] ✅ Reached destination!
-2025-01-31 00:37:17,273 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:17,398 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '136,201'
-2025-01-31 00:37:17,398 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [136, 201]
-2025-01-31 00:37:17,398 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [136, 201] (attempt 1)
-2025-01-31 00:37:17,404 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:37:17,504 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:17,631 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '136,,201'
-2025-01-31 00:37:17,631 - __main__ - _fetch_position - DEBUG - [POSITION] Failed to parse comma format: too many values to unpack (expected 2)
-2025-01-31 00:37:17,631 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:37:20,635 - interface - scroll - INFO - Scrolled by: 17 units (random)
-2025-01-31 00:37:21,736 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:21,864 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,207'
-2025-01-31 00:37:21,864 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 207]
-2025-01-31 00:37:21,864 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [138, 207] (attempt 2)
-2025-01-31 00:37:21,869 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:37:21,869 - __main__ - run - INFO - 2. Wait 5 seconds until check and add stats
-2025-01-31 00:37:28,870 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:37:28,870 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:37:28,871 - interface - get_level_ocr - DEBUG - Created new_coords: [1604, 262, 1754, 279]
-2025-01-31 00:37:28,871 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:37:28,999 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 47
-2025-01-31 00:37:28,999 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:28,999 - interface - get_reset_ocr - DEBUG - Created new_coords: [1634, 279, 1714, 319]
-2025-01-31 00:37:28,999 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:37:29,121 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:37:29,122 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:37:29,122 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1688, 337, 1748, 357]
-2025-01-31 00:37:29,122 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:37:29,240 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 231
-2025-01-31 00:37:29,242 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:29,242 - interface - get_attr_ocr - DEBUG - Created new_coords: [1528, 384, 1648, 424]
-2025-01-31 00:37:29,242 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-31 00:37:29,380 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 6743
-2025-01-31 00:37:29,380 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:29,380 - interface - get_attr_ocr - DEBUG - Created new_coords: [1536, 438, 1656, 477]
-2025-01-31 00:37:29,380 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-31 00:37:29,515 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 984
-2025-01-31 00:37:29,515 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:29,515 - interface - get_attr_ocr - DEBUG - Created new_coords: [1541, 522, 1661, 564]
-2025-01-31 00:37:29,515 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-31 00:37:29,655 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 984
-2025-01-31 00:37:29,656 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:29,656 - interface - get_attr_ocr - DEBUG - Created new_coords: [1535, 576, 1655, 615]
-2025-01-31 00:37:29,656 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-31 00:37:29,788 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 984
-2025-01-31 00:37:29,789 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-31 00:37:29,789 - __main__ - read_all_stats - INFO - Available Points: 231
-2025-01-31 00:37:29,789 - __main__ - read_all_stats - INFO - Strength: 6743
-2025-01-31 00:37:29,789 - __main__ - read_all_stats - INFO - Agility: 984
-2025-01-31 00:37:29,789 - __main__ - read_all_stats - INFO - Vitality: 984
-2025-01-31 00:37:29,789 - __main__ - read_all_stats - INFO - Command: 0
-2025-01-31 00:37:29,797 - __main__ - distribute_attributes - INFO - Starting distribution of 231 available points
-2025-01-31 00:37:29,797 - __main__ - distribute_attributes - INFO - Stat distribution config: {'strenght': 0.7, 'agility': 0.1, 'vitality': 0.1, 'energy': 0.1}
-2025-01-31 00:37:30,398 - interface - execute_command - DEBUG - Command /s 161 is executing
-2025-01-31 00:37:32,304 - __main__ - distribute_attributes - INFO - Allocating 161 points to strenght
-2025-01-31 00:37:32,906 - interface - execute_command - DEBUG - Command /a 23 is executing
-2025-01-31 00:37:34,712 - __main__ - distribute_attributes - INFO - Allocating 23 points to agility
-2025-01-31 00:37:35,313 - interface - execute_command - DEBUG - Command /v 23 is executing
-2025-01-31 00:37:37,119 - __main__ - distribute_attributes - INFO - Allocating 23 points to vitality
-2025-01-31 00:37:37,721 - interface - execute_command - DEBUG - Command /e 23 is executing
-2025-01-31 00:37:39,526 - __main__ - distribute_attributes - INFO - Allocating 23 points to energy
-2025-01-31 00:37:39,526 - __main__ - distribute_attributes - INFO - Distribution complete, reading final stats
-2025-01-31 00:37:39,527 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:37:39,527 - __main__ - move_to_location - INFO - Character already in lorencia. No need to move again
-2025-01-31 00:37:41,527 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:37:41,528 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [128, 200]
-2025-01-31 00:37:41,628 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:41,753 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,207'
-2025-01-31 00:37:41,753 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 207]
-2025-01-31 00:37:41,753 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [138, 207] (attempt 1)
-2025-01-31 00:37:41,854 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:41,977 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,206'
-2025-01-31 00:37:41,977 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 206]
-2025-01-31 00:37:41,978 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [138, 206] (attempt 1)
-2025-01-31 00:37:42,079 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:42,205 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '138,205'
-2025-01-31 00:37:42,205 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [138, 205]
-2025-01-31 00:37:42,205 - __main__ - move_to_coordinates - INFO - [POS] Current:[138,205] → Target:[128,200] | Δ[-10,-5] | Dist:15 | Last move: None
-2025-01-31 00:37:42,757 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:42,887 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '137,203'
-2025-01-31 00:37:42,887 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [137, 203]
-2025-01-31 00:37:42,888 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [137, 203] (attempt 1)
-2025-01-31 00:37:42,988 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:43,111 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '136,202'
-2025-01-31 00:37:43,111 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [136, 202]
-2025-01-31 00:37:43,111 - __main__ - move_to_coordinates - INFO - [POS] Current:[136,202] → Target:[128,200] | Δ[-8,-2] | Dist:10 | Last move: diagonal_SW
-2025-01-31 00:37:43,111 - __main__ - move_to_coordinates - INFO - [MOVEMENT] ✅ Reached destination!
-2025-01-31 00:37:43,212 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:43,336 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '135,202'
-2025-01-31 00:37:43,336 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [135, 202]
-2025-01-31 00:37:43,337 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [135, 202] (attempt 1)
-2025-01-31 00:37:43,342 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:37:43,442 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:37:43,569 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '135,202'
-2025-01-31 00:37:43,570 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [135, 202]
-2025-01-31 00:37:43,570 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [135, 202] (attempt 1)
-2025-01-31 00:37:43,571 - __main__ - check_and_click_play - INFO - Play already active (red) - skipping click
-2025-01-31 00:37:43,571 - __main__ - run - INFO - 2. Wait 5 seconds until check and add stats
-2025-01-31 00:37:50,572 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:37:50,572 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-01-31 00:37:50,572 - interface - get_level_ocr - DEBUG - Created new_coords: [1604, 262, 1754, 279]
-2025-01-31 00:37:50,572 - interface - convert_image_into_string - DEBUG - Converting level...
-2025-01-31 00:37:50,699 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 56
-2025-01-31 00:37:50,699 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:50,699 - interface - get_reset_ocr - DEBUG - Created new_coords: [1634, 279, 1714, 319]
-2025-01-31 00:37:50,699 - interface - convert_image_into_string - DEBUG - Converting reset...
-2025-01-31 00:37:50,821 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
-2025-01-31 00:37:50,822 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
-2025-01-31 00:37:50,822 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1688, 337, 1748, 357]
-2025-01-31 00:37:50,822 - interface - convert_image_into_string - DEBUG - Converting available_points...
-2025-01-31 00:37:50,945 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 64
-2025-01-31 00:37:50,946 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:50,946 - interface - get_attr_ocr - DEBUG - Created new_coords: [1528, 384, 1648, 424]
-2025-01-31 00:37:50,946 - interface - convert_image_into_string - DEBUG - Converting strenght...
-2025-01-31 00:37:51,078 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 6904
-2025-01-31 00:37:51,079 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:51,079 - interface - get_attr_ocr - DEBUG - Created new_coords: [1536, 438, 1656, 477]
-2025-01-31 00:37:51,079 - interface - convert_image_into_string - DEBUG - Converting agility...
-2025-01-31 00:37:51,213 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 1007
-2025-01-31 00:37:51,213 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:51,213 - interface - get_attr_ocr - DEBUG - Created new_coords: [1541, 522, 1661, 564]
-2025-01-31 00:37:51,213 - interface - convert_image_into_string - DEBUG - Converting vitality...
-2025-01-31 00:37:51,345 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 1007
-2025-01-31 00:37:51,346 - interface - get_attr_ocr - DEBUG - -----Starting get_reset-----
-2025-01-31 00:37:51,346 - interface - get_attr_ocr - DEBUG - Created new_coords: [1535, 576, 1655, 615]
-2025-01-31 00:37:51,346 - interface - convert_image_into_string - DEBUG - Converting energy...
-2025-01-31 00:37:51,480 - interface - get_attr_ocr - DEBUG - Result from convert_image_into_number: 1007
-2025-01-31 00:37:51,481 - __main__ - read_all_stats - INFO - Final stats:
-2025-01-31 00:37:51,481 - __main__ - read_all_stats - INFO - Available Points: 64
-2025-01-31 00:37:51,481 - __main__ - read_all_stats - INFO - Strength: 6904
-2025-01-31 00:37:51,481 - __main__ - read_all_stats - INFO - Agility: 1007
-2025-01-31 00:37:51,481 - __main__ - read_all_stats - INFO - Vitality: 1007
-2025-01-31 00:37:51,481 - __main__ - read_all_stats - INFO - Command: 0
-2025-01-31 00:37:51,486 - __main__ - distribute_attributes - INFO - Starting distribution of 64 available points
-2025-01-31 00:37:51,486 - __main__ - distribute_attributes - INFO - Stat distribution config: {'strenght': 0.7, 'agility': 0.1, 'vitality': 0.1, 'energy': 0.1}
-2025-01-31 00:37:52,088 - interface - execute_command - DEBUG - Command /s 44 is executing
-2025-01-31 00:37:53,893 - __main__ - distribute_attributes - INFO - Allocating 44 points to strenght
-2025-01-31 00:37:54,494 - interface - execute_command - DEBUG - Command /a 6 is executing
-2025-01-31 00:37:56,198 - __main__ - distribute_attributes - INFO - Allocating 6 points to agility
-2025-01-31 00:37:56,800 - interface - execute_command - DEBUG - Command /v 6 is executing
-2025-01-31 00:37:58,505 - __main__ - distribute_attributes - INFO - Allocating 6 points to vitality
-2025-01-31 00:37:59,106 - interface - execute_command - DEBUG - Command /e 6 is executing
-2025-01-31 00:38:00,811 - __main__ - distribute_attributes - INFO - Allocating 6 points to energy
-2025-01-31 00:38:00,812 - __main__ - distribute_attributes - INFO - Distribution complete, reading final stats
-2025-01-31 00:38:00,812 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:38:01,414 - interface - execute_command - DEBUG - Command /move dungeon3 is executing
-2025-01-31 00:38:05,434 - interface - open_stats_window - INFO - Open stat window
-2025-01-31 00:38:05,535 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [32, 63]
-2025-01-31 00:38:05,636 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:05,764 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '3,85'
-2025-01-31 00:38:05,764 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [3, 85]
-2025-01-31 00:38:05,764 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [3, 85] (attempt 1)
-2025-01-31 00:38:05,869 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:05,992 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '3,85'
-2025-01-31 00:38:05,992 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [3, 85]
-2025-01-31 00:38:05,992 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [3, 85] (attempt 1)
-2025-01-31 00:38:06,093 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:06,216 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '3,85'
-2025-01-31 00:38:06,216 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [3, 85]
-2025-01-31 00:38:06,216 - __main__ - move_to_coordinates - INFO - [POS] Current:[3,85] → Target:[32,63] | Δ[29,-22] | Dist:51 | Last move: None
-2025-01-31 00:38:06,669 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:06,794 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '4,84'
-2025-01-31 00:38:06,794 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [4, 84]
-2025-01-31 00:38:06,795 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [4, 84] (attempt 1)
-2025-01-31 00:38:06,895 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:07,016 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '5,83'
-2025-01-31 00:38:07,016 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [5, 83]
-2025-01-31 00:38:07,016 - __main__ - move_to_coordinates - INFO - [POS] Current:[5,83] → Target:[32,63] | Δ[27,-20] | Dist:47 | Last move: diagonal_SE
-2025-01-31 00:38:07,568 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:07,693 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '6,82'
-2025-01-31 00:38:07,694 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [6, 82]
-2025-01-31 00:38:07,694 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [6, 82] (attempt 1)
-2025-01-31 00:38:07,794 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:07,913 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:38:07,914 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:38:08,914 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:38:08,915 - __main__ - move_to_location - INFO - Character already in dungeon3. No need to move again
-2025-01-31 00:38:10,915 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:38:10,915 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [32, 63]
-2025-01-31 00:38:11,016 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:11,144 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '6,82'
-2025-01-31 00:38:11,144 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [6, 82]
-2025-01-31 00:38:11,145 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [6, 82] (attempt 1)
-2025-01-31 00:38:11,246 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:11,366 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '6,82'
-2025-01-31 00:38:11,366 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [6, 82]
-2025-01-31 00:38:11,367 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [6, 82] (attempt 1)
-2025-01-31 00:38:11,467 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:11,590 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '6,82'
-2025-01-31 00:38:11,590 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [6, 82]
-2025-01-31 00:38:11,590 - __main__ - move_to_coordinates - INFO - [POS] Current:[6,82] → Target:[32,63] | Δ[26,-19] | Dist:45 | Last move: None
-2025-01-31 00:38:12,143 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:12,266 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '88'
-2025-01-31 00:38:12,266 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:38:15,270 - interface - scroll - INFO - Scrolled by: 770 units (random)
-2025-01-31 00:38:16,371 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:16,494 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '9,79'
-2025-01-31 00:38:16,494 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [9, 79]
-2025-01-31 00:38:16,494 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [9, 79] (attempt 2)
-2025-01-31 00:38:16,595 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:16,714 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '9,79'
-2025-01-31 00:38:16,714 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [9, 79]
-2025-01-31 00:38:16,714 - __main__ - move_to_coordinates - INFO - [POS] Current:[9,79] → Target:[32,63] | Δ[23,-16] | Dist:39 | Last move: diagonal_SE
-2025-01-31 00:38:17,268 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:17,390 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '11,77'
-2025-01-31 00:38:17,390 - __main__ - _fetch_position - DEBUG - [POSITION] Parsed coordinates: [11, 77]
-2025-01-31 00:38:17,390 - __main__ - get_current_coords_from_game - INFO - [POSITION] Successfully got coordinates: [11, 77] (attempt 1)
-2025-01-31 00:38:17,491 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:17,614 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:38:17,614 - __main__ - run - ERROR - Error in main loop: cannot unpack non-iterable NoneType object
-2025-01-31 00:38:18,615 - __main__ - run - INFO - 1. Lets go to kill some mobs
-2025-01-31 00:38:18,616 - __main__ - move_to_location - INFO - Character already in dungeon3. No need to move again
-2025-01-31 00:38:20,617 - interface - open_stats_window - INFO - Stat window is already open.
-2025-01-31 00:38:20,617 - __main__ - move_to_coordinates - INFO - [MOVEMENT] Starting movement to target [32, 63]
-2025-01-31 00:38:20,717 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:20,841 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '0'
-2025-01-31 00:38:20,841 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 1 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:38:23,844 - interface - scroll - INFO - Scrolled by: 734 units (random)
-2025-01-31 00:38:24,945 - interface - convert_image_into_string - DEBUG - Converting position...
-2025-01-31 00:38:25,071 - __main__ - _fetch_position - DEBUG - [POSITION] Raw position data: '1386'
-2025-01-31 00:38:25,071 - __main__ - get_current_coords_from_game - WARNING - [POSITION] ⚠️ Attempt 2 failed: cannot unpack non-iterable NoneType object
-2025-01-31 00:38:25,518 - config - on_press - INFO - Bot stopped
+2025-01-31 00:43:55,113 - interface - setup_screen - INFO - Window size: 1920x1080
+2025-01-31 00:44:00,115 - __main__ - run - INFO - 1. Read stats
+2025-01-31 00:44:02,115 - interface - open_stats_window - INFO - Open stat window
+2025-01-31 00:44:02,416 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
+2025-01-31 00:44:04,788 - interface - get_text_from_screen - DEBUG - Found 'Nivel' at rectangle: [1490, 408, 1519, 418]
+2025-01-31 00:44:04,790 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:04,790 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:04,790 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:05,149 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
+2025-01-31 00:44:05,150 - interface - get_text_from_screen - DEBUG - Attempting to locate Resetear text on screen
+2025-01-31 00:44:07,458 - interface - get_text_from_screen - DEBUG - Found 'Resetear' at rectangle: [1490, 421, 1547, 448]
+2025-01-31 00:44:07,461 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:07,461 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:07,461 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:07,815 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:07,827 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:11,167 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
+2025-01-31 00:44:11,169 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:11,169 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
+2025-01-31 00:44:11,169 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:11,503 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:11,515 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:11,527 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:13,527 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:13,529 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:13,529 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:13,529 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:13,890 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
+2025-01-31 00:44:13,891 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:13,891 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:13,891 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:14,245 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:14,247 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:16,629 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
+2025-01-31 00:44:16,631 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:16,631 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
+2025-01-31 00:44:16,631 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:16,953 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:16,956 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:16,958 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:18,959 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:18,961 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:18,961 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:18,961 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:19,315 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
+2025-01-31 00:44:19,317 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:19,317 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:19,317 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:19,677 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:19,679 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:22,016 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
+2025-01-31 00:44:22,018 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:22,018 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
+2025-01-31 00:44:22,018 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:22,355 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:22,358 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:22,370 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:24,370 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:24,373 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:24,373 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:24,373 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:24,731 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
+2025-01-31 00:44:24,733 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:24,733 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:24,733 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:25,098 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:25,101 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:27,677 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 460, 1530, 486]
+2025-01-31 00:44:27,682 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:27,683 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 456, 1860, 490]
+2025-01-31 00:44:27,683 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:28,028 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:28,030 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:28,042 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:30,043 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:30,045 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:30,045 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:30,045 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:30,401 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 691
+2025-01-31 00:44:30,402 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:30,402 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:30,402 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:30,758 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:30,761 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:33,761 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1530, 486]
+2025-01-31 00:44:33,763 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:33,763 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1800, 461, 1860, 490]
+2025-01-31 00:44:33,763 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:34,093 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:34,095 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:34,097 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:36,098 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:36,100 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:36,100 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:36,100 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:36,469 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
+2025-01-31 00:44:36,471 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:36,471 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:36,471 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:36,830 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:36,832 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:39,168 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1490, 465, 1531, 487]
+2025-01-31 00:44:39,170 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:39,170 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1801, 461, 1861, 491]
+2025-01-31 00:44:39,170 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:39,505 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:39,508 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:39,519 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:41,519 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:41,521 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:41,522 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:41,522 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:41,882 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 69
+2025-01-31 00:44:41,883 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:41,884 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:41,884 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:42,242 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:42,245 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:44,471 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1490, 469, 1533, 479]
+2025-01-31 00:44:44,473 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:44,474 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1803, 465, 1863, 483]
+2025-01-31 00:44:44,474 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:44,789 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:44,792 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:44,803 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:46,804 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:46,806 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:46,806 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:46,806 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:47,168 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 691
+2025-01-31 00:44:47,170 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:47,170 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:47,170 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:47,531 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:47,533 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:49,939 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1486, 465, 1528, 486]
+2025-01-31 00:44:49,940 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:49,941 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1798, 461, 1858, 490]
+2025-01-31 00:44:49,941 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:50,275 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:50,278 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:50,290 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:52,290 - interface - open_stats_window - INFO - Stat window is already open.
+2025-01-31 00:44:52,292 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
+2025-01-31 00:44:52,292 - interface - get_level_ocr - DEBUG - Created new_coords: [1719, 406, 1869, 420]
+2025-01-31 00:44:52,292 - interface - convert_image_into_string - DEBUG - Converting level...
+2025-01-31 00:44:52,651 - interface - get_level_ocr - DEBUG - Result from convert_image_into_number: 697
+2025-01-31 00:44:52,652 - interface - get_reset_ocr - DEBUG - -----Starting get_reset-----
+2025-01-31 00:44:52,652 - interface - get_reset_ocr - DEBUG - Created new_coords: [1747, 417, 1827, 452]
+2025-01-31 00:44:52,652 - interface - convert_image_into_string - DEBUG - Converting reset...
+2025-01-31 00:44:53,012 - interface - get_reset_ocr - DEBUG - Result from convert_image_into_number: 27
+2025-01-31 00:44:53,014 - interface - get_text_from_screen - DEBUG - Attempting to locate Puntos text on screen
+2025-01-31 00:44:55,344 - interface - get_text_from_screen - DEBUG - Found 'Puntos' at rectangle: [1490, 469, 1533, 479]
+2025-01-31 00:44:55,346 - interface - get_available_points_ocr - DEBUG - -----Starting get_available_points-----
+2025-01-31 00:44:55,346 - interface - get_available_points_ocr - DEBUG - Created new_coords: [1803, 465, 1863, 483]
+2025-01-31 00:44:55,346 - interface - convert_image_into_string - DEBUG - Converting available_points...
+2025-01-31 00:44:55,655 - interface - get_available_points_ocr - DEBUG - Result from convert_image_into_number: 0
+2025-01-31 00:44:55,657 - __main__ - read_all_stats - ERROR - Invalid available_points value: 0
+2025-01-31 00:44:55,660 - __main__ - read_all_stats - ERROR - Error reading stats: Invalid available_points value: 0
+2025-01-31 00:44:57,080 - config - on_press - INFO - Bot stopped
