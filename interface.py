@@ -3,8 +3,8 @@ import pytesseract
 import numpy as np
 import cv2
 import time
-import logging
 import random
+import logging
 import sys
 import keyboard
 import ctypes
@@ -25,15 +25,47 @@ class Interface:
         self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
+        self.logging.info("yaloencendi")
         self.setup_screen()
+        
+    def get_system_dpi(self):
+        if sys.platform == 'win32':
+            try:
+                user32 = ctypes.windll.user32
+                # Get DPI for the primary monitor
+                dpi = user32.GetDpiForSystem()
+                scaling_factor = dpi / 96.0  # 96 is the base DPI
+                
+                self.logging.info(f"System DPI: {dpi}")
+                self.logging.info(f"Scaling Factor: {scaling_factor}x")
+                
+                # Get more detailed DPI awareness information
+                awareness = ctypes.windll.shcore.GetProcessDpiAwareness(0)
+                awareness_states = {
+                    0: "DPI_AWARENESS_UNAWARE",
+                    1: "DPI_AWARENESS_SYSTEM_AWARE",
+                    2: "DPI_AWARENESS_PER_MONITOR_AWARE"
+                }
+                self.logging.info(f"DPI Awareness State: {awareness_states.get(awareness, 'Unknown')}")
+                
+                return dpi, scaling_factor, awareness
+                
+            except Exception as e:
+                self.logging.error(f"Error getting DPI info: {e}")
+                return None, None, None
+        else:
+            self.logging.info("DPI check is only supported on Windows")
+            return None, None, None
 
     def set_dpis_monitor(self):
         if sys.platform == 'win32':
             try:
                 # Force the process to be DPI aware
+                self.get_system_dpi()
                 PROCESS_PER_MONITOR_DPI_AWARE = 2
                 ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)
                 self.logging.info(f"Set {PROCESS_PER_MONITOR_DPI_AWARE} DPI")
+                self.get_system_dpi()
             except Exception as e:
                 self.logging.error(f"Failed to set DPI awareness: {e}")
         

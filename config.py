@@ -13,7 +13,7 @@ class Configuration:
     def __init__(self):
         self.setup_directories()
         self.load_config('config.json')
-        self.setup_logging()
+        self.logging = logging.getLogger(__name__)
         self.setup_keyboard_listener()
         self.update_game_state(updates=self.start_status())
         

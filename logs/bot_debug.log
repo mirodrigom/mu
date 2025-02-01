@@ -1,28 +1,5 @@
-2025-02-01 16:18:31,792 - gameclass - build_character_profile - INFO - ===================
-2025-02-01 16:18:31,792 - gameclass - build_character_profile - INFO - You are a None who born in None with this base attributes ['strenght', 'agility', 'vitality', 'energy']
-2025-02-01 16:18:31,793 - gameclass - build_character_profile - INFO - ===================
-2025-02-01 16:18:36,794 - __main__ - run - INFO - 1. Read stats
-2025-02-01 16:18:38,794 - interface - open_stats_window - INFO - Open stat window
-2025-02-01 16:18:39,101 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
-2025-02-01 16:18:40,917 - interface - get_text_from_screen - WARNING - Attempt 1: 'Nivel' text not found
-2025-02-01 16:18:42,605 - interface - get_text_from_screen - WARNING - Attempt 2: 'Nivel' text not found
-2025-02-01 16:18:44,279 - interface - get_text_from_screen - WARNING - Attempt 3: 'Nivel' text not found
-2025-02-01 16:18:46,180 - interface - get_text_from_screen - WARNING - Attempt 4: 'Nivel' text not found
-2025-02-01 16:18:48,291 - interface - get_text_from_screen - WARNING - Attempt 5: 'Nivel' text not found
-2025-02-01 16:18:48,293 - interface - get_level_ocr - DEBUG - -----Starting get_level-----
-2025-02-01 16:18:48,293 - interface - get_level_ocr - ERROR - Error in get_level_ocr: 'NoneType' object is not subscriptable
-2025-02-01 16:18:48,293 - interface - get_level_ocr - ERROR - Error type: <class 'TypeError'>
-2025-02-01 16:18:48,293 - interface - reload_ui - WARNING - Will close all popups.
-2025-02-01 16:18:50,303 - interface - get_text_from_screen - DEBUG - Attempting to locate Salir text on screen
-2025-02-01 16:18:52,064 - interface - get_text_from_screen - WARNING - Attempt 1: 'Salir' text not found
-2025-02-01 16:18:53,754 - interface - get_text_from_screen - WARNING - Attempt 2: 'Salir' text not found
-2025-02-01 16:18:55,460 - interface - get_text_from_screen - WARNING - Attempt 3: 'Salir' text not found
-2025-02-01 16:18:57,226 - interface - get_text_from_screen - WARNING - Attempt 4: 'Salir' text not found
-2025-02-01 16:18:58,917 - interface - get_text_from_screen - WARNING - Attempt 5: 'Salir' text not found
-2025-02-01 16:19:00,919 - interface - open_stats_window - INFO - Open stat window
-2025-02-01 16:19:01,020 - __main__ - read_all_stats - ERROR - Error reading stats: 'NoneType' object is not subscriptable
-2025-02-01 16:19:03,021 - interface - open_stats_window - INFO - Stat window is already open.
-2025-02-01 16:19:03,021 - interface - get_text_from_screen - DEBUG - Attempting to locate Nivel text on screen
-2025-02-01 16:19:04,769 - interface - get_text_from_screen - WARNING - Attempt 1: 'Nivel' text not found
-2025-02-01 16:19:06,745 - interface - get_text_from_screen - WARNING - Attempt 2: 'Nivel' text not found
-2025-02-01 16:19:08,389 - config - on_press - INFO - Bot stopped
+2025-02-01 16:29:13,563 - gameclass - build_character_profile - INFO - ===================
+2025-02-01 16:29:13,563 - gameclass - build_character_profile - INFO - You are a Magic Gladiator who born in lorencia with this base attributes ['strenght', 'agility', 'vitality', 'energy']
+2025-02-01 16:29:13,563 - gameclass - build_character_profile - INFO - ===================
+2025-02-01 16:29:18,565 - __main__ - run - INFO - 1. Read stats
+2025-02-01 16:29:20,057 - config - on_press - INFO - Bot stopped

@@ -43,7 +43,7 @@ class GameClass:
         self.logging.info("===================")
         
     def set_class(self):
-        name = self.config.get_class()
+        self.name = self.config.get_class()
 
     def set_level_to_reset(self, reset):
         if reset == 0:

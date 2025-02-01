@@ -2,6 +2,7 @@ import time
 import logging
 import os
 
+from logger_config import setup_logger
 from pathlearner import PathLearner
 from interface import Interface
 from utils import Utils
@@ -15,6 +16,7 @@ class GameBot:
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
     def __init__(self):
+        setup_logger()
         self.config = Configuration()
         self.logging = logging.getLogger(__name__)
         self.interface = Interface(self.config)
@@ -29,6 +31,7 @@ class GameBot:
         self.first_time = True
         self.current_path = []  # Store coordinates for current path
         self.good_paths = {}  # Dictionary to store successful paths by destination
+        self.logging.info("GameBot initialized")
         
 
     def save_good_path(self, target_x: int, target_y: int):
