@@ -497,6 +497,7 @@ class GameBot:
             
         current_state = self.config.get_game_state()
         current_map = self.interface.get_current_map(current_state)
+        mu_helper_active = self.interface.get_mu_helper_status(current_state)
         blocked_directions = set()
         last_successful_movement = time.time()
         
@@ -526,10 +527,14 @@ class GameBot:
                 )
             )
             
+            if abs(dx) <= 16 and abs(dy) <= 16:
+                if mu_helper_active == True:
+                    self.logging.info(f"[MOVEMENT] ✅ No need to move he is already farming!")
+                    break
+            
             # Check if reached destination (within 8 units, 2x standard step size)
             if abs(dx) <= 8 and abs(dy) <= 8:
                 self.logging.info(f"[MOVEMENT] ✅ Reached destination!")
-                self.check_and_click_play(target_x, target_y)
                 break
             
             # Stuck detection with improved logic for 4-unit steps

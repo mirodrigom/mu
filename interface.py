@@ -149,6 +149,7 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error in get_available_points_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
+            self.reload_ui()
             raise
         
     def get_level_ocr(self, coords):
@@ -171,6 +172,7 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error in get_level_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
+            self.reload_ui()
             raise
     
     def get_reset_ocr(self, coords):
@@ -192,10 +194,11 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error in get_reset_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
+            self.reload_ui()
             raise
     
     def get_attr_ocr(self, coords, attr):
-        self.logging.debug("-----Starting get_reset-----")        
+        self.logging.debug("-----Starting get_attributes-----")        
         try:
             x1 = coords[2] + 100
             y1 = coords[1] - 4
@@ -213,6 +216,7 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error in get_reset_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
+            self.reload_ui()
             raise
         
     def get_attribute_from_screen(self, attribute):
@@ -489,6 +493,18 @@ class Interface:
         except Exception as e:
             print(f"Error focusing MEGAMU: {e}")
             return False
+    
+    
+    def reload_ui(self):
+        self.logging.warning("Will close all popups.")
+        self.escape_multiple_times()
+        
+        message_salir_is_active = self.get_text_from_screen("Salir")
+        if message_salir_is_active:
+            self.escape()
+        #self.get_poweroff_reference()
+        self.window_stats_open = False
+        self.open_stats_window()
     
     #################################### Clicks ####################################
     
