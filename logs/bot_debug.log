@@ -1,5 +1,0 @@
-2025-02-01 16:29:13,563 - gameclass - build_character_profile - INFO - ===================
-2025-02-01 16:29:13,563 - gameclass - build_character_profile - INFO - You are a Magic Gladiator who born in lorencia with this base attributes ['strenght', 'agility', 'vitality', 'energy']
-2025-02-01 16:29:13,563 - gameclass - build_character_profile - INFO - ===================
-2025-02-01 16:29:18,565 - __main__ - run - INFO - 1. Read stats
-2025-02-01 16:29:20,057 - config - on_press - INFO - Bot stopped

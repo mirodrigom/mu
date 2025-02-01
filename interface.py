@@ -25,7 +25,6 @@ class Interface:
         self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
-        self.logging.info("yaloencendi")
         self.setup_screen()
         
     def get_system_dpi(self):

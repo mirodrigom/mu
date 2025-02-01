@@ -2,7 +2,7 @@ import time
 import logging
 import os
 
-from logger_config import setup_logger
+from logger_config import setup_logging
 from pathlearner import PathLearner
 from interface import Interface
 from utils import Utils
@@ -16,8 +16,8 @@ class GameBot:
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
     def __init__(self):
-        setup_logger()
         self.config = Configuration()
+        setup_logging()
         self.logging = logging.getLogger(__name__)
         self.interface = Interface(self.config)
         self.gameclass = GameClass()
