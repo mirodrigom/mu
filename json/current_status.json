@@ -1,26 +1,60 @@
 {
-    "current_reset": 0,
-    "current_level": 0,
-    "current_map": "",
+    "current_reset": 31,
+    "current_level": 323,
+    "current_map": "tarkan",
     "current_coords": [],
-    "current_strenght": 0,
-    "current_agility": 0,
-    "current_vitality": 0,
-    "current_energy": 0,
+    "current_strenght": 9274,
+    "current_agility": 1342,
+    "current_vitality": 1203,
+    "current_energy": 1203,
     "current_command": 0,
-    "available_points": 0,
-    "mulheper_active": false,
-    "current_position_elemental": [],
-    "current_position_level": [],
-    "current_position_available_points": [],
-    "current_position_reset": [],
-    "current_position_strenght": [],
-    "current_position_agility": [],
-    "current_position_vitality": [],
-    "current_position_energy": [],
+    "available_points": 36,
+    "mulheper_active": true,
+    "current_position_level": [
+        1286,
+        317,
+        1319,
+        330
+    ],
+    "current_position_available_points": [
+        1286,
+        381,
+        1329,
+        391
+    ],
+    "current_position_reset": [
+        1286,
+        339,
+        1343,
+        356
+    ],
+    "current_position_strenght": [
+        1287,
+        421,
+        1333,
+        442
+    ],
+    "current_position_agility": [
+        1285,
+        466,
+        1337,
+        486
+    ],
+    "current_position_vitality": [
+        1287,
+        533,
+        1341,
+        552
+    ],
+    "current_position_energy": [
+        1287,
+        574,
+        1337,
+        596
+    ],
     "current_position_command": [],
     "current_location": [
-        11,
-        77
+        123,
+        86
     ]
 }

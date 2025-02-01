@@ -70,7 +70,7 @@ class GameBot:
         dist = abs(dx) + abs(dy)
         blocked_str = f"[Blocked: {','.join(blocked)}]" if blocked else ""
         status_str = f" | {status}" if status else ""
-        return (f"[POS] Current:[{current_x},{current_y}] → Target:[{target_x},{target_y}] | " f"Δ[{dx},{dy}] | Dist:{dist}{blocked_str}{status_str}")
+        return (f"[POS] Current:[{current_x},{current_y}] -> Target:[{target_x},{target_y}] | " f"D[{dx},{dy}] | Dist:{dist}{blocked_str}{status_str}")
 
     def find_alternative_route(self, current_x: int, current_y: int, target_x: int, target_y: int, blocked_directions: set, history: list) -> tuple:
         """
@@ -135,25 +135,6 @@ class GameBot:
             except ValueError as e:
                 self.logging.debug(f"[POSITION] Failed to parse comma format: {e}")
 
-        def get_current_coords_from_game(self, retries=900, delay=1):
-            """
-            Intenta obtener la posición actual con reintentos.
-            Args:
-                retries: Número máximo de intentos
-                delay: Tiempo entre intentos
-            Returns:
-                bool: True si tuvo éxito, False si no
-            """
-            for attempt in range(retries):
-                try:
-                    x, y = self._fetch_position() 
-                    self.interface.set_current_coords([x,y])
-                    return True
-                except Exception as e:
-                    self.logging.warning(f"Attempt {attempt + 1} failed: {e}")
-                    if attempt < retries - 1:
-                        time.sleep(delay)
-            return False
 
     def distribute_attributes(self):
         """Distribuye puntos de atributos disponibles según la configuración."""
@@ -261,15 +242,14 @@ class GameBot:
                     #if not coords_available_points:
                     #    time.sleep(1)
                     #    continue
-                    if stats[stat] <= 0 and stat != 'available_points':  # Invalid read
+                    if stats[stat] <= 0 and stat == 'level':  # Invalid read
                         self.logging.error(f"Invalid {stat} value: {stats[stat]}")
                         if stat == 'level':
                             self.interface.set_level_reference([])
-                        if stat == 'reset':
-                            self.interface.set_reset_reference([])
                         raise ValueError(f"Invalid {stat} value: {stats[stat]}")
 
                 # Attributes
+                
                 for attr in self.gameclass.attributes:
                     if attr == 'strenght':
                         coords_attr = self.interface.get_attribute_reference(current_state, attr)
@@ -294,7 +274,7 @@ class GameBot:
                         
                     self.interface.set_attribute_reference(attr, coords_attr)
                     stats[attr] = self.interface.get_attr_ocr(coords_attr, attr)
-
+                    
                 # Update state
                 state = {
                     ''
@@ -329,8 +309,6 @@ class GameBot:
         if not avoid_checks:
             current_state = self.config.get_game_state()
             if map_name != current_state['current_map'] or stuck is True:
-                if current_state['current_level'] >= self.config.file['reset_level']:
-                    time.sleep(0.1)
 
                 self.interface.set_mu_helper_status(False)
                 self.interface.command_move_to_map(map_name=map_name)
@@ -371,10 +349,13 @@ class GameBot:
         
         reset_level = self.gameclass.set_level_to_reset(reset)
         max_level = self.config.file['max_level']
-        self.gameclass.set_level_to_reset()
+
+        # Add debug logging
+        self.logging.info(f"Current values - Level: {level}, Reset Level: {reset_level}, Max Level: {max_level}")
 
         # Reset
-        if level >= reset_level <= max_level:
+        if level >= reset_level and reset_level <= max_level:
+            self.logging.info("Attempting to reset character...")
             self.interface.set_mu_helper_status(False)
             self.reset_character()
         # No esta farmeando
@@ -422,10 +403,23 @@ class GameBot:
         """
         for attempt in range(retries):
             try:
-                x, y = self._fetch_position() 
+                position = self._fetch_position()
+                if position is None:
+                    raise ValueError("Position returned None")
+                    
+                # Ensure position is in the correct format
+                if isinstance(position, str):
+                    # Assuming position is returned as "x,y" string
+                    x, y = map(int, position.split(','))
+                elif isinstance(position, (list, tuple)) and len(position) == 2:
+                    x, y = position
+                else:
+                    raise ValueError(f"Unexpected position format: {position}")
+                
                 self.interface.set_current_coords([x,y])
                 self.logging.info(f"[POSITION] Successfully got coordinates: [{x}, {y}] (attempt {attempt + 1})")
                 return True
+                
             except Exception as e:
                 self.logging.warning(f"[POSITION] ⚠️ Attempt {attempt + 1} failed: {str(e)}")
                 if attempt < retries - 1:

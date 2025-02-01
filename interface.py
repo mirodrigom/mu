@@ -45,6 +45,15 @@ class Interface:
             self.logging.error(f"Error getting window info: {e}")
             return False
             
+    def calculate_position_offset(self, base_offset, base_scale, scale_rate):
+        """
+        Calculate coordinate offset based on scale.
+        """
+        current_scale = self.config.get_interface_scale()
+        scale_diff = current_scale - base_scale
+        offset_adjustment = scale_diff * scale_rate
+        return int(base_offset + offset_adjustment)
+
     def get_position_data(self, with_comma=False):
         """
         Obtiene las coordenadas del juego mediante OCR.
@@ -52,8 +61,34 @@ class Interface:
             str: Coordenadas en formato "x,y"
         """
         try:
-            adjusted_position = self.config.get_ocr_coordinates()['position']
+            # Base values at 100% scale
+            BASE_SCALE = 100
+            
+            # Base coordinates at 100%
+            BASE_X1 = 201
+            BASE_X2 = 261
+            BASE_Y1 = 18
+            BASE_Y2 = 40
+            
+            # Rate of change (pixels per 1% scale)
+            X1_RATE = 2.16   # (255 - 201) / (125 - 100)
+            X2_RATE = 2.72   # (329 - 261) / (125 - 100)
+            Y1_RATE = 0.32   # (26 - 18) / (125 - 100)
+            Y2_RATE = 0.32   # (48 - 40) / (125 - 100)
+            
+            # Calculate scaled coordinates
+            x1 = self.calculate_position_offset(BASE_X1, BASE_SCALE, X1_RATE)
+            x2 = self.calculate_position_offset(BASE_X2, BASE_SCALE, X2_RATE)
+            y1 = self.calculate_position_offset(BASE_Y1, BASE_SCALE, Y1_RATE)
+            y2 = self.calculate_position_offset(BASE_Y2, BASE_SCALE, Y2_RATE)
+            
+            adjusted_position = [x1, y1, x2, y2]
+            
+            self.logging.debug(f"Scale: {self.config.get_interface_scale()}%")
+            self.logging.debug(f"Adjusted position coords: {adjusted_position}")
+            
             return self.convert_image_into_string(coords=adjusted_position, image_name="position", with_comma=with_comma).strip()
+            
         except Exception as e:
             self.logging.error(f"Position fetch failed: {e}")
             raise ValueError("Position fetch failed")
@@ -83,10 +118,28 @@ class Interface:
         
         return binary
 
+    def normalize_text(self, text):
+        """
+        Normalize text by removing accents and converting to lowercase
+        """
+        import unicodedata
+        
+        if not text:
+            return ""
+            
+        # Convert to lowercase and strip
+        text = text.lower().strip()
+        
+        # Remove accents
+        text = ''.join(c for c in unicodedata.normalize('NFD', text)
+                    if unicodedata.category(c) != 'Mn')
+        
+        return text
+
     def get_text_from_screen(self, text_to_catch):
         self.logging.debug(f"Attempting to locate {text_to_catch} text on screen")
         try:
-            for attempt in range(5):
+            for attempt in range(10):
                 time.sleep(1)
                 try:
                     # Capture screen with DPI awareness already set
@@ -96,25 +149,54 @@ class Interface:
                     # Convert to grayscale
                     gray = cv2.cvtColor(screen_np, cv2.COLOR_RGB2GRAY)
                     
-                    # Apply thresholding
-                    _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    # Apply multiple preprocessing techniques
+                    # 1. Increase contrast
+                    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+                    contrast = clahe.apply(gray)
                     
-                    # Perform OCR
-                    data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT)
+                    # 2. Denoise
+                    denoised = cv2.fastNlMeansDenoising(contrast)
                     
-                    for i, text in enumerate(data['text']):
-                        if text_to_catch in text:
-                            # Get the raw coordinates without scaling
-                            x = data['left'][i]
-                            y = data['top'][i]
-                            w = data['width'][i]
-                            h = data['height'][i]
-                            
-                            rectangle = [x, y, x+w, y+h]
-                            
-                            self.logging.debug(f"Found '{text_to_catch}' at rectangle: {rectangle}")
-                            return rectangle
+                    # 3. Multiple threshold attempts
+                    preprocessing_methods = [
+                        # Original binary threshold
+                        lambda img: cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1],
+                        # Adaptive threshold
+                        lambda img: cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2),
+                        # Different binary threshold
+                        lambda img: cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)[1]
+                    ]
+                    
+                    # Try each preprocessing method
+                    for preprocess in preprocessing_methods:
+                        binary = preprocess(denoised)
                         
+                        # Scale up the image for better OCR (2x)
+                        binary = cv2.resize(binary, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+                        
+                        # Add custom configuration for tesseract (removed language specification)
+                        custom_config = r'--oem 3 --psm 6'
+                        
+                        # Perform OCR with default language
+                        data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT, config=custom_config)
+                        
+                        for i, text in enumerate(data['text']):
+                            # Make the comparison case-insensitive and accent-insensitive
+                            normalized_text = self.normalize_text(text)
+                            normalized_target = self.normalize_text(text_to_catch)
+                            
+                            if normalized_target in normalized_text:
+                                # Scale back the coordinates (divide by 2 because we scaled up)
+                                x = int(data['left'][i] / 2)
+                                y = int(data['top'][i] / 2)
+                                w = int(data['width'][i] / 2)
+                                h = int(data['height'][i] / 2)
+                                
+                                rectangle = [x, y, x+w, y+h]
+                                
+                                self.logging.debug(f"Found '{text_to_catch}' at rectangle: {rectangle}")
+                                return rectangle
+                    
                     self.logging.warning(f"Attempt {attempt + 1}: '{text_to_catch}' text not found")
                     
                 except Exception as e:
@@ -125,14 +207,32 @@ class Interface:
         except ImportError:
             self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
             return None
-    
+
     def get_available_points_ocr(self, coords):
         self.logging.debug("-----Starting get_available_points-----")        
         try:
-            # Log each coordinate calculation
-            x1 = coords[2] + 270
+            # Validate coords
+            if coords is None or len(coords) < 4:
+                self.logging.error(f"Invalid coords: {coords}")
+                return None
+                
+            # Base values at 100% scale
+            BASE_SCALE = 100
+            BASE_X1_OFFSET = 200  # x1 offset at 100%
+            BASE_X2_OFFSET = 270  # x2 offset at 100%
+            
+            # Rate of change (pixels per 1% scale)
+            X1_RATE = 2.8    # (270 - 200) / (125 - 100)
+            X2_RATE = 2.4    # (330 - 270) / (125 - 100)
+            
+            # Calculate scaled offsets
+            x1_offset = self.calculate_offset(BASE_X1_OFFSET, BASE_SCALE, X1_RATE)
+            x2_offset = self.calculate_offset(BASE_X2_OFFSET, BASE_SCALE, X2_RATE)
+            
+            # Apply offsets to base coordinates
+            x1 = coords[2] + x1_offset
+            x2 = coords[2] + x2_offset
             y1 = coords[1] - 4
-            x2 = coords[2] + 330
             y2 = coords[3] + 4
             
             new_coords = [x1, y1, x2, y2]
@@ -142,23 +242,34 @@ class Interface:
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-            
+                
         except Exception as e:
             self.logging.error(f"Error in get_available_points_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
+            self.logging.error(f"Coords value: {coords}")
             self.reload_ui()
             raise
-        
+
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
-            scale = self.config.get_interface_scale()
+            # Base values at 100% scale
+            BASE_SCALE = 100
+            BASE_X1_OFFSET = 200  # x1 offset at 100%
+            BASE_X2_OFFSET = 280  # x2 offset at 100%
             
+            # Rate of change (pixels per 1% scale)
+            X1_RATE = 0      # No change for x1
+            X2_RATE = 2.8    # (350 - 280) / (125 - 100)
             
-            # Log each coordinate calculation
-            x1 = coords[2] + 200
-            y1 = coords[1] - 2
-            x2 = coords[2] + 350
+            # Calculate scaled offsets
+            x1_offset = self.calculate_offset(BASE_X1_OFFSET, BASE_SCALE, X1_RATE)
+            x2_offset = self.calculate_offset(BASE_X2_OFFSET, BASE_SCALE, X2_RATE)
+            
+            # Apply offsets to base coordinates
+            x1 = coords[2] + x1_offset
+            x2 = coords[2] + x2_offset
+            y1 = coords[1] - 2  # Y offsets remain constant
             y2 = coords[3] + 2
             
             new_coords = [x1, y1, x2, y2]
@@ -168,41 +279,75 @@ class Interface:
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-            
+                
         except Exception as e:
             self.logging.error(f"Error in get_level_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
             self.reload_ui()
             raise
-    
+
+    def calculate_offset(self, base_offset, base_scale, scale_rate):
+        current_scale = self.config.get_interface_scale()
+        scale_diff = current_scale - base_scale
+        offset_adjustment = scale_diff * scale_rate
+        return int(base_offset + offset_adjustment)
+
     def get_reset_ocr(self, coords):
         self.logging.debug("-----Starting get_reset-----")        
         try:
-            x1 = coords[2] + 200
+                        
+            # Base values at 100% scale
+            BASE_SCALE = 100
+            BASE_X1_OFFSET = 150  # x1 offset at 100%
+            BASE_X2_OFFSET = 220  # x2 offset at 100%
+            
+            # Rate of change (pixels per 1% scale)
+            X1_RATE = 2.0    # (200 - 150) / (125 - 100)
+            X2_RATE = 2.4    # (280 - 220) / (125 - 100)
+            
+            # Calculate scaled offsets
+            x1_offset = self.calculate_offset(BASE_X1_OFFSET, BASE_SCALE, X1_RATE)
+            x2_offset = self.calculate_offset(BASE_X2_OFFSET, BASE_SCALE, X2_RATE)
+            
+            # Apply offsets to base coordinates
+            x1 = coords[2] + x1_offset
+            x2 = coords[2] + x2_offset
             y1 = coords[1] - 4
-            x2 = coords[2] + 280
             y2 = coords[3] + 4
             
-            new_coords = [x1, y1, x2, y2]
-            self.logging.debug(f"Created new_coords: {new_coords}")
+            scaled_coords = [x1, y1, x2, y2]
             
-            result = self.convert_image_into_number(new_coords, 'reset')
+            result = self.convert_image_into_number(scaled_coords, 'reset')
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-            
+                
         except Exception as e:
             self.logging.error(f"Error in get_reset_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
             self.reload_ui()
             raise
-    
+        
     def get_attr_ocr(self, coords, attr):
         self.logging.debug("-----Starting get_attributes-----")        
         try:
-            x1 = coords[2] + 100
+            # Base values at 100% scale
+            BASE_SCALE = 100
+            BASE_X1_OFFSET = 100  # x1 offset at 100%
+            BASE_X2_OFFSET = 180  # x2 offset at 100%
+            
+            # Rate of change (pixels per 1% scale)
+            X1_RATE = 0      # No change for x1
+            X2_RATE = 1.6    # (220 - 180) / (125 - 100)
+            
+            # Calculate scaled offsets
+            x1_offset = self.calculate_offset(BASE_X1_OFFSET, BASE_SCALE, X1_RATE)
+            x2_offset = self.calculate_offset(BASE_X2_OFFSET, BASE_SCALE, X2_RATE)
+            
+            # Apply offsets to base coordinates
+            x1 = coords[2] + x1_offset
+            x2 = coords[2] + x2_offset
             y1 = coords[1] - 4
-            x2 = coords[2] + 220
             y2 = coords[3] + 4
             
             new_coords = [x1, y1, x2, y2]
@@ -212,7 +357,7 @@ class Interface:
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-            
+                
         except Exception as e:
             self.logging.error(f"Error in get_reset_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
@@ -331,70 +476,7 @@ class Interface:
         except ImportError:
             self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
             return None
-    '''
-    def get_elemental_reference(self):
-        """Localiza el punto de referencia elemental en la pantalla usando OpenCV."""
-        self.logging.debug("Attempting to locate elemental reference on the screen")
-        
-        image_path = os.path.join(self.config.dirs['images'], 'tofind', 'elemental_reference.png')
-        self.logging.debug(image_path)
-        if not os.path.exists(image_path):
-            self.logging.error(f"Reference image not found at: {image_path}")
-            return None
-        
-        # Load the template image
-        template = cv2.imread(image_path)
-        template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-        
-        for attempt in range(5):
-            time.sleep(1)
-            try:
-                # Capture screen
-                screen = np.array(ImageGrab.grab())
-                screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-                screen_gray = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-                
-                # Template matching
-                result = cv2.matchTemplate(screen_gray, template_gray, cv2.TM_CCOEFF_NORMED)
-                min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-                
-                # If confidence is high enough (similar to pyautogui's confidence)
-                if max_val > 0.7:
-                    # Get the position of the match
-                    top_left = max_loc
-                    h, w = template_gray.shape
-                    
-                    # Calculate center (similar to pyautogui.center())
-                    center_x = top_left[0] + w // 2
-                    center_y = top_left[1] + h // 2
-                    center_point = (center_x, center_y)
-                    
-                    self.logging.debug(f"Found elemental reference at: {center_point}")
-                    return center_point
-                    
-                self.logging.warning(f"Attempt elemental {attempt + 1}: Reference not found")
-                
-                # Handle the last attempt failure
-                if attempt == 4:
-                    self.logging.warning("Will close all popups.")
-                    self.escape_multiple_times()
-                    self.get_poweroff_reference()
-                    self.window_stats_open = False
-                    self.open_stats_window()
-                    
-            except Exception as e:
-                self.logging.error(f"Error finding elemental reference on attempt {attempt + 1}: {str(e)}")
-                # Same error handling as above
-                if attempt == 4:
-                    self.logging.warning("Will close all popups.")
-                    self.escape_multiple_times()
-                    self.get_poweroff_reference()
-                    self.window_stats_open = False
-                    self.open_stats_window()
-        
-        return None
-
-    '''
+    
     def get_poweroff_reference(self):
         """Localiza el punto de referencia poweroff en la pantalla usando OpenCV."""
         self.logging.debug("Attempting to locate poweroff reference on the screen")
@@ -493,7 +575,6 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error focusing MEGAMU: {e}")
             return False
-    
     
     def reload_ui(self):
         self.logging.warning("Will close all popups.")
@@ -708,12 +789,6 @@ class Interface:
         
     def get_current_coords(self, current_state):
         return current_state["current_location"][0], current_state["current_location"][1]
-    
-    def get_current_stats_elemental(self, current_state):
-        return current_state['current_position_elemental']
-    
-    def set_elemental_reference(self, coords):
-        self.config.update_game_state({'current_position_elemental': coords})
         
     def set_reset_reference(self, coords):
         self.config.update_game_state({'current_position_reset': coords})

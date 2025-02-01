@@ -1,6 +1,6 @@
 {
     "class": "Magic Gladiator",
-    "interface_scale": "125",
+    "interface_scale": 100,
     "level_thresholds": {
         "140": {
             "map": "tarkan",
@@ -51,14 +51,6 @@
     "coordinate_samples": 3,
     "error_threshold": 3,
     "check_interval": 5,
-    "ocr_coordinates": {
-        "position": [
-            255,
-            26,
-            329,
-            48
-        ]
-    },
     "validation": {
         "strenght": {
             "min": 1,

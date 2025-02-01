@@ -54,7 +54,6 @@ class Configuration:
                 "current_command": 0,
                 "available_points": 0,
                 "mulheper_active": False,
-                "current_position_elemental": [],
                 "current_position_level": [],
                 "current_position_available_points": [],
                 "current_position_reset": [],

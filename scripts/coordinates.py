@@ -38,7 +38,7 @@ class CoordinateSelector:
 
     def on_release(self, event):
         coords = (self.start_x, self.start_y, event.x, event.y)
-        self.logging(f"Coordinates: {coords}")
+        print(f"Coordinates: {coords}")
         self.coordinates.append(coords)
 
 if __name__ == "__main__":

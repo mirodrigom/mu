@@ -46,9 +46,8 @@ class GameClass:
         self.name = self.config.get_class()
 
     def set_level_to_reset(self, reset):
-        if reset == 0:
-            level_to_reset = 350
-        elif reset > 0 and reset <= 5:
+        level_to_reset = 350
+        if reset > 0 and reset <= 5:
             level_to_reset = 360
         elif reset > 5 and reset <= 15:
             level_to_reset = 370
@@ -61,6 +60,3 @@ class GameClass:
 
         self.logging.info(f"This character will reset at level: {level_to_reset} / Number of resets {reset}")
         return level_to_reset
-
-    
-    

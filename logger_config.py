@@ -1,6 +1,7 @@
 import logging
 import sys
 import os
+import codecs
 
 def setup_logging():
     # Create logs directory if it doesn't exist
@@ -21,21 +22,27 @@ def setup_logging():
         root_logger.removeHandler(handler)
     
     # Set root logger to DEBUG level
-    root_logger.setLevel(logging.DEBUG)  # Changed from INFO to DEBUG
+    root_logger.setLevel(logging.DEBUG)
     
     # Create formatter
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     
-    # Create console handler (can keep this at INFO level if you want less console output)
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.INFO)
+    # Create console handler with UTF-8 encoding
+    if sys.platform == 'win32':
+        # On Windows, use sys.stdout.buffer to write UTF-8
+        console_handler = logging.StreamHandler(
+            codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+        )
+    else:
+        console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.DEBUG)
     console_handler.setFormatter(formatter)
     root_logger.addHandler(console_handler)
     
-    # Create file handler (set to DEBUG to catch all messages)
-    file_handler = logging.FileHandler(log_file)
-    file_handler.setLevel(logging.DEBUG)  # This will catch debug messages
+    # Create file handler with UTF-8 encoding
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
     root_logger.addHandler(file_handler)
