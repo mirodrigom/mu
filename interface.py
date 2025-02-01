@@ -163,10 +163,18 @@ class Interface:
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
-            # Log each coordinate calculation
-            x1 = coords[2] + 200
-            y1 = coords[1] - 2
-            x2 = coords[2] + 350
+            
+            # Get actual screen width from your window
+            screen_width = self.screen_width  # Assuming this is set in setup_screen()
+            
+            # These are the relative positions that worked on the first computer
+            RELATIVE_RIGHT_OFFSET = 0.104166667  # 200/1920
+            RELATIVE_WIDTH = 0.078125  # (350-200)/1920
+            
+            # Apply the relative positions to current screen
+            x1 = coords[2] + int(RELATIVE_RIGHT_OFFSET * screen_width)
+            y1 = coords[1] - 2  # Keep small vertical adjustments
+            x2 = coords[2] + int((RELATIVE_RIGHT_OFFSET + RELATIVE_WIDTH) * screen_width)
             y2 = coords[3] + 2
             
             new_coords = [x1, y1, x2, y2]

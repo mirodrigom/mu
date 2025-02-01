@@ -1,53 +1,33 @@
 {
-    "current_reset": 31,
-    "current_level": 314,
+    "current_reset": 0,
+    "current_level": 0,
     "current_map": "",
     "current_coords": [],
-    "current_strenght": 9057,
-    "current_agility": 1312,
-    "current_vitality": 1173,
-    "current_energy": 1173,
+    "current_strenght": 0,
+    "current_agility": 0,
+    "current_vitality": 0,
+    "current_energy": 0,
     "current_command": 0,
-    "available_points": 280,
+    "available_points": 0,
     "mulheper_active": false,
     "current_position_elemental": [],
     "current_position_level": [
         1368,
-        260,
+        264,
         1403,
-        284
+        276
     ],
     "current_position_available_points": [],
     "current_position_reset": [
         1368,
-        282,
+        281,
         1434,
-        314
+        315
     ],
-    "current_position_strenght": [
-        1369,
-        397,
-        1427,
-        411
-    ],
-    "current_position_agility": [
-        1364,
-        442,
-        1435,
-        474
-    ],
-    "current_position_vitality": [
-        1368,
-        531,
-        1440,
-        558
-    ],
-    "current_position_energy": [
-        1369,
-        589,
-        1434,
-        606
-    ],
+    "current_position_strenght": [],
+    "current_position_agility": [],
+    "current_position_vitality": [],
+    "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
         11,
