@@ -163,43 +163,59 @@ class Interface:
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
-            # Original calculation
-            x1 = coords[2] + 200
-            y1 = coords[1] - 2
-            x2 = coords[2] + 350
-            y2 = coords[3] + 2
+            # Create a wider search area
+            x1 = coords[2]  # Start right after "Nivel"
+            y1 = coords[1] - 5  # Slightly above
+            x2 = coords[2] + 400  # Search a wider area
+            y2 = coords[3] + 5  # Slightly below
             
             new_coords = [x1, y1, x2, y2]
+            self.logging.debug(f"Original 'Nivel' coords: {coords}")
             self.logging.debug(f"Created new_coords: {new_coords}")
             
-            # Save debug screenshots
+            # Take a debug screenshot of the area we're scanning
             screen = ImageGrab.grab()
             screen_np = np.array(screen)
             
-            # Draw rectangles on a copy of the screen
+            # Draw rectangles to show the areas
             debug_image = screen_np.copy()
             
-            # Draw original coords rectangle in red
+            # Draw original coords in red
             cv2.rectangle(debug_image, 
                         (coords[0], coords[1]), 
                         (coords[2], coords[3]), 
-                        (255,0,0), 2)  # Red rectangle
+                        (255,0,0), 2)
             
-            # Draw new_coords rectangle in green
+            # Draw search area in green
             cv2.rectangle(debug_image, 
                         (x1, y1), 
                         (x2, y2), 
-                        (0,255,0), 2)  # Green rectangle
+                        (0,255,0), 2)
             
-            # Save the debug image
+            # Save full screenshot with rectangles
             timestamp = time.strftime("%Y%m%d-%H%M%S")
-            cv2.imwrite(f'debug_regions_{timestamp}.png', cv2.cvtColor(debug_image, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(f'debug_level_search_{timestamp}.png', 
+                    cv2.cvtColor(debug_image, cv2.COLOR_RGB2BGR))
             
-            # Also save just the region we're trying to read
+            # Save just the region we're searching
             region = screen_np[y1:y2, x1:x2]
-            cv2.imwrite(f'debug_level_region_{timestamp}.png', cv2.cvtColor(region, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(f'debug_level_region_{timestamp}.png', 
+                    cv2.cvtColor(region, cv2.COLOR_RGB2BGR))
             
-            self.logging.debug(f"Saved debug screenshots with timestamp {timestamp}")
+            # Perform OCR with debug info
+            gray_region = cv2.cvtColor(region, cv2.COLOR_RGB2GRAY)
+            _, binary = cv2.threshold(gray_region, 0, 255, 
+                                    cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            
+            # Save the processed image we're running OCR on
+            cv2.imwrite(f'debug_level_binary_{timestamp}.png', binary)
+            
+            # Run OCR and log all text found
+            data = pytesseract.image_to_data(binary, output_type=pytesseract.Output.DICT)
+            self.logging.debug("All text found in region:")
+            for i, text in enumerate(data['text']):
+                if text.strip():  # Only log non-empty text
+                    self.logging.debug(f"Found text: '{text}' at position: {data['left'][i]}, {data['top'][i]}")
             
             result = self.convert_image_into_number(new_coords, 'level')
             self.logging.debug(f"Result from convert_image_into_number: {result}")
