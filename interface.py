@@ -163,34 +163,55 @@ class Interface:
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
-            
-            # Get actual screen width from your window
-            screen_width = self.screen_width  # Assuming this is set in setup_screen()
-            
-            # These are the relative positions that worked on the first computer
-            RELATIVE_RIGHT_OFFSET = 0.104166667  # 200/1920
-            RELATIVE_WIDTH = 0.078125  # (350-200)/1920
-            
-            # Apply the relative positions to current screen
-            x1 = coords[2] + int(RELATIVE_RIGHT_OFFSET * screen_width)
-            y1 = coords[1] - 2  # Keep small vertical adjustments
-            x2 = coords[2] + int((RELATIVE_RIGHT_OFFSET + RELATIVE_WIDTH) * screen_width)
+            # Original calculation
+            x1 = coords[2] + 200
+            y1 = coords[1] - 2
+            x2 = coords[2] + 350
             y2 = coords[3] + 2
             
             new_coords = [x1, y1, x2, y2]
             self.logging.debug(f"Created new_coords: {new_coords}")
             
+            # Save debug screenshots
+            screen = ImageGrab.grab()
+            screen_np = np.array(screen)
+            
+            # Draw rectangles on a copy of the screen
+            debug_image = screen_np.copy()
+            
+            # Draw original coords rectangle in red
+            cv2.rectangle(debug_image, 
+                        (coords[0], coords[1]), 
+                        (coords[2], coords[3]), 
+                        (255,0,0), 2)  # Red rectangle
+            
+            # Draw new_coords rectangle in green
+            cv2.rectangle(debug_image, 
+                        (x1, y1), 
+                        (x2, y2), 
+                        (0,255,0), 2)  # Green rectangle
+            
+            # Save the debug image
+            timestamp = time.strftime("%Y%m%d-%H%M%S")
+            cv2.imwrite(f'debug_regions_{timestamp}.png', cv2.cvtColor(debug_image, cv2.COLOR_RGB2BGR))
+            
+            # Also save just the region we're trying to read
+            region = screen_np[y1:y2, x1:x2]
+            cv2.imwrite(f'debug_level_region_{timestamp}.png', cv2.cvtColor(region, cv2.COLOR_RGB2BGR))
+            
+            self.logging.debug(f"Saved debug screenshots with timestamp {timestamp}")
+            
             result = self.convert_image_into_number(new_coords, 'level')
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-            
+                
         except Exception as e:
             self.logging.error(f"Error in get_level_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
             self.reload_ui()
             raise
-    
+
     def get_reset_ocr(self, coords):
         self.logging.debug("-----Starting get_reset-----")        
         try:

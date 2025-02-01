@@ -13,16 +13,21 @@
     "current_position_elemental": [],
     "current_position_level": [
         1368,
-        264,
+        260,
         1403,
-        276
+        284
     ],
-    "current_position_available_points": [],
+    "current_position_available_points": [
+        1368,
+        341,
+        1417,
+        353
+    ],
     "current_position_reset": [
         1368,
-        281,
+        282,
         1434,
-        315
+        314
     ],
     "current_position_strenght": [],
     "current_position_agility": [],
