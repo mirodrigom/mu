@@ -267,8 +267,6 @@ class GameBot:
                             self.interface.set_level_reference([])
                         if stat == 'reset':
                             self.interface.set_reset_reference([])
-                        if stat == 'available_points':
-                            self.interface.set_available_attributes([])
                         raise ValueError(f"Invalid {stat} value: {stats[stat]}")
 
                 # Attributes

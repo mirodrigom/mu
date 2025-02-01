@@ -5,9 +5,7 @@ import cv2
 import time
 import random
 import logging
-import sys
 import keyboard
-import ctypes
 import pyautogui
 import pygetwindow as gw
 
@@ -26,70 +24,11 @@ class Interface:
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
         self.setup_screen()
-        
-    def get_system_dpi(self):
-        if sys.platform == 'win32':
-            try:
-                user32 = ctypes.windll.user32
-                # Get DPI for the primary monitor
-                dpi = user32.GetDpiForSystem()
-                scaling_factor = dpi / 96.0  # 96 is the base DPI
-                
-                self.logging.info(f"System DPI: {dpi}")
-                self.logging.info(f"Scaling Factor: {scaling_factor}x")
-                
-                # Get more detailed DPI awareness information
-                awareness = ctypes.windll.shcore.GetProcessDpiAwareness(0)
-                awareness_states = {
-                    0: "DPI_AWARENESS_UNAWARE",
-                    1: "DPI_AWARENESS_SYSTEM_AWARE",
-                    2: "DPI_AWARENESS_PER_MONITOR_AWARE"
-                }
-                self.logging.info(f"DPI Awareness State: {awareness_states.get(awareness, 'Unknown')}")
-                
-                return dpi, scaling_factor, awareness
-                
-            except Exception as e:
-                self.logging.error(f"Error getting DPI info: {e}")
-                return None, None, None
-        else:
-            self.logging.info("DPI check is only supported on Windows")
-            return None, None, None
-
-    def set_dpis_monitor(self):
-        if sys.platform == 'win32':
-            try:
-                # Check initial DPI state
-                self.logging.info("Initial DPI settings:")
-                self.get_system_dpi()
-
-                # Try multiple DPI awareness methods
-                try:
-                    # Method 1: Using SetProcessDpiAwareness
-                    PROCESS_PER_MONITOR_DPI_AWARE = 2
-                    result = ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)
-                    self.logging.info(f"SetProcessDpiAwareness result: {result}")
-                except Exception as e1:
-                    self.logging.error(f"Method 1 failed: {e1}")
-                    try:
-                        # Method 2: Using older SetProcessDPIAware
-                        result = ctypes.windll.user32.SetProcessDPIAware()
-                        self.logging.info(f"SetProcessDPIAware result: {result}")
-                    except Exception as e2:
-                        self.logging.error(f"Method 2 failed: {e2}")
-
-                # Verify final DPI state
-                self.logging.info("Final DPI settings:")
-                self.get_system_dpi()
-
-            except Exception as e:
-                self.logging.error(f"Failed to set DPI awareness: {e}")
 
     def setup_screen(self):
         """Configura los parámetros de la pantalla del juego"""
         try:
             # Set DPI awareness BEFORE any window operations
-            self.set_dpis_monitor()
             
             app_name = self.config.file["application_name"]
             # Get the window by title
@@ -146,10 +85,23 @@ class Interface:
     def get_text_from_screen(self, text_to_catch):
         self.logging.debug(f"Attempting to locate {text_to_catch} text on screen")
         try:
+            # Get display scaling factor
+            try:
+                import win32gui
+                import win32con
+                dc = win32gui.GetDC(0)
+                dpi_x = win32gui.GetDeviceCaps(dc, win32con.LOGPIXELSX)
+                win32gui.ReleaseDC(0, dc)
+                scale_factor = dpi_x / 96.0
+            except:
+                scale_factor = 1.0
+                
+            self.logging.debug(f"Using scale factor: {scale_factor}")
+
             for attempt in range(5):
                 time.sleep(1)
                 try:
-                    # Capture screen with DPI awareness already set
+                    # Use original capture method
                     screen = ImageGrab.grab()
                     screen_np = np.array(screen)
                     
@@ -164,14 +116,13 @@ class Interface:
                     
                     for i, text in enumerate(data['text']):
                         if text_to_catch in text:
-                            # Get the raw coordinates without scaling
-                            x = data['left'][i]
-                            y = data['top'][i]
-                            w = data['width'][i]
-                            h = data['height'][i]
+                            # Get coordinates and adjust for scaling
+                            x = int(data['left'][i] * scale_factor)
+                            y = int(data['top'][i] * scale_factor)
+                            w = int(data['width'][i] * scale_factor)
+                            h = int(data['height'][i] * scale_factor)
                             
                             rectangle = [x, y, x+w, y+h]
-                            
                             self.logging.debug(f"Found '{text_to_catch}' at rectangle: {rectangle}")
                             return rectangle
                         
@@ -181,7 +132,7 @@ class Interface:
                     self.logging.error(f"Error finding '{text_to_catch}' text on attempt {attempt + 1}: {str(e)}")
             
             return None
-        
+            
         except ImportError:
             self.logging.error("pytesseract is not installed. Please install it using: pip install pytesseract")
             return None
