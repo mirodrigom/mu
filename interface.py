@@ -5,10 +5,11 @@ import cv2
 import time
 import random
 import logging
-import sys
 import keyboard
 import pyautogui
 import pygetwindow as gw
+import win32gui
+import win32con
 
 from PIL import Image, ImageGrab
 from utils import Utils
@@ -18,19 +19,55 @@ class Interface:
     
     screen_width = 0
     screen_height = 0
+    
+    dashboard_height = 0
+    dashboard_width = 0
+    dashboard_x = 0
+    dashboard_y = 0
+    
     window_stats_open = False
     
     def __init__(self, config: Configuration):
         self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
+        self.setup_dashboard_coordinate()
         self.setup_screen()
+        
+    def setup_dashboard_coordinate(self):
+        try:
+            app_name = self.config.file["dashboard_name"]
+            # Get the window by title
+            while True:
+                window = gw.getWindowsWithTitle(app_name)[0]
+                self.dashboard_width = window.width
+                self.dashboard_height = window.height
+                
+                if self.dashboard_width == 375 and self.dashboard_height == 432:
+                    break
+                # Move window to desired x,y coordinates
+                desired_x = 5
+                desired_y = 100
+                window.moveTo(desired_x, desired_y)
+                
+                self.dashboard_x = window.left
+                self.dashboard_y = window.top
+                self.logging.info(window)
+                self.expand_dashboard()
+            
+            return True
+        except Exception as e:
+            self.logging.error("YOU MUST OPEN FIRST MU-DASHBOARD")
+            exit(0)
+
+    def expand_dashboard(self):
+        expand_button_x = self.dashboard_x + self.dashboard_width - 5
+        expand_button_y = self.dashboard_y + self.dashboard_height - 5
+        self.mouse_click(x = expand_button_x, y= expand_button_y)
 
     def setup_screen(self):
         """Configura los parámetros de la pantalla del juego"""
-        try:
-            # Set DPI awareness BEFORE any window operations
-            
+        try:            
             app_name = self.config.file["application_name"]
             # Get the window by title
             window = gw.getWindowsWithTitle(app_name)[0]
@@ -44,6 +81,17 @@ class Interface:
         except Exception as e:
             self.logging.error(f"Error getting window info: {e}")
             return False
+        
+    def get_position_data_using_dashboard(self, with_comma=False):
+        try:
+            coordinates = [222, 263, 280, 285]
+            string_converted = self.convert_image_into_string(coords=coordinates, image_name="position", with_comma=with_comma).strip()
+            self.logging.debug(f"[POSITION] Raw position data: '{string_converted}'")
+            return self.utils.clean_coordinates(string_converted)
+            #return self.convert_image_into_string(coords=coordinates, image_name="position", with_comma=with_comma).strip()
+        except Exception as e:
+                self.logging.error(f"Position fetch failed: {e}")
+                raise ValueError("Position fetch failed")
             
     def calculate_position_offset(self, base_offset, base_scale, scale_rate):
         """
@@ -87,7 +135,9 @@ class Interface:
             self.logging.debug(f"Scale: {self.config.get_interface_scale()}%")
             self.logging.debug(f"Adjusted position coords: {adjusted_position}")
             
-            return self.convert_image_into_string(coords=adjusted_position, image_name="position", with_comma=with_comma).strip()
+            string_converted = self.convert_image_into_string(coords=adjusted_position, image_name="position", with_comma=with_comma).strip()
+            self.logging.debug(string_converted)
+            return self.utils.clean_coordinates(string_converted)
             
         except Exception as e:
             self.logging.error(f"Position fetch failed: {e}")
@@ -564,17 +614,7 @@ class Interface:
             return 0
     
     def focus_application(self):
-        try:
-            # Find and focus MEGAMU window
-            megamu_window = gw.getWindowsWithTitle("MEGAMU")[0]
-            megamu_window.activate()
-            return True
-        except IndexError:
-            self.logging.error("MEGAMU window not found")
-            return False
-        except Exception as e:
-            self.logging.error(f"Error focusing MEGAMU: {e}")
-            return False
+        self.mouse_click(1780, 672)
     
     def reload_ui(self):
         self.logging.warning("Will close all popups.")
@@ -647,7 +687,6 @@ class Interface:
         time.sleep(0.1)
         keyboard.release('esc')
         
-        
     def command_reset(self):
         self.enter()
         self.execute_command('/reset')
@@ -700,6 +739,7 @@ class Interface:
         keyboard.release(key)
         
     def command_move_to_map(self, map_name):
+        time.sleep(0.5)
         self.enter()
         self.execute_command(f'/move {map_name}')
         self.enter()
@@ -822,11 +862,11 @@ class Interface:
         
     def get_attribute_reference(self, current_state, attr):
         if attr == "strenght":
-           return current_state["current_position_strenght"]
+            return current_state["current_position_strenght"]
         if attr == "agility":
             return current_state["current_position_agility"]
         if attr == "vitality":
-           return current_state["current_position_vitality"]
+            return current_state["current_position_vitality"]
         if attr == "energy":
             return current_state["current_position_energy"]
         if attr == "command":

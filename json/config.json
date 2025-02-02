@@ -1,6 +1,6 @@
 {
     "class": "Magic Gladiator",
-    "interface_scale": 100,
+    "interface_scale": 125,
     "level_thresholds": {
         "140": {
             "map": "tarkan",
@@ -41,6 +41,7 @@
         ]
     },
     "application_name": "MEGAMU",
+    "dashboard_name": "MEGAMU - Dashboard",
     "stat_distribution": {
         "strenght": 0.7,
         "agility": 0.1,

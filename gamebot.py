@@ -122,18 +122,14 @@ class GameBot:
             ValueError: Si el formato de coordenadas es inválido
         """
         time.sleep(0.1)
-        raw_data = self.interface.get_position_data(with_comma=True)
-        self.logging.debug(f"[POSITION] Raw position data: '{raw_data}'")
-        
-        # Try comma-separated format first
-        if ',' in raw_data:
-            try:
-                x, y = raw_data.split(',')
-                x, y = int(x.strip()), int(y.strip())
-                self.logging.debug(f"[POSITION] Parsed coordinates: [{x}, {y}]")
-                return x, y
-            except ValueError as e:
-                self.logging.debug(f"[POSITION] Failed to parse comma format: {e}")
+        try:
+            #x, y = self.interface.get_position_data_using_dashboard(with_comma=True)
+            x, y = self.interface.get_position_data(with_comma=True)        
+
+            self.logging.debug(f"[POSITION] Parsed coordinates: [{x}, {y}]")
+            return x, y
+        except ValueError as e:
+            self.logging.debug(f"[POSITION] Failed to parse comma format: {e}")
 
 
     def distribute_attributes(self):
@@ -530,7 +526,11 @@ class GameBot:
                 )
             )
             
-            if abs(dx) <= 16 and abs(dy) <= 16:
+            if abs(dx) >= 20 and abs(dy) >= 20:
+                if mu_helper_active == True:
+                    self.interface.set_mu_helper_status(False)
+                    self.logging.info(f"[MOVEMENT] ❌ You were killed 💀")
+            else:
                 if mu_helper_active == True:
                     self.logging.info(f"[MOVEMENT] ✅ No need to move he is already farming!")
                     break
@@ -550,6 +550,7 @@ class GameBot:
                         f"[STUCK] 🚫 Stuck for {stuck_count} moves at [{current_x},{current_y}] "
                         f"Time since last movement: {time_since_movement:.1f}s"
                     )
+                    self.interface.focus_application()
                     
                     # Progressive escape strategy
                     move_x, move_y, move_type = self.calculate_escape_vector(
@@ -863,5 +864,5 @@ class GameBot:
 
 if __name__ == "__main__":
     bot = GameBot()
-    time.sleep(5)
+    time.sleep(2)
     bot.run()

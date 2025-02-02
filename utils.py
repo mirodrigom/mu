@@ -34,35 +34,20 @@ class Utils:
         except Exception as e:
             self.logging.error(f"{e}: It seems that your coordinates sucks.")
         
-    def extract_numeric_value(self, text):
-        """Enhanced numeric value extraction"""
+    def clean_coordinates(self,coord_str):
         try:
-            # Clean the text
-            cleaned = ''.join(filter(str.isdigit, text.strip()))
-            if not cleaned:
-                return 0
-
-            # Handle common OCR mistakes
-            if len(cleaned) > 4:  # Stats shouldn't be more than 4 digits
-                cleaned = cleaned[:4]
-
-            value = int(cleaned)
-
-            # Validate reasonable ranges
-            if value > 9999:
-                return 0
-
-            return value
-        except ValueError:
-            return 0
-    
-    def clean_stats_command(self, command):
-        splitted_command = command.split(",")
-        filtered_stats = []
-        
-        for stat in splitted_command:
-            point = stat.strip().split(" ")[1]
-            if point != '0':
-                filtered_stats.append(stat.strip())
-        result = ', '.join(filtered_stats)
-        return result
+            # Split the string by comma
+            x_str, y_str = coord_str.split(',')
+            
+            # If x is more than 3 digits, remove first digit(s)
+            if len(x_str) > 3:
+                x_str = x_str[-3:]
+                
+            # Convert to integers
+            x = int(x_str.strip())
+            y = int(y_str.strip())
+            
+            return x, y
+        except Exception as e:
+            print(f"Error parsing coordinates: {e}")
+            return None, None
