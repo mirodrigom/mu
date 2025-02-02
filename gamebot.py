@@ -130,6 +130,7 @@ class GameBot:
             return x, y
         except ValueError as e:
             self.logging.debug(f"[POSITION] Failed to parse comma format: {e}")
+            raise e
 
 
     def distribute_attributes(self):

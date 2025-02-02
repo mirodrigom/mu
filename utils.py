@@ -34,8 +34,13 @@ class Utils:
         except Exception as e:
             self.logging.error(f"{e}: It seems that your coordinates sucks.")
         
-    def clean_coordinates(self,coord_str):
+    def clean_coordinates(self, coord_str):
         try:
+            # Handle case where there's no comma
+            if ',' not in coord_str:
+                self.logging.error(f"Invalid coordinate format: {coord_str}")
+                return None, None
+                
             # Split the string by comma
             x_str, y_str = coord_str.split(',')
             
@@ -43,11 +48,15 @@ class Utils:
             if len(x_str) > 3:
                 x_str = x_str[-3:]
                 
-            # Convert to integers
-            x = int(x_str.strip())
-            y = int(y_str.strip())
-            
+            # Convert to integers, with additional error checking
+            try:
+                x = int(x_str.strip())
+                y = int(y_str.strip())
+            except ValueError:
+                self.logging.error(f"Invalid number format: x={x_str}, y={y_str}")
+                return None, None
+                
             return x, y
         except Exception as e:
-            print(f"Error parsing coordinates: {e}")
+            self.logging.error(f"Error parsing coordinates: {e}")
             return None, None

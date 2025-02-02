@@ -31,7 +31,7 @@ class Interface:
         self.config = config
         self.utils = Utils()
         self.logging = logging.getLogger(__name__)
-        self.setup_dashboard_coordinate()
+        #self.setup_dashboard_coordinate()
         self.setup_screen()
         
     def setup_dashboard_coordinate(self):
@@ -137,7 +137,11 @@ class Interface:
             
             string_converted = self.convert_image_into_string(coords=adjusted_position, image_name="position", with_comma=with_comma).strip()
             self.logging.debug(string_converted)
-            return self.utils.clean_coordinates(string_converted)
+            coordinates = self.utils.clean_coordinates(string_converted)
+            self.logging.debug(string_converted)
+            if coordinates[0] is None or coordinates[1] is None:
+                raise ValueError("Invalid coordinates returned")
+            return coordinates
             
         except Exception as e:
             self.logging.error(f"Position fetch failed: {e}")
@@ -600,10 +604,10 @@ class Interface:
                 config=method_ocr
             ).strip()
             
-            return text if text else "0" 
+            return text if text else ("0,0" if with_comma else "0")
         except Exception as e:
             self.logging.error(f"Error reading {image_name}: {e}")
-            return "0" 
+            return "0,0" if with_comma else "0"
         
     def convert_image_into_number(self, coords, image_name, relative_coords=None, with_comma=False):
         try:
@@ -614,7 +618,19 @@ class Interface:
             return 0
     
     def focus_application(self):
-        self.mouse_click(1780, 672)
+        #self.mouse_click(1780, 672)
+        try:
+            # Find and focus MEGAMU window
+            app_name = self.config.file["application_name"]
+            megamu_window = gw.getWindowsWithTitle(app_name)[0]
+            megamu_window.activate()
+            return True
+        except IndexError:
+            self.logging.error("{app_name} window not found")
+            return False
+        except Exception as e:
+            self.logging.error(f"Error focusing {app_name}: {e}")
+            return False
     
     def reload_ui(self):
         self.logging.warning("Will close all popups.")
