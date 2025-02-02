@@ -52,11 +52,20 @@ class Utils:
             try:
                 x = int(x_str.strip())
                 y = int(y_str.strip())
+                
+                # Check if coordinates are 0,0
+                if x == 0 and y == 0:
+                    return None, None
+                    
+                # Validate coordinate ranges (0-300)
+                if not (0 <= x <= 300 and 0 <= y <= 300):
+                    self.logging.error(f"Coordinates out of valid range (0-300): x={x}, y={y}")
+                    return None, None
+                    
+                return x, y
             except ValueError:
                 self.logging.error(f"Invalid number format: x={x_str}, y={y_str}")
                 return None, None
-                
-            return x, y
         except Exception as e:
             self.logging.error(f"Error parsing coordinates: {e}")
             return None, None
