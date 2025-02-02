@@ -24,9 +24,9 @@ def setup_logging():
     # Set root logger to DEBUG level
     root_logger.setLevel(logging.DEBUG)
     
-    # Create formatter
+    # Create formatter with function name included
     formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s'
     )
     
     # Create console handler with UTF-8 encoding

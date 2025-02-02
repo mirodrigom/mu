@@ -307,6 +307,9 @@ class Interface:
     def get_level_ocr(self, coords):
         self.logging.debug("-----Starting get_level-----")        
         try:
+            # First, ensure coords are integers
+            coords = [int(coord) for coord in coords]  # Convert all coordinates to integers
+            
             # Base values at 100% scale
             BASE_SCALE = 100
             BASE_X1_OFFSET = 200  # x1 offset at 100%
@@ -333,7 +336,7 @@ class Interface:
             self.logging.debug(f"Result from convert_image_into_number: {result}")
             
             return result
-                
+            
         except Exception as e:
             self.logging.error(f"Error in get_level_ocr: {e}")
             self.logging.error(f"Error type: {type(e)}")
@@ -341,10 +344,16 @@ class Interface:
             raise
 
     def calculate_offset(self, base_offset, base_scale, scale_rate):
-        current_scale = self.config.get_interface_scale()
-        scale_diff = current_scale - base_scale
-        offset_adjustment = scale_diff * scale_rate
-        return int(base_offset + offset_adjustment)
+
+        try:
+            current_scale = self.config.get_interface_scale()
+            if isinstance(current_scale, str):
+                current_scale = int(current_scale)
+            scale_diff = current_scale - base_scale
+            offset_adjustment = scale_diff * scale_rate
+            return int(base_offset + offset_adjustment)
+        except Exception as e:
+            self.logging.error(e)
 
     def get_reset_ocr(self, coords):
         self.logging.debug("-----Starting get_reset-----")        

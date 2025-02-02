@@ -1,60 +1,60 @@
 {
-    "current_reset": 31,
-    "current_level": 342,
-    "current_map": "tarkan",
+    "current_reset": 0,
+    "current_level": 1,
+    "current_map": "noria",
     "current_coords": [],
-    "current_strenght": 9390,
-    "current_agility": 1357,
-    "current_vitality": 1218,
-    "current_energy": 1218,
+    "current_strenght": 13,
+    "current_agility": 18,
+    "current_vitality": 14,
+    "current_energy": 40,
     "current_command": 0,
-    "available_points": 8,
-    "mulheper_active": true,
+    "available_points": 0,
+    "mulheper_active": false,
     "current_position_level": [
-        1361,
-        262,
-        1397,
-        288
+        1300,
+        235,
+        1336,
+        247
     ],
     "current_position_available_points": [
-        1361,
-        344,
-        1411,
-        357
+        1300,
+        310,
+        1350,
+        323
     ],
     "current_position_reset": [
-        1361,
-        293,
-        1427,
-        314
+        1300,
+        250,
+        1367,
+        275
     ],
     "current_position_strenght": [
-        1363,
-        399,
-        1417,
-        412
+        1302,
+        364,
+        1361,
+        385
     ],
     "current_position_agility": [
-        1356,
-        446,
-        1425,
-        476
+        1301,
+        417,
+        1368,
+        439
     ],
     "current_position_vitality": [
-        1360,
-        530,
-        1430,
-        554
+        1301,
+        495,
+        1373,
+        518
     ],
     "current_position_energy": [
-        1363,
-        584,
-        1424,
-        605
+        1302,
+        552,
+        1368,
+        575
     ],
     "current_position_command": [],
     "current_location": [
-        123,
-        91
+        144,
+        437
     ]
 }
