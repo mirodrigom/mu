@@ -59,6 +59,13 @@ class Memory:
         x = self.pm.read_int(self.plugin_dll + 0x36C6C)
         y = self.pm.read_int(self.plugin_dll + 0x388F0)
         return x, y
+    
+    def get_level(self):
+        return self.pm.read_int(self.plugin_dll + 0x388F4)
+    
+    def get_reset(self):
+        return self.pm.read_int(self.plugin_dll + 0x36C7C)
+        
 
     def _get_memory_regions(self):
         """Get relevant memory regions efficiently"""
