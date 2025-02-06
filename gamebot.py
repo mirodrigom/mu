@@ -200,33 +200,52 @@ class GameBot:
         
         return True
     
-    def get_available_points(self, current_state):
+    def get_value_based_on_memory_address(self, address):
         points = None
-        if not self.memory.available_points_addr:
-            coords_available_points = self.interface.get_available_attributes(current_state)
-            if len(coords_available_points) == 0:
-                coords_available_points = self.interface.get_text_from_screen("Puntos")
-            points = self.interface.get_available_points_ocr(coords_available_points)
-            self.interface.set_available_attributes(coords_available_points)
-            
-            memory_available_points = self.memory.find_available_points_memory(points)
-            if memory_available_points and len(memory_available_points) == 1:
-                self.memory.available_points_addr = memory_available_points[0]
-                print(f"Set memory address to: 0x{self.memory.available_points_addr:X}")
-        
-        if self.memory.available_points_addr:
+        if address:
             try:
-                value = self.memory.get_value_of_memory(self.memory.available_points_addr)
+                value = self.memory.get_value_of_memory(address)
                 if value is not None:
                     points = value
-                    print(f"Successfully read value {value}")
+                    self.logging.info(f"Successfully read value {value}")
                 else:
-                    print("Failed to read value, clearing address")
-                    self.memory.available_points_addr = None
+                    self.logging.info("Failed to read value, clearing address")
+                    address = None
             except Exception as e:
-                print(f"Error reading memory: {str(e)}")
-                self.memory.available_points_addr = None
+                self.logging.info(f"Error reading memory: {str(e)}")
+                address = None
         return points
+
+    
+    def get_attribute_points(self, current_state, attr, attr_spanish, memory_attr_name, find_memory_method, get_coords_method, get_points_method, set_coords_method):
+        self.logging.info(f"memory address => {getattr(self.memory, memory_attr_name, None)}")
+
+        if not getattr(self.memory, memory_attr_name, None):
+            # Get the attribute coordinates
+            coords_attr = get_coords_method(current_state)
+            if len(coords_attr) == 0:
+                coords_attr = self.interface.get_text_from_screen(attr_spanish)
+
+            # Save the attribute reference
+            set_coords_method(coords_attr)
+
+            # Get the points using OCR
+            points = get_points_method(coords_attr)
+            self.logging.info(f"current value => {points}")
+
+            # Only proceed with memory scan if we have a valid value
+            if points and points > 0:
+                memory_attr_addr = find_memory_method(points)
+
+                # Verify we found exactly one match
+                if memory_attr_addr and len(memory_attr_addr) == 1:
+                    # Verify the address is stable
+                    if self.memory.verify_address(memory_attr_addr[0]):
+                        setattr(self.memory, memory_attr_name, memory_attr_addr[0])
+                        self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
+        
+        return self.get_value_based_on_memory_address(getattr(self.memory, memory_attr_name, None))
+
 
     def read_all_stats(self):
         """Read and save all character stats"""
@@ -255,34 +274,24 @@ class GameBot:
                     if stat == 'reset':
                         stats[stat] = self.memory.get_reset()
                     if stat == 'available_points':
-                        stats[stat] = self.get_available_points(current_state)
+                        stats[stat] = self.get_attribute_points(current_state=current_state, attr="available_points", attr_spanish="Puntos", memory_attr_name="available_points_addr", find_memory_method=self.memory.find_available_points_memory, get_coords_method=self.interface.get_available_attributes, get_points_method=self.interface.get_available_points_ocr, set_coords_method=self.interface.set_available_attributes)
                                 
                 # Attributes
                 for attr in self.gameclass.attributes:
                     if attr == 'strenght':
-                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
-                        if len(coords_attr) == 0:
-                            coords_attr = self.interface.get_text_from_screen("Fuerza")
+                        stats[attr] = self.get_attribute_points(current_state, attr, "Fuerza", "strenght_addr", self.memory.find_str_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("strenght", coords))
                     if attr == 'agility':
-                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
-                        if len(coords_attr) == 0:
-                            coords_attr = self.interface.get_text_from_screen("Agilidad")
+                        stats[attr] = self.get_attribute_points(current_state, attr, "Agilidad", "agility_addr", self.memory.find_agi_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("agility", coords))
                     if attr == 'vitality':
-                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
-                        if len(coords_attr) == 0:
-                            coords_attr = self.interface.get_text_from_screen("Vitalidad")
+                        stats[attr] = self.get_attribute_points(current_state, attr, "Vitalidad", "vitality_addr", self.memory.find_vit_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("vitality", coords))
                     if attr == 'energy':
-                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
-                        if len(coords_attr) == 0:
-                            coords_attr = self.interface.get_text_from_screen("Energia")
+                        stats[attr] = self.get_attribute_points(current_state, attr, "Energía", "energy_addr", self.memory.find_ene_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("energy", coords))
                     if attr == 'command':
-                        coords_attr = self.interface.get_attribute_reference(current_state, attr)
-                        if len(coords_attr) == 0:
-                            coords_attr = self.interface.get_text_from_screen("Comando")
-                        
-                    self.interface.set_attribute_reference(attr, coords_attr)
-                    stats[attr] = self.interface.get_attr_ocr(coords_attr, attr)
+                        stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))
 
+
+                    
+                
                 # Update state
                 state = {
                     ''
@@ -303,6 +312,7 @@ class GameBot:
                 self.logging.info(f"Strength: {state['current_strenght']}")
                 self.logging.info(f"Agility: {state['current_agility']}")
                 self.logging.info(f"Vitality: {state['current_vitality']}")
+                self.logging.info(f"Energy: {state['current_energy']}")
                 self.logging.info(f"Command: {state['current_command']}")
                 return stats['level'], stats['reset']
 

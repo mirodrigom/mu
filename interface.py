@@ -855,12 +855,6 @@ class Interface:
     def get_current_coords(self, current_state):
         return current_state["current_location"][0], current_state["current_location"][1]
         
-    def set_reset_reference(self, coords):
-        self.config.update_game_state({'current_position_reset': coords})
-        
-    def set_level_reference(self, coords):
-        self.config.update_game_state({'current_position_level': coords})
-        
     def set_available_attributes(self, coords):
         self.config.update_game_state({'current_position_available_points': coords})
         
@@ -875,12 +869,6 @@ class Interface:
             self.config.update_game_state({'current_position_energy': coords})
         if attr == "command":
             self.config.update_game_state({'current_position_command': coords})
-            
-    def get_reset_reference(self, current_state):
-        return current_state["current_position_reset"]
-        
-    def get_level_reference(self, current_state):
-        return current_state["current_position_level"]
         
     def get_available_attributes(self, current_state):
         return current_state["current_position_available_points"]
@@ -896,3 +884,15 @@ class Interface:
             return current_state["current_position_energy"]
         if attr == "command":
             return current_state["current_position_command"]
+    
+    def get_attribute_value(self, current_state, attr):
+        if attr == "strenght":
+            return current_state["current_strenght"]
+        if attr == "agility":
+            return current_state["current_agility"]
+        if attr == "vitality":
+            return current_state["current_vitality"]
+        if attr == "energy":
+            return current_state["current_energy"]
+        if attr == "command":
+            return current_state["current_command"]

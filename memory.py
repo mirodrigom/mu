@@ -113,17 +113,23 @@ class Memory:
         value_bytes = struct.pack('<I', value)
         
         try:
-            data = self.pm.read_bytes(region.start, region.size)
-            
-            pos = 0
-            while True:
-                pos = data.find(value_bytes, pos)
-                if pos == -1:
-                    break
-                addr = region.start + pos
-                matches.append(addr)
-                pos += 1
+            # Read in larger chunks for better performance
+            chunk_size = min(region.size, self._chunk_size)
+            for offset in range(0, region.size, chunk_size):
+                size = min(chunk_size, region.size - offset)
+                data = self.pm.read_bytes(region.start + offset, size)
                 
+                pos = 0
+                while True:
+                    pos = data.find(value_bytes, pos)
+                    if pos == -1:
+                        break
+                    addr = region.start + offset + pos
+                    # Only add non-zero values to matches
+                    if value != 0 or self.verify_address(addr):
+                        matches.append(addr)
+                    pos += 1
+                    
             if progress_callback:
                 progress_callback(region.size)
                 
@@ -133,7 +139,18 @@ class Memory:
             self.logging.debug(f"Error scanning region at 0x{region.start:X}: {str(e)}")
             
         return matches
-    
+
+    def verify_address(self, addr: int) -> bool:
+        """Verify if an address is valid and stable"""
+        try:
+            # Read the value multiple times to ensure it's stable
+            val1 = self.pm.read_int(addr)
+            time.sleep(0.01)
+            val2 = self.pm.read_int(addr)
+            return val1 == val2 and val1 != 0
+        except:
+            return False
+
     def get_value_of_memory(self, address: int) -> int:
         """Read a 4-byte integer value from the specified address"""
         try:
