@@ -8,6 +8,7 @@ from interface import Interface
 from utils import Utils
 from config import Configuration
 from gameclass import GameClass
+from memory import Memory
 
 class GameBot:
     
@@ -22,6 +23,8 @@ class GameBot:
         self.interface = Interface(self.config)
         self.gameclass = GameClass()
         self.utils = Utils()
+        self.memory = Memory()
+        
         self.interface.load_ocr_packages()
         
         self.running = True
@@ -124,7 +127,8 @@ class GameBot:
         time.sleep(0.1)
         try:
             #x, y = self.interface.get_position_data_using_dashboard(with_comma=True)
-            x, y = self.interface.get_position_data(with_comma=True)        
+            #x, y = self.interface.get_position_data(with_comma=True)        
+            x, y = self.memory.get_coordinates()
 
             self.logging.debug(f"[POSITION] Parsed coordinates: [{x}, {y}]")
             return x, y
@@ -217,6 +221,7 @@ class GameBot:
                 
                 # Basic stats
                 for stat in ['level', 'reset', 'available_points']:
+                    '''
                     if stat == 'level':
                         coords_level = self.interface.get_level_reference(current_state)
                         if len(coords_level) == 0:
@@ -229,24 +234,45 @@ class GameBot:
                             coords_reset = self.interface.get_text_from_screen("Resetear")
                         stats[stat] = self.interface.get_reset_ocr(coords_reset)
                         self.interface.set_reset_reference(coords_reset)
+                    '''
                     if stat == 'available_points':
-                        coords_available_points = self.interface.get_available_attributes(current_state)
-                        if len(coords_available_points) == 0:
-                            coords_available_points = self.interface.get_text_from_screen("Puntos")
-                        stats[stat] = self.interface.get_available_points_ocr(coords_available_points)
-                        self.interface.set_available_attributes(coords_available_points)
+                        if not self.memory.available_points_addr:
+                            coords_available_points = self.interface.get_available_attributes(current_state)
+                            if len(coords_available_points) == 0:
+                                coords_available_points = self.interface.get_text_from_screen("Puntos")
+                            stats[stat] = self.interface.get_available_points_ocr(coords_available_points)
+                            self.interface.set_available_attributes(coords_available_points)
+                            
+                            memory_available_points = self.memory.find_available_points_memory(stats[stat])
+                            if memory_available_points and len(memory_available_points) == 1:
+                                self.memory.available_points_addr = memory_available_points[0]
+                                print(f"Set memory address to: 0x{self.memory.available_points_addr:X}")
                         
+                        if self.memory.available_points_addr:
+                            try:
+                                value = self.memory.get_value_of_memory(self.memory.available_points_addr)
+                                if value is not None:
+                                    stats[stat] = value
+                                    print(f"Successfully read value {value}")
+                                else:
+                                    print("Failed to read value, clearing address")
+                                    self.memory.available_points_addr = None
+                            except Exception as e:
+                                print(f"Error reading memory: {str(e)}")
+                                self.memory.available_points_addr = None
+                                
                     #if not coords_available_points:
                     #    time.sleep(1)
                     #    continue
+                    '''
                     if stats[stat] <= 0 and stat == 'level':  # Invalid read
                         self.logging.error(f"Invalid {stat} value: {stats[stat]}")
                         if stat == 'level':
                             self.interface.set_level_reference([])
                         raise ValueError(f"Invalid {stat} value: {stats[stat]}")
-
+                    '''
                 # Attributes
-                
+                '''
                 for attr in self.gameclass.attributes:
                     if attr == 'strenght':
                         coords_attr = self.interface.get_attribute_reference(current_state, attr)
@@ -271,7 +297,7 @@ class GameBot:
                         
                     self.interface.set_attribute_reference(attr, coords_attr)
                     stats[attr] = self.interface.get_attr_ocr(coords_attr, attr)
-                    
+                '''
                 # Update state
                 state = {
                     ''
