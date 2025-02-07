@@ -1,49 +1,24 @@
 {
-    "current_reset": 65,
-    "current_level": 1,
-    "current_map": "noria",
+    "current_reset": 0,
+    "current_level": 0,
+    "current_map": "lorencia",
     "current_coords": [],
-    "current_strenght": 19005,
-    "current_agility": 2737,
-    "current_vitality": 479,
-    "current_energy": null,
+    "current_strenght": 0,
+    "current_agility": 0,
+    "current_vitality": 0,
+    "current_energy": 0,
     "current_command": 0,
-    "available_points": 2,
-    "mulheper_active": true,
-    "current_position_available_points": [
-        1146,
-        339,
-        1196,
-        352
-    ],
-    "current_position_strenght": [
-        1152,
-        382,
-        1231,
-        427
-    ],
-    "current_position_agility": [
-        1144,
-        446,
-        1215,
-        473
-    ],
-    "current_position_vitality": [
-        1147,
-        531,
-        1219,
-        546
-    ],
-    "current_position_energy": [
-        1147,
-        583,
-        1214,
-        618
-    ],
+    "available_points": 0,
+    "mulheper_active": false,
+    "current_position_available_points": [],
+    "current_position_strenght": [],
+    "current_position_agility": [],
+    "current_position_vitality": [],
+    "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        140,
-        118
+        122,
+        133
     ],
     "current_position_level": [],
     "current_position_reset": []
