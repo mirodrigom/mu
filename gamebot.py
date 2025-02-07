@@ -24,7 +24,7 @@ class GameBot:
         self.gameclass = GameClass()
         self.utils = Utils()
         self.memory = Memory()
-        self.movement = Movement(self.memory, self.config, self.interface)
+        self.movement = Movement(interface=self.interface, config=self.config, memory=self.memory)
         
         self.interface.load_ocr_packages()
         
@@ -208,7 +208,7 @@ class GameBot:
                     x = obj["location"][0]
                     y = obj["location"][1]
                 
-                self.movement.move_to_coordinates(x, y)
+                self.movement.move_to(x, y)
                 self.check_and_click_play(x, y)
                 break
         
