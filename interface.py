@@ -992,11 +992,13 @@ class Interface:
         
     def move_mouse_to_coords_without_click(self, x, y):
         pyautogui.moveTo(x, y)
-        time.sleep(0.1)
+        time.sleep(0.5)
         
     def check_npc_in_cursor(self, x, y):
         self.move_mouse_to_coords_without_click(x, y)
-        if self.find_cursor_image() is True:
+        is_any_npc = self.find_cursor_image()
+        time.sleep(0.1)
+        if is_any_npc is True:
             self.logging.info("In that coordinate, there is an NPC. So, we will not move to that coordinate.")
             return True
         return False
