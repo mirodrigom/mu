@@ -312,6 +312,7 @@ class Movement:
                 self.map_data['free_spaces'].add(new_pos)
                 self.map_data['obstacles'].discard(new_pos)  # Ensure it's not marked as an obstacle
                 return True
+            
 
     def explore_map(self, map_name: str):
         """Explore the map to create a map of obstacles and free spaces."""
@@ -335,8 +336,6 @@ class Movement:
     def _calculate_distance(self, x1: int, y1: int, x2: int, y2: int) -> float:
         """Calculate Manhattan distance between two points."""
         return abs(x2 - x1) + abs(y2 - y1)
-
-
 
     def _execute_movement(self, direction: str):
         """Execute movement in the given direction."""

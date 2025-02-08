@@ -10,7 +10,10 @@ import pyautogui
 import pygetwindow as gw
 import win32gui
 import win32con
+import win32ui
+import win32api
 
+from ctypes import windll
 from PIL import Image, ImageGrab
 from utils import Utils
 from config import Configuration
@@ -82,12 +85,222 @@ class Interface:
             self.screen_height = window.height
             self.center_screen = self.screen_width // 2, self.screen_height // 2
             self.logging.info(f"Window size: {self.screen_width}x{self.screen_height}")
+            self.check_points = self._initialize_check_points()
             
             return True
         except Exception as e:
             self.logging.error(f"Error getting window info: {e}")
             return False
         
+    def _initialize_check_points(self):
+        """Inicializa el área de búsqueda"""
+        # Área específica donde puede estar la imagen
+        self.search_area = {
+            'left': 849,
+            'top': 427,
+            'right': 1083,
+            'bottom': 638
+        }
+        
+        # Calculamos el centro del área
+        center_x = (self.search_area['left'] + self.search_area['right']) // 2
+        center_y = (self.search_area['top'] + self.search_area['bottom']) // 2
+        
+        return {
+            'center': (center_x, center_y),
+            'top': (center_x, self.search_area['top'] + 50),
+            'down': (center_x, self.search_area['bottom'] - 50),
+            'left': (self.search_area['left'] + 50, center_y),
+            'right': (self.search_area['right'] - 50, center_y)
+        }
+        
+
+
+    def preprocess_image(self, image_path):
+        """Optimize PNG image with transparency for comparison"""
+        try:
+            # Load image if it's a path
+            if isinstance(image_path, str):
+                print(f"Loading image from path: {image_path}")
+                image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+                if image is None:
+                    print(f"Failed to load image from: {image_path}")
+                    return None
+            else:
+                image = image_path
+
+            # Convert BGR to RGB if necessary
+            if len(image.shape) == 3 and image.shape[2] == 3:
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            
+            # Handle alpha channel if present
+            if len(image.shape) == 3 and image.shape[2] == 4:
+                # Split alpha channel
+                bgr = image[:,:,:3]
+                alpha = image[:,:,3]
+                
+                # Create white background
+                white_bg = np.ones_like(bgr, dtype=np.uint8) * 255
+                
+                # Blend using alpha channel
+                alpha_norm = alpha[:,:,np.newaxis] / 255.0
+                blended = (bgr * alpha_norm + white_bg * (1 - alpha_norm)).astype(np.uint8)
+            else:
+                blended = image
+
+            # Convert to grayscale
+            gray = cv2.cvtColor(blended, cv2.COLOR_BGR2GRAY) if len(blended.shape) == 3 else blended
+            
+            return gray
+
+        except Exception as e:
+            print(f"Error in preprocess_image: {str(e)}")
+            return None
+
+    def capture_region(self):
+        """Captura la región completa de búsqueda"""
+        try:
+            region = (
+                self.search_area['left'],
+                self.search_area['top'],
+                self.search_area['right'],
+                self.search_area['bottom']
+            )
+            # Asegurarse que la ruta existe
+            import os
+            screenshot_dir = "images"
+            if not os.path.exists(screenshot_dir):
+                os.makedirs(screenshot_dir)
+                
+            screenshot_path = os.path.join(screenshot_dir, f"screenshot_{region[0]}_{region[1]}.png")
+            screenshot = self.take_screenshot(region)
+            
+            if isinstance(screenshot, str):  # Si ya es una ruta
+                return screenshot
+            else:  # Si es un objeto de imagen
+                screenshot.save(screenshot_path)
+                return screenshot_path
+                
+        except Exception as e:
+            print(f"Error in capture_region: {str(e)}")
+            return None
+        
+    def take_screenshot_with_cursor_using_coords(self, coords, image_name):
+        """
+        Toma una screenshot de una región específica incluyendo el cursor
+        """
+        try:
+            # Crear un DC para toda la pantalla
+            hwin = win32gui.GetDesktopWindow()
+            width = coords[2] - coords[0]
+            height = coords[3] - coords[1]
+            
+            hwndDC = win32gui.GetWindowDC(hwin)
+            mfcDC = win32ui.CreateDCFromHandle(hwndDC)
+            saveDC = mfcDC.CreateCompatibleDC()
+            
+            # Crear el mapa de bits para guardar la imagen
+            saveBitMap = win32ui.CreateBitmap()
+            saveBitMap.CreateCompatibleBitmap(mfcDC, width, height)
+            saveDC.SelectObject(saveBitMap)
+            
+            # Copiar la pantalla al mapa de bits
+            saveDC.BitBlt((0, 0), (width, height), mfcDC, (coords[0], coords[1]), win32con.SRCCOPY)
+            
+            # Obtener información del cursor
+            cursor = win32gui.GetCursorInfo()
+            
+            # Dibujar el cursor en la imagen si está visible
+            if cursor[1]:  # cursor[1] es True si el cursor está visible
+                hcursor = win32gui.LoadImage(0, win32con.IDC_ARROW, win32con.IMAGE_CURSOR, 0, 0, win32con.LR_SHARED)
+                cursor_pos = win32gui.GetCursorPos()
+                cursor_x = cursor_pos[0] - coords[0]  # Ajustar posición relativa
+                cursor_y = cursor_pos[1] - coords[1]
+                
+                # Dibujar el cursor en la posición correcta
+                windll.user32.DrawIcon(saveDC.GetHandleOutput(), cursor_x, cursor_y, cursor[1])
+            
+            # Guardar la imagen
+            path = os.path.join(self.config.dirs['images'], f'{image_name}.png')
+            saveBitMap.SaveBitmapFile(saveDC, path)
+            
+            # Limpieza
+            win32gui.DeleteObject(saveBitMap.GetHandle())
+            saveDC.DeleteDC()
+            mfcDC.DeleteDC()
+            win32gui.ReleaseDC(hwin, hwndDC)
+            
+            return path
+            
+        except Exception as e:
+            print(f"Error taking screenshot: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return None
+        
+
+    def check_for_image(self, target_image_path):
+        """Busca la imagen en el área específica"""
+        try:
+            # Ensure we're using the correct target image
+            target_image_path = "images/mouse_click.png"  # Force correct path
+            
+            # Region to search
+            region = (849, 427, 1083, 638)
+            
+            # Take screenshot and get the path
+            screenshot_path = self.take_screenshot_with_cursor_using_coords(coords=region, image_name="search_area.png")
+            
+            print(f"Searching in region: {region}")
+            print(f"Looking for image: {target_image_path}")
+            
+            # Load both images using OpenCV with regular imread since there's no transparency
+            screenshot_cv = cv2.imread(screenshot_path, cv2.IMREAD_COLOR)
+            target = cv2.imread(target_image_path, cv2.IMREAD_COLOR)
+            
+            if target is None:
+                print(f"Could not load target image: {target_image_path}")
+                return False, (0, 0)
+                
+            if screenshot_cv is None:
+                print(f"Could not load screenshot: {screenshot_path}")
+                return False, (0, 0)
+            
+            # Convert both to grayscale
+            screenshot_gray = cv2.cvtColor(screenshot_cv, cv2.COLOR_BGR2GRAY)
+            target_gray = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
+            
+            # Find matches with a slightly lower threshold since the image is simple
+            result = cv2.matchTemplate(screenshot_gray, target_gray, cv2.TM_CCOEFF_NORMED)
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            
+            # Lower the threshold since the image is simple and might have slight variations
+            threshold = 1
+            found = max_val >= threshold
+            
+            print(f"Best match value: {max_val:.3f}")
+            
+            if found:
+                # Calculate absolute coordinates
+                abs_x = region[0] + max_loc[0] + target.shape[1]//2
+                abs_y = region[1] + max_loc[1] + target.shape[0]//2
+                print(f"Found at: ({abs_x}, {abs_y})")
+                return True, (abs_x, abs_y)
+                
+            return False, (0, 0)
+            
+        except Exception as e:
+            print(f"Error in check_for_image: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False, (0, 0)
+
+    def find_cursor_image(self):
+        found, coords = self.check_for_image("mouse_click.png")
+        if found:
+            return True
+        return False
+    
     def get_position_data_using_dashboard(self, with_comma=False):
         try:
             coordinates = [222, 263, 280, 285]
@@ -776,31 +989,46 @@ class Interface:
         self.enter()
         self.set_current_map(map_name = map_name)
         self.window_stats_open = False
+        
+    def move_mouse_to_coords_without_click(self, x, y):
+        pyautogui.moveTo(x, y)
+        time.sleep(0.1)
+        
+    def check_npc_in_cursor(self, x, y):
+        self.move_mouse_to_coords_without_click(x, y)
+        if self.find_cursor_image() is True:
+            self.logging.info("In that coordinate, there is an NPC. So, we will not move to that coordinate.")
+            return True
+        return False
     
     #Horizontal/Vertical
     def mouse_top(self):
         x, y = self.get_character_center()
         y = y - 50
         self.logging.info(f"Top mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     def mouse_down(self):
         x, y = self.get_character_center()
         y = y + 50
         self.logging.info(f"Down mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     def mouse_left(self):
         x, y = self.get_character_center()
         x = x - 50
         self.logging.info(f"Left mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     def mouse_right(self):
         x, y = self.get_character_center()
         x = x + 50
         self.logging.info(f"Right mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     #Diagonal
     def mouse_top_right(self):
@@ -808,28 +1036,32 @@ class Interface:
         x = x + 50
         y = y - 50
         self.logging.info(f"Top/Right mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     def mouse_top_left(self):
         x, y = self.get_character_center()
         x = x - 50
         y = y - 50
         self.logging.info(f"Top/Left mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     def mouse_down_right(self):
         x, y = self.get_character_center()
         x = x + 50
         y = y + 50
         self.logging.info(f"Down/Right mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
         
     def mouse_down_left(self):
         x, y = self.get_character_center()
         x = x - 50
         y = y + 50
         self.logging.info(f"Down/Left mouse click on these coords: ({x},{y})")
-        self.mouse_click(x,y)
+        if not self.check_npc_in_cursor(x,y):
+            self.mouse_click(x,y)
 
         
     def _release_all_keys(self):

@@ -281,6 +281,7 @@ class GameBot:
             while self.running:
                 self.interface.focus_application()
                 self.movement.explore_map("lorencia")
+                #self.interface.find_cursor_image()
                 time.sleep(1)
         else:
             while self.running:
