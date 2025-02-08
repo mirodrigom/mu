@@ -995,10 +995,15 @@ class Interface:
         time.sleep(1)
         
     def check_npc_in_cursor(self, x, y):
+        in_any_npc = False
         self.move_mouse_to_coords_without_click(x, y)
-        is_any_npc = self.find_cursor_image()
-        time.sleep(0.1)
-        if is_any_npc is True:
+        for _ in range(2):
+            in_any_npc = self.find_cursor_image()
+            time.sleep(0.1)
+            if in_any_npc is True:
+                break
+            
+        if in_any_npc is True:
             self.logging.info("In that coordinate, there is an NPC. So, we will not move to that coordinate.")
             return True
         return False

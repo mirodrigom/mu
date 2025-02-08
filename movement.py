@@ -27,7 +27,7 @@ class Movement:
         self.MOVEMENT_TIMEOUT = 60  # 1 minute timeout
         
         # Stuck detection
-        self.last_positions = deque(maxlen=5)  # Track the last few positions
+        self.movement_history = deque(maxlen=20)
         self.stuck_threshold = 5  # Number of steps to consider the bot stuck
         self.stuck_timeout = 300  # Time (in seconds) before resetting to Lorencia
         
@@ -143,7 +143,7 @@ class Movement:
             if success:
                 # Once we reach the unexplored coordinate, explore the surrounding area
                 self.logging.info("Reached unexplored coordinate. Exploring surrounding area.")
-                self.explore_randomly()  # Call explore_randomly here
+                #self.explore_randomly()  # Call explore_randomly here
                 return True
             else:
                 self.logging.warning("Failed to move to unexplored coordinate.")
@@ -157,12 +157,13 @@ class Movement:
         Handle stuck recovery by moving to Lorencia and restarting exploration.
         """
         self.logging.warning("Bot is stuck. Resetting position by moving to Lorencia.")
-        self.move_to_location("lorencia", avoid_checks=True)
-        time.sleep(5)  # Wait for the bot to move to Lorencia
-        self.explore_map("lorencia")  # Restart exploration
+        self.movement_history.clear()  # Clear movement history
+        #self.move_to_location("lorencia", avoid_checks=True)
+        #time.sleep(5)  # Wait for the bot to move to Lorencia
+        #self.explore_map("lorencia")  # Restart exploration
     
     def explore_randomly(self):
-        """Explore the map randomly, prioritizing unexplored coordinates."""
+        """Explore the map randomly, avoiding repetitive movements."""
         self.logging.info("Starting random exploration...")
         
         boundary_failures = defaultdict(int)  # Track failures in each direction
@@ -178,9 +179,12 @@ class Movement:
             self.map_data['free_spaces'].add(current_pos)
             self.map_data['obstacles'].discard(current_pos)  # Ensure it's not marked as an obstacle
             
+            # Update movement history with current position
+            self.movement_history.append(current_pos)
+            self.logging.debug(f"Movement history: {list(self.movement_history)}")
+            
             # Check if the bot is stuck (not moving for several steps)
-            self.last_positions.append(current_pos)
-            if len(self.last_positions) == self.last_positions.maxlen and len(set(self.last_positions)) <= 2:
+            if len(self.movement_history) == self.movement_history.maxlen and len(set(self.movement_history)) <= 2:
                 self.logging.warning("Bot is stuck in the same position. Attempting to recover.")
                 self._handle_stuck_recovery()
                 return  # Exit the function and restart exploration
@@ -294,26 +298,56 @@ class Movement:
             self.save_map_data()  # Overwrite the file with default data
 
     def _get_best_direction(self, current_x: int, current_y: int, target_x: int, target_y: int) -> str:
-        """Determine the best direction to move based on current position and target."""
+        """
+        Determine the best direction to move based on current position and target.
+        Avoids moving toward known obstacles.
+        """
         dx = target_x - current_x
         dy = target_y - current_y
         
-        # If we're significantly off in both X and Y, use diagonal movement
+        # Generate a list of possible directions, sorted by priority
+        possible_directions = []
+        
+        # Diagonal movements (higher priority if both X and Y are significantly off)
         if abs(dx) >= self.STEP_SIZE and abs(dy) >= self.STEP_SIZE:
-            if dx > 0:
-                return 'NE' if dy > 0 else 'SE'
-            else:
-                return 'NW' if dy > 0 else 'SW'
+            if dx > 0 and dy > 0 and (current_x + self.STEP_SIZE, current_y + self.STEP_SIZE) not in self.map_data['obstacles']:
+                possible_directions.append('NE')
+            if dx < 0 and dy > 0 and (current_x - self.STEP_SIZE, current_y + self.STEP_SIZE) not in self.map_data['obstacles']:
+                possible_directions.append('NW')
+            if dx > 0 and dy < 0 and (current_x + self.STEP_SIZE, current_y - self.STEP_SIZE) not in self.map_data['obstacles']:
+                possible_directions.append('SE')
+            if dx < 0 and dy < 0 and (current_x - self.STEP_SIZE, current_y - self.STEP_SIZE) not in self.map_data['obstacles']:
+                possible_directions.append('SW')
         
-        # Otherwise, use cardinal directions
+        # Cardinal directions (fallback if diagonals are blocked)
         if abs(dx) > abs(dy):
-            return 'E' if dx > 0 else 'W'
+            if dx > 0 and (current_x + self.STEP_SIZE, current_y) not in self.map_data['obstacles']:
+                possible_directions.append('E')
+            elif dx < 0 and (current_x - self.STEP_SIZE, current_y) not in self.map_data['obstacles']:
+                possible_directions.append('W')
         else:
-            return 'N' if dy > 0 else 'S'
-    
-    def _verify_movement(self,start_pos) -> bool:
-        """Verify if movement actually changed position."""
+            if dy > 0 and (current_x, current_y + self.STEP_SIZE) not in self.map_data['obstacles']:
+                possible_directions.append('N')
+            elif dy < 0 and (current_x, current_y - self.STEP_SIZE) not in self.map_data['obstacles']:
+                possible_directions.append('S')
         
+        # If no valid directions are found, try any direction that isn't blocked
+        if not possible_directions:
+            for direction, (dx, dy) in self.DIRECTIONS.items():
+                target_pos = (current_x + dx, current_y + dy)
+                if target_pos not in self.map_data['obstacles']:
+                    possible_directions.append(direction)
+        
+        # If still no valid directions, return None (bot is completely blocked)
+        if not possible_directions:
+            self.logging.warning("No valid directions found. Bot is completely blocked.")
+            return None
+        
+        # Choose the first valid direction (prioritizes diagonals, then cardinals)
+        return possible_directions[0]
+
+    def _verify_movement(self, start_pos) -> bool:
+        """Verify if movement actually changed position."""
         self.logging.info(f"Starting position: {start_pos}")
         
         end_pos = self.get_current_coords_from_game()
@@ -327,7 +361,7 @@ class Movement:
             # Only add to free_spaces if not already an obstacle
             self.map_data['free_spaces'].add(end_pos)
             self.logging.debug(f"Movement successful to {end_pos}")
-            #if he could move, we will remove it from obstacle.
+            # If he could move, we will remove it from obstacle.
             self.map_data['obstacles'].discard(end_pos)
         else:
             target_pos = self.current_target
@@ -343,21 +377,30 @@ class Movement:
         return moved
     
     def _find_alternative_path(self, target_x: int, target_y: int) -> bool:
-        """Calculate path using A* algorithm with obstacle avoidance"""
-        # This would need a proper implementation of A* with obstacle awareness
-        # Here's a simplified version:
-        
+        """Calculate path using A* algorithm with obstacle avoidance."""
         current_x, current_y = self.get_current_coords_from_game()
         
-        # Try clockwise movement pattern
-        for dir_order in ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE']:
-            if dir_order not in self.obstacle_locations:
-                start_pos = self.get_current_coords_from_game()
-                self._execute_movement(dir_order)
-                if self._verify_movement(start_pos=start_pos):
-                    return self.move_to(target_x, target_y)
+        # Try all possible directions in a random order
+        directions = list(self.DIRECTIONS.keys())
+        random.shuffle(directions)
         
-        self.logging.error("No viable path found")
+        for direction in directions:
+            dx, dy = self.DIRECTIONS[direction]
+            target_pos = (current_x + dx, current_y + dy)
+            
+            # Skip if the target position is an obstacle
+            if target_pos in self.map_data['obstacles']:
+                continue
+            
+            # Attempt to move in this direction
+            start_pos = self.get_current_coords_from_game()
+            self._execute_movement(direction)
+            
+            # Verify if movement was successful
+            if self._verify_movement(start_pos=start_pos):
+                return self.move_to(target_x, target_y)
+        
+        self.logging.error("No viable path found.")
         return False
 
     def move_to(self, target_x: int, target_y: int) -> bool:
@@ -390,6 +433,9 @@ class Movement:
 
             # Determine the best movement direction
             direction = self._get_best_direction(*current_pos, target_x, target_y)
+            if direction is None:
+                self.logging.warning("No valid directions found. Bot is completely blocked.")
+                return False
 
             start_pos = self.get_current_coords_from_game()
             # Try moving in the chosen direction
@@ -407,7 +453,6 @@ class Movement:
                 self.map_data['free_spaces'].add(new_pos)
                 self.map_data['obstacles'].discard(new_pos)  # Ensure it's not marked as an obstacle
                 return True
-            
 
     def explore_map(self, map_name: str):
         """Explore the map to create a map of obstacles and free spaces."""
@@ -416,7 +461,7 @@ class Movement:
         self.load_map_data()  # Load existing map data if available
         
         # Move to the map if not already there
-        self.move_to_location(map_name, avoid_checks=True)
+        self.move_to_location(map_name, avoid_checks=True, do_not_open_stats=True)
         
         # Initialize free_spaces with the current position
         current_pos = self.get_current_coords_from_game()
@@ -424,9 +469,9 @@ class Movement:
         self.save_map_data()
         
         # Start by moving to unexplored coordinates
-        while self.move_to_unexplored():
-            self.logging.info("Moved to an unexplored coordinate. Continuing exploration.")
-            time.sleep(1)  # Wait for the bot to settle
+        self.move_to_unexplored()
+        self.logging.info("Moved to an unexplored coordinate. Continuing exploration.")
+        time.sleep(1)  # Wait for the bot to settle
         
         # If no unexplored coordinates are found, fall back to random exploration
         self.logging.info("No more unexplored coordinates found. Starting random exploration.")
@@ -439,10 +484,11 @@ class Movement:
         return abs(x2 - x1) + abs(y2 - y1)
 
     def _execute_movement(self, direction: str):
-        """Execute movement in the given direction."""
+        """Execute movement in the given direction and update movement history."""
         dx, dy = self.DIRECTIONS[direction]
         
         self.logging.info(f"Moving to {direction}...")
+        self.logging.debug(f"Movement history before update: {list(self.movement_history)}")
         
         if self.movement_will_be_with == "mouse":
             self.logging.debug(f"Using mouse for movement: {direction}")
@@ -509,8 +555,8 @@ class Movement:
         else:
             self.logging.warning("Failed to recover from stuck state.")
             return False
-    
-    def move_to_location(self, map_name: str, avoid_checks=False, stuck=False):
+
+    def move_to_location(self, map_name: str, avoid_checks=False, stuck=False, do_not_open_stats=False):
         if not avoid_checks:
             current_state = self.config.get_game_state()
             if map_name != current_state['current_map'] or stuck is True:
@@ -520,10 +566,12 @@ class Movement:
             else:
                 self.logging.info(f"Character already in {map_name}. No need to move again")
         else:
+            self.logging.info(f"Character is moving to {map_name} without checking the current map.")
             self.interface.set_mu_helper_status(False)
             self.interface.command_move_to_map(map_name=map_name)
-            
-        self.interface.open_stats_window()
+        
+        if not do_not_open_stats:
+            self.interface.open_stats_window()
         
     def get_current_coords_from_game(self):
         try:
