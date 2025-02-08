@@ -43,9 +43,51 @@ class Movement:
         self.exploration_step_size = self.STEP_SIZE  # Step size for exploration
         self.max_exploration_steps = 100  # Maximum steps to explore (adjust as needed)
         self.load_map_data()
+        
+    def get_unexplored_coordinates(self) -> Optional[Tuple[int, int]]:
+        """
+        Identify and return unexplored coordinates from the map.
+        Returns None if all coordinates are explored.
+        """
+        current_x, current_y = self.get_current_coords_from_game()
+        
+        # Define a search radius around the current position
+        search_radius = 10  # Adjust as needed
+        unexplored_coords = []
+        
+        # Iterate over a grid around the current position
+        for dx in range(-search_radius, search_radius + 1):
+            for dy in range(-search_radius, search_radius + 1):
+                target_x = current_x + dx
+                target_y = current_y + dy
+                
+                # Check if the coordinate is unexplored
+                if (target_x, target_y) not in self.map_data['free_spaces'] and \
+                (target_x, target_y) not in self.map_data['obstacles']:
+                    unexplored_coords.append((target_x, target_y))
+        
+        if unexplored_coords:
+            # Prioritize the closest unexplored coordinate
+            unexplored_coords.sort(key=lambda coord: self._calculate_distance(current_x, current_y, *coord))
+            return unexplored_coords[0]
+        
+        return None
+    
+    def move_to_unexplored(self) -> bool:
+        """
+        Move the bot to the closest unexplored coordinate.
+        Returns True if successful, False otherwise.
+        """
+        unexplored_coord = self.get_unexplored_coordinates()
+        if unexplored_coord:
+            self.logging.info(f"Moving to unexplored coordinate: {unexplored_coord}")
+            return self.move_to(*unexplored_coord)
+        else:
+            self.logging.info("No unexplored coordinates found.")
+            return False
 
     def explore_randomly(self):
-        """Explore the map randomly to identify obstacles and free spaces."""
+        """Explore the map randomly, prioritizing unexplored coordinates."""
         self.logging.info("Starting random exploration...")
         
         boundary_failures = defaultdict(int)  # Track failures in each direction
@@ -60,7 +102,15 @@ class Movement:
             self.map_data['free_spaces'].add(current_pos)
             self.map_data['obstacles'].discard(current_pos)  # Ensure it's not marked as an obstacle
             
-            # Filter out directions that have failed too many times
+            # Check for unexplored coordinates
+            unexplored_coord = self.get_unexplored_coordinates()
+            if unexplored_coord:
+                self.logging.info(f"Found unexplored coordinate: {unexplored_coord}. Moving there.")
+                self.move_to(*unexplored_coord)
+                time.sleep(1)  # Wait for the bot to move
+                continue  # Skip the rest of the loop and continue exploration
+            
+            # If no unexplored coordinates, proceed with random exploration
             available_directions = [
                 dir for dir in self.exploration_directions
                 if boundary_failures[dir] <= 3  # Allow up to 3 failures per direction
@@ -271,6 +321,11 @@ class Movement:
         
         # Move to the map if not already there
         self.move_to_location(map_name, avoid_checks=True)
+        
+        # Start by moving to unexplored coordinates
+        while self.move_to_unexplored():
+            self.logging.info("Moved to an unexplored coordinate. Continuing exploration.")
+            time.sleep(1)  # Wait for the bot to settle
         
         # Start random exploration
         self.explore_randomly()
