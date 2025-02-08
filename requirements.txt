@@ -31,3 +31,4 @@ tomlkit==0.13.2
 vulture==2.14
 mouse
 pymem
+matplotlib

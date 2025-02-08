@@ -9,7 +9,7 @@
     "current_energy": 0,
     "current_command": 0,
     "available_points": 0,
-    "mulheper_active": true,
+    "mulheper_active": false,
     "current_position_available_points": [],
     "current_position_strenght": [],
     "current_position_agility": [],
@@ -17,8 +17,8 @@
     "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        131,
-        200
+        143,
+        128
     ],
     "current_position_level": [],
     "current_position_reset": []

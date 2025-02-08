@@ -13,6 +13,7 @@ from movement import Movement
 class GameBot:
     
     consecutive_errors = 0
+    EXPLORE_MODE = True
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
@@ -275,37 +276,44 @@ class GameBot:
 
     def run(self):
         """Ejecuta el bucle principal del bot"""
-        while self.running:
-            try:
-                if not self.running:
-                    return
+        
+        if self.EXPLORE_MODE:
+            while self.running:
                 self.interface.focus_application()
-                # Primera inicialización
-                if self.first_time:
-                    #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
-                    self.first_time = False
-                    '''
-                    self.logging.info("1. Read stats")
-                    self.read_all_stats()
-                    self.logging.info("2. Assign attributes")
-                    self.distribute_attributes()
-                    
-                    self.logging.info("3. Show last stats after add attributes")
-                    self.read_all_stats()
-                    '''
-                else:
-                    self.logging.info("1. Lets go to kill some mobs")
-                    self.lets_kill_some_mobs()
-                    self.logging.info(f"2. Wait {self.config.file['check_interval']} seconds until check and add stats")
-                    time.sleep(self.config.file['check_interval'])
-                    #self.read_all_stats()
-                    #self.distribute_attributes()
-            except KeyboardInterrupt:
-                self.logging.info("Bot stopped by user")
-                break
-            except Exception as e:
-                self.logging.error(f"Error in main loop: {e}")
+                self.movement.explore_map("lorencia")
                 time.sleep(1)
+        else:
+            while self.running:
+                try:
+                    if not self.running:
+                        return
+                    self.interface.focus_application()
+                    # Primera inicialización
+                    if self.first_time:
+                        #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
+                        self.first_time = False
+                        '''
+                        self.logging.info("1. Read stats")
+                        self.read_all_stats()
+                        self.logging.info("2. Assign attributes")
+                        self.distribute_attributes()
+                        
+                        self.logging.info("3. Show last stats after add attributes")
+                        self.read_all_stats()
+                        '''
+                    else:
+                        self.logging.info("1. Lets go to kill some mobs")
+                        self.lets_kill_some_mobs()
+                        self.logging.info(f"2. Wait {self.config.file['check_interval']} seconds until check and add stats")
+                        time.sleep(self.config.file['check_interval'])
+                        #self.read_all_stats()
+                        #self.distribute_attributes()
+                except KeyboardInterrupt:
+                    self.logging.info("Bot stopped by user")
+                    break
+                except Exception as e:
+                    self.logging.error(f"Error in main loop: {e}")
+                    time.sleep(1)
 
 if __name__ == "__main__":
     bot = GameBot()

@@ -26,6 +26,7 @@ class Interface:
     dashboard_y = 0
     
     window_stats_open = False
+    center_screen = None
     
     def __init__(self, config: Configuration):
         self.config = config
@@ -33,6 +34,10 @@ class Interface:
         self.logging = logging.getLogger(__name__)
         #self.setup_dashboard_coordinate()
         self.setup_screen()
+        
+    def get_character_center(self):
+        self.logging.info(f"Center character screen: {self.center_screen}")
+        return self.center_screen
         
     def setup_dashboard_coordinate(self):
         try:
@@ -75,6 +80,7 @@ class Interface:
             # Get window dimensions
             self.screen_width = window.width
             self.screen_height = window.height
+            self.center_screen = self.screen_width // 2, self.screen_height // 2
             self.logging.info(f"Window size: {self.screen_width}x{self.screen_height}")
             
             return True
@@ -656,7 +662,7 @@ class Interface:
     
     def click_center_screen(self):
         # Using virtual click instead of physical mouse movement
-        pyautogui.click(self.screen_width // 2, self.screen_height // 2)
+        pyautogui.click(self.center_screen)
 
     def mouse_click(self, x, y):
         pyautogui.click(x, y)
@@ -770,7 +776,69 @@ class Interface:
         self.enter()
         self.set_current_map(map_name = map_name)
         self.window_stats_open = False
+    
+    #Horizontal/Vertical
+    def mouse_top(self):
+        x, y = self.get_character_center()
+        y = y - 50
+        self.logging.info(f"Top mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
         
+    def mouse_down(self):
+        x, y = self.get_character_center()
+        y = y + 50
+        self.logging.info(f"Down mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+        
+    def mouse_left(self):
+        x, y = self.get_character_center()
+        x = x - 50
+        self.logging.info(f"Left mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+        
+    def mouse_right(self):
+        x, y = self.get_character_center()
+        x = x + 50
+        self.logging.info(f"Right mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+        
+    #Diagonal
+    def mouse_top_right(self):
+        x, y = self.get_character_center()
+        x = x + 50
+        y = y - 50
+        self.logging.info(f"Top/Right mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+        
+    def mouse_top_left(self):
+        x, y = self.get_character_center()
+        x = x - 50
+        y = y - 50
+        self.logging.info(f"Top/Left mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+        
+    def mouse_down_right(self):
+        x, y = self.get_character_center()
+        x = x + 50
+        y = y + 50
+        self.logging.info(f"Down/Right mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+        
+    def mouse_down_left(self):
+        x, y = self.get_character_center()
+        x = x - 50
+        y = y + 50
+        self.logging.info(f"Down/Left mouse click on these coords: ({x},{y})")
+        self.mouse_click(x,y)
+
+        
+    def _release_all_keys(self):
+        """Release all movement keys."""
+        self.arrow_key_up(release=True)
+        self.arrow_key_down(release=True)
+        self.arrow_key_left(release=True)
+        self.arrow_key_right(release=True)
+    
     def arrow_key_left(self, press=True, release=False):
         """Enhanced arrow key control with press/release options"""
         key = 'left'
