@@ -3,7 +3,7 @@ import math
 import json
 import random
 import logging
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 from collections import defaultdict, deque  # Add this at the top of your file
 
 class Movement:
@@ -26,6 +26,11 @@ class Movement:
         self.MAX_STUCK_COUNT = 3
         self.MOVEMENT_TIMEOUT = 60  # 1 minute timeout
         
+        # Stuck detection
+        self.last_positions = deque(maxlen=5)  # Track the last few positions
+        self.stuck_threshold = 5  # Number of steps to consider the bot stuck
+        self.stuck_timeout = 300  # Time (in seconds) before resetting to Lorencia
+        
         # Movement directions with their corresponding x,y changes
         self.DIRECTIONS = {
             'N': (0, self.STEP_SIZE),
@@ -46,10 +51,11 @@ class Movement:
         
     def get_unexplored_coordinates(self) -> Optional[Tuple[int, int]]:
         """
-        Identify and return unexplored coordinates from the map.
+        Identify and return unexplored coordinates from the map, using free_spaces for navigation.
         Returns None if all coordinates are explored.
         """
         current_x, current_y = self.get_current_coords_from_game()
+        self.logging.info(f"Current position: ({current_x}, {current_y})")
         
         # Define a search radius around the current position
         search_radius = 10  # Adjust as needed
@@ -61,21 +67,73 @@ class Movement:
                 target_x = current_x + dx
                 target_y = current_y + dy
                 
+                self.logging.debug(f"Trying to go to {target_x}, {target_y}")
+                
                 # Check if the coordinate is unexplored
-                if (target_x, target_y) not in self.map_data['free_spaces'] and \
-                (target_x, target_y) not in self.map_data['obstacles']:
-                    unexplored_coords.append((target_x, target_y))
+                if (target_x, target_y) not in self.map_data['free_spaces'] and (target_x, target_y) not in self.map_data['obstacles']:
+                    # Check if there's a path to the unexplored coordinate using free_spaces
+                    if self._is_reachable_via_free_spaces(current_x, current_y, target_x, target_y):
+                        unexplored_coords.append((target_x, target_y))
+                        self.logging.debug(f"Found unexplored coordinate: ({target_x}, {target_y})")
+                    else:
+                        self.logging.debug(f"Coordinate ({target_x}, {target_y}) is unreachable via free_spaces.")
         
         if unexplored_coords:
             # Prioritize the closest unexplored coordinate
             unexplored_coords.sort(key=lambda coord: self._calculate_distance(current_x, current_y, *coord))
+            self.logging.info(f"Closest unexplored coordinate: {unexplored_coords[0]}")
             return unexplored_coords[0]
         
+        self.logging.info("No unexplored coordinates found within the search radius.")
         return None
     
+    def _is_reachable_via_free_spaces(self, start_x: int, start_y: int, target_x: int, target_y: int) -> bool:
+        """
+        Check if the target coordinate is reachable via free_spaces.
+        Allows moving through a small number of non-free_spaces tiles.
+        """
+        self.logging.debug(f"Checking path from ({start_x}, {start_y}) to ({target_x}, {target_y})")
+        
+        max_non_free_tiles = 2  # Allow moving through up to 2 non-free_spaces tiles
+        non_free_count = 0
+        
+        # Use Bresenham's line algorithm to check for a straight-line path through free_spaces
+        for x, y in self._bresenham_line(start_x, start_y, target_x, target_y):
+            self.logging.debug(f"Checking coordinate ({x}, {y})")
+            if (x, y) not in self.map_data['free_spaces']:
+                non_free_count += 1
+                if non_free_count > max_non_free_tiles:
+                    self.logging.debug(f"Path blocked at ({x}, {y}). Too many non-free_spaces tiles.")
+                    return False  # Path is blocked
+        return True  # Path is clear
+    
+    def _bresenham_line(self, x0: int, y0: int, x1: int, y1: int) -> List[Tuple[int, int]]:
+        """
+        Generate coordinates along a straight line between two points using Bresenham's line algorithm.
+        """
+        points = []
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+        sx = 1 if x0 < x1 else -1
+        sy = 1 if y0 < y1 else -1
+        err = dx - dy
+        
+        while True:
+            points.append((x0, y0))
+            if x0 == x1 and y0 == y1:
+                break
+            e2 = 2 * err
+            if e2 > -dy:
+                err -= dy
+                x0 += sx
+            if e2 < dx:
+                err += dx
+                y0 += sy
+        return points
+
     def move_to_unexplored(self) -> bool:
         """
-        Move the bot to the closest unexplored coordinate.
+        Move the bot to the closest unexplored coordinate using free_spaces for navigation.
         Returns True if successful, False otherwise.
         """
         unexplored_coord = self.get_unexplored_coordinates()
@@ -93,7 +151,16 @@ class Movement:
         else:
             self.logging.info("No unexplored coordinates found.")
             return False
-
+        
+    def _handle_stuck_recovery(self):
+        """
+        Handle stuck recovery by moving to Lorencia and restarting exploration.
+        """
+        self.logging.warning("Bot is stuck. Resetting position by moving to Lorencia.")
+        self.move_to_location("lorencia", avoid_checks=True)
+        time.sleep(5)  # Wait for the bot to move to Lorencia
+        self.explore_map("lorencia")  # Restart exploration
+    
     def explore_randomly(self):
         """Explore the map randomly, prioritizing unexplored coordinates."""
         self.logging.info("Starting random exploration...")
@@ -101,7 +168,7 @@ class Movement:
         boundary_failures = defaultdict(int)  # Track failures in each direction
         original_directions = self.exploration_directions.copy()  # Save original directions
         stuck_count = 0  # Track consecutive failures
-        last_positions = deque(maxlen=5)  # Track the last few positions to detect being stuck
+        start_time = time.time()  # Track the start time of exploration
         
         for step in range(self.max_exploration_steps):
             current_pos = self.get_current_coords_from_game()
@@ -112,12 +179,17 @@ class Movement:
             self.map_data['obstacles'].discard(current_pos)  # Ensure it's not marked as an obstacle
             
             # Check if the bot is stuck (not moving for several steps)
-            last_positions.append(current_pos)
-            if len(last_positions) == last_positions.maxlen and len(set(last_positions)) <= 2:
+            self.last_positions.append(current_pos)
+            if len(self.last_positions) == self.last_positions.maxlen and len(set(self.last_positions)) <= 2:
                 self.logging.warning("Bot is stuck in the same position. Attempting to recover.")
-                self._handle_stuck_state(current_pos[0], current_pos[1])
-                last_positions.clear()  # Reset the position history
-                continue  # Skip the rest of the loop and try again
+                self._handle_stuck_recovery()
+                return  # Exit the function and restart exploration
+            
+            # Check if the bot has been stuck for too long
+            if time.time() - start_time > self.stuck_timeout:
+                self.logging.warning("Bot has been stuck for too long. Resetting to Lorencia.")
+                self._handle_stuck_recovery()
+                return  # Exit the function and restart exploration
             
             # Check for unexplored coordinates
             unexplored_coord = self.get_unexplored_coordinates()
@@ -172,9 +244,8 @@ class Movement:
             # If stuck too many times, take a break or change strategy
             if stuck_count >= self.MAX_STUCK_COUNT:
                 self.logging.warning("Bot is stuck. Taking a break or changing strategy.")
-                self._handle_stuck_state(current_pos[0], current_pos[1])
-                time.sleep(5)
-                stuck_count = 0
+                self._handle_stuck_recovery()
+                return  # Exit the function and restart exploration
         
         self.logging.info("Random exploration completed.")
         self.save_map_data()
@@ -347,16 +418,20 @@ class Movement:
         # Move to the map if not already there
         self.move_to_location(map_name, avoid_checks=True)
         
+        # Initialize free_spaces with the current position
+        current_pos = self.get_current_coords_from_game()
+        self.map_data['free_spaces'].add(current_pos)
+        self.save_map_data()
+        
         # Start by moving to unexplored coordinates
         while self.move_to_unexplored():
             self.logging.info("Moved to an unexplored coordinate. Continuing exploration.")
             time.sleep(1)  # Wait for the bot to settle
         
-        # If no more unexplored coordinates are found, log completion
-        self.logging.info("No more unexplored coordinates found. Exploration complete.")
+        # If no unexplored coordinates are found, fall back to random exploration
+        self.logging.info("No more unexplored coordinates found. Starting random exploration.")
+        self.explore_randomly()
         
-        # Save the final map data
-        self.save_map_data()
         self.logging.info(f"Finished exploring {map_name}. Map data saved to {self.map_file}")
 
     def _calculate_distance(self, x1: int, y1: int, x2: int, y2: int) -> float:

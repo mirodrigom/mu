@@ -992,7 +992,7 @@ class Interface:
         
     def move_mouse_to_coords_without_click(self, x, y):
         pyautogui.moveTo(x, y)
-        time.sleep(0.5)
+        time.sleep(1)
         
     def check_npc_in_cursor(self, x, y):
         self.move_mouse_to_coords_without_click(x, y)
