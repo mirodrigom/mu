@@ -995,6 +995,8 @@ class Interface:
         time.sleep(1)
         
     def check_npc_in_cursor(self, x, y):
+        return False
+        '''
         in_any_npc = False
         self.move_mouse_to_coords_without_click(x, y)
         for _ in range(2):
@@ -1007,6 +1009,7 @@ class Interface:
             self.logging.info("In that coordinate, there is an NPC. So, we will not move to that coordinate.")
             return True
         return False
+        '''
     
     #Horizontal/Vertical
     def mouse_top(self):

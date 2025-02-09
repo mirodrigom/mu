@@ -47,46 +47,43 @@ class Movement:
         self.exploration_directions = list(self.DIRECTIONS.keys())  # All possible directions
         self.exploration_step_size = self.STEP_SIZE  # Step size for exploration
         self.max_exploration_steps = 100  # Maximum steps to explore (adjust as needed)
+        # Track attempts to reach specific coordinates
+        self.coordinate_attempts = defaultdict(int)
+        self.MAX_COORDINATE_ATTEMPTS = 3  # Max attempts before marking as unreachable
+        
         self.load_map_data()
         
-    def get_unexplored_coordinates(self) -> Optional[Tuple[int, int]]:
-        """
-        Identify and return unexplored coordinates from the map, using free_spaces for navigation.
-        Returns None if all coordinates are explored.
-        """
-        current_x, current_y = self.get_current_coords_from_game()
+    def get_unexplored_coordinates(self, current_pos) -> Optional[Tuple[int, int]]:
+        """Identifica y devuelve coordenadas inexploradas que sean accesibles desde free_spaces."""
+        current_x, current_y = current_pos
         self.logging.info(f"Current position: ({current_x}, {current_y})")
-        
-        # Define a search radius around the current position
-        search_radius = 10  # Adjust as needed
+
+        search_radius = 100  # Ajusta según sea necesario
         unexplored_coords = []
-        
-        # Iterate over a grid around the current position
+
         for dx in range(-search_radius, search_radius + 1):
             for dy in range(-search_radius, search_radius + 1):
                 target_x = current_x + dx
                 target_y = current_y + dy
-                
-                self.logging.debug(f"Trying to go to {target_x}, {target_y}")
-                
-                # Check if the coordinate is unexplored
-                if (target_x, target_y) not in self.map_data['free_spaces'] and (target_x, target_y) not in self.map_data['obstacles']:
-                    # Check if there's a path to the unexplored coordinate using free_spaces
-                    if self._is_reachable_via_free_spaces(current_x, current_y, target_x, target_y):
-                        unexplored_coords.append((target_x, target_y))
-                        self.logging.debug(f"Found unexplored coordinate: ({target_x}, {target_y})")
-                    else:
-                        self.logging.debug(f"Coordinate ({target_x}, {target_y}) is unreachable via free_spaces.")
-        
+
+                # Saltar si la coordenada ya está explorada o es un obstáculo
+                if (target_x, target_y) in self.map_data['free_spaces'] or (target_x, target_y) in self.map_data['obstacles']:
+                    continue
+
+                # Verificar si la coordenada inexplorada es accesible desde free_spaces
+                if self._is_explorable(target_x, target_y):
+                    unexplored_coords.append((target_x, target_y))
+                    self.logging.debug(f"Found accessible unexplored coordinate: ({target_x}, {target_y})")
+
         if unexplored_coords:
-            # Prioritize the closest unexplored coordinate
+            # Priorizar la coordenada inexplorada más cercana
             unexplored_coords.sort(key=lambda coord: self._calculate_distance(current_x, current_y, *coord))
-            self.logging.info(f"Closest unexplored coordinate: {unexplored_coords[0]}")
+            self.logging.info(f"Closest accessible unexplored coordinate: {unexplored_coords[0]}")
             return unexplored_coords[0]
-        
-        self.logging.info("No unexplored coordinates found within the search radius.")
+
+        self.logging.info("No accessible unexplored coordinates found within the search radius.")
         return None
-    
+
     def _is_reachable_via_free_spaces(self, start_x: int, start_y: int, target_x: int, target_y: int) -> bool:
         """
         Check if the target coordinate is reachable via free_spaces.
@@ -130,13 +127,59 @@ class Movement:
                 err += dx
                 y0 += sy
         return points
+    
+    def _is_explorable(self, target_x: int, target_y: int) -> bool:
+        """
+        Verifica si una coordenada inexplorada es accesible desde los free_spaces.
+        Devuelve True si hay al menos un free_space adyacente a la coordenada inexplorada.
+        """
+        # Verifica si hay al menos un free_space adyacente a la coordenada inexplorada
+        for dx, dy in self.DIRECTIONS.values():
+            adjacent_x = target_x + dx
+            adjacent_y = target_y + dy
+            if (adjacent_x, adjacent_y) in self.map_data['free_spaces']:
+                return True
+        return False
+    
+    def explore_new_area(self):
+        """
+        Explore a new area by moving to the closest unexplored coordinate using free spaces.
+        """
+        current_pos = self.get_current_coords_from_game()
+        self.logging.info(f"Current position: {current_pos}")
 
-    def move_to_unexplored(self) -> bool:
+        # Obtener la coordenada inexplorada más cercana y accesible
+        unexplored_coord = self.get_unexplored_coordinates(current_pos)
+        if not unexplored_coord:
+            self.logging.info("No accessible unexplored coordinates found.")
+            return False
+
+        target_x, target_y = unexplored_coord
+        self.logging.info(f"Target unexplored coordinate: ({target_x}, {target_y})")
+
+        # Mover a la coordenada inexplorada
+        self.logging.info(f"Attempting to move to unexplored coordinate: ({target_x}, {target_y})")
+        success = self.move_to(target_x, target_y)
+
+        if success:
+            self.logging.info(f"Successfully reached unexplored coordinate: ({target_x}, {target_y})")
+            # Marcar la nueva área como explorada
+            self.map_data['free_spaces'].add((target_x, target_y))
+            self.save_map_data()
+            return True
+        else:
+            self.logging.warning(f"Failed to reach unexplored coordinate: ({target_x}, {target_y})")
+            # Marcar la coordenada como obstáculo si no se pudo llegar
+            self.map_data['obstacles'].add((target_x, target_y))
+            self.save_map_data()
+            return False
+
+    def move_to_unexplored(self, current_pos) -> bool:
         """
         Move the bot to the closest unexplored coordinate using free_spaces for navigation.
         Returns True if successful, False otherwise.
         """
-        unexplored_coord = self.get_unexplored_coordinates()
+        unexplored_coord = self.get_unexplored_coordinates(current_pos)
         if unexplored_coord:
             self.logging.info(f"Moving to unexplored coordinate: {unexplored_coord}")
             success = self.move_to(*unexplored_coord)
@@ -153,15 +196,32 @@ class Movement:
             return False
         
     def _handle_stuck_recovery(self):
-        """
-        Handle stuck recovery by moving to Lorencia and restarting exploration.
-        """
-        self.logging.warning("Bot is stuck. Resetting position by moving to Lorencia.")
-        self.movement_history.clear()  # Clear movement history
-        #self.move_to_location("lorencia", avoid_checks=True)
-        #time.sleep(5)  # Wait for the bot to move to Lorencia
-        #self.explore_map("lorencia")  # Restart exploration
-    
+        """Handle stuck recovery by trying alternative directions."""
+        self.logging.warning("Bot is stuck. Attempting to recover.")
+        current_x, current_y = self.get_current_coords_from_game()
+        
+        # Try moving in all possible directions
+        for direction in self.DIRECTIONS:
+            dx, dy = self.DIRECTIONS[direction]
+            target_x, target_y = current_x + dx, current_y + dy
+            
+            # Skip if the target position is an obstacle
+            if (target_x, target_y) in self.map_data['obstacles']:
+                continue
+            
+            self.logging.info(f"Attempting to move {direction} to ({target_x}, {target_y}).")
+            self.move_to(target_x, target_y)
+            time.sleep(2)  # Wait for movement to complete
+            
+            # Check if the bot successfully moved
+            new_x, new_y = self.get_current_coords_from_game()
+            if (new_x, new_y) != (current_x, current_y):
+                self.logging.info("Successfully recovered from stuck state.")
+                return True
+        
+        self.logging.warning("Failed to recover from stuck state.")
+        return False
+        
     def explore_randomly(self):
         """Explore the map randomly, avoiding repetitive movements."""
         self.logging.info("Starting random exploration...")
@@ -171,17 +231,9 @@ class Movement:
         stuck_count = 0  # Track consecutive failures
         start_time = time.time()  # Track the start time of exploration
         
-        for step in range(self.max_exploration_steps):
+        while time.time() - start_time < self.stuck_timeout:  # Use a while loop with a timeout
             current_pos = self.get_current_coords_from_game()
-            self.logging.debug(f"Step {step + 1}: Current position: {current_pos}")
-            
-            # Record current position as a free space
-            self.map_data['free_spaces'].add(current_pos)
-            self.map_data['obstacles'].discard(current_pos)  # Ensure it's not marked as an obstacle
-            
-            # Update movement history with current position
-            self.movement_history.append(current_pos)
-            self.logging.debug(f"Movement history: {list(self.movement_history)}")
+            self.logging.debug(f"Current position: {current_pos}")
             
             # Check if the bot is stuck (not moving for several steps)
             if len(self.movement_history) == self.movement_history.maxlen and len(set(self.movement_history)) <= 2:
@@ -189,37 +241,8 @@ class Movement:
                 self._handle_stuck_recovery()
                 return  # Exit the function and restart exploration
             
-            # Check if the bot has been stuck for too long
-            if time.time() - start_time > self.stuck_timeout:
-                self.logging.warning("Bot has been stuck for too long. Resetting to Lorencia.")
-                self._handle_stuck_recovery()
-                return  # Exit the function and restart exploration
-            
-            # Check for unexplored coordinates
-            unexplored_coord = self.get_unexplored_coordinates()
-            if unexplored_coord:
-                self.logging.info(f"Found unexplored coordinate: {unexplored_coord}. Moving there.")
-                success = self.move_to(*unexplored_coord)
-                if success:
-                    # Once we reach the unexplored coordinate, continue exploring
-                    time.sleep(1)  # Wait for the bot to move
-                    continue  # Skip the rest of the loop and continue exploration
-                else:
-                    self.logging.warning("Failed to move to unexplored coordinate. Continuing random exploration.")
-            
-            # If no unexplored coordinates, proceed with random exploration
-            available_directions = [
-                dir for dir in self.exploration_directions
-                if boundary_failures[dir] <= 3  # Allow up to 3 failures per direction
-            ]
-            
-            if not available_directions:
-                self.logging.warning("All directions have failed too many times. Resetting.")
-                boundary_failures.clear()
-                available_directions = original_directions.copy()
-            
             # Choose a random direction to move
-            direction = random.choice(available_directions)
+            direction = random.choice(self.exploration_directions)
             dx, dy = self.DIRECTIONS[direction]
             target_pos = (current_pos[0] + dx, current_pos[1] + dy)
             
@@ -235,6 +258,7 @@ class Movement:
                 self.map_data['free_spaces'].add(target_pos)
                 self.map_data['obstacles'].discard(target_pos)  # Ensure it's not marked as an obstacle
                 stuck_count = 0  # Reset stuck count
+                self.save_map_data()
             else:
                 # Failed to move: mark as obstacle
                 if target_pos not in self.map_data['free_spaces']:
@@ -253,15 +277,15 @@ class Movement:
         
         self.logging.info("Random exploration completed.")
         self.save_map_data()
-
+    
     def save_map_data(self):
         """Save the current map data to a JSON file."""
         try:
             with open(self.map_file, 'w') as f:
                 data = {
-                    'obstacles': list(self.map_data['obstacles']),  # Convert to list
-                    'free_spaces': list(self.map_data['free_spaces']),  # Convert to list
-                    'map_name': self.map_data['map_name']  # Ensure map_name is included
+                    'obstacles': list(self.map_data['obstacles']),
+                    'free_spaces': list(self.map_data['free_spaces']),
+                    'map_name': self.map_data['map_name']
                 }
                 json.dump(data, f, indent=4)
             self.logging.info(f"Map data saved successfully to {self.map_file}")
@@ -271,8 +295,9 @@ class Movement:
     def load_map_data(self):
         """Load map data from a JSON file. If the file is missing or invalid, initialize with default data."""
         default_data = {
-            'obstacles': set(),  # Initialize as a set
-            'free_spaces': set(),  # Initialize as a set
+            'obstacles': set(),  # Temporary obstacles
+            'permanent_obstacles': set(),  # Permanent obstacles (unreachable coordinates)
+            'free_spaces': set(),  # Free spaces
             'map_name': None
         }
         
@@ -281,21 +306,16 @@ class Movement:
             with open(self.map_file, 'r') as f:
                 data = json.load(f)
                 self.map_data = {
-                    'obstacles': set(tuple(obs) for obs in data['obstacles']),  # Convert to set
-                    'free_spaces': set(tuple(free) for free in data['free_spaces']),  # Convert to set
-                    'map_name': data.get('map_name', None)  # Use .get() to handle missing key
+                    'obstacles': set(tuple(obs) for obs in data.get('obstacles', [])),
+                    'permanent_obstacles': set(tuple(obs) for obs in data.get('permanent_obstacles', [])),
+                    'free_spaces': set(tuple(free) for free in data.get('free_spaces', [])),
+                    'map_name': data.get('map_name', None)
                 }
-            self.logging.info(f"Map data loaded successfully from {self.map_file}")
-        except FileNotFoundError:
-            # If the file doesn't exist, create it with default data
-            self.logging.warning(f"{self.map_file} not found. Creating with default data.")
+        except (FileNotFoundError, json.JSONDecodeError):
+            # If the file doesn't exist or is invalid, initialize with default data
+            self.logging.warning(f"{self.map_file} not found or invalid. Initializing with default data.")
             self.map_data = default_data
             self.save_map_data()  # Save the default data to the file
-        except json.JSONDecodeError:
-            # If the file is empty or contains invalid JSON, initialize with default data
-            self.logging.warning(f"{self.map_file} is empty or contains invalid JSON. Initializing with default data.")
-            self.map_data = default_data
-            self.save_map_data()  # Overwrite the file with default data
 
     def _get_best_direction(self, current_x: int, current_y: int, target_x: int, target_y: int) -> str:
         """
@@ -350,31 +370,28 @@ class Movement:
         """Verify if movement actually changed position."""
         self.logging.info(f"Starting position: {start_pos}")
         
-        end_pos = self.get_current_coords_from_game()
-        self.logging.info(f"Ending position: {end_pos}")
+        # Retry movement up to 3 times before marking as failed
+        for _ in range(3):
+            time.sleep(1)  # Wait for the bot to move
+            end_pos = self.get_current_coords_from_game()
+            self.logging.info(f"Ending position: {end_pos}")
+            
+            if start_pos != end_pos:
+                self.map_data['free_spaces'].add(end_pos)
+                self.map_data['obstacles'].discard(end_pos)
+                self.logging.debug(f"Movement successful to {end_pos}")
+                return True
         
-        # Record movement effectiveness
-        moved = start_pos != end_pos
-        self.effective_movements.append(moved)
-        
-        if moved:
-            # Only add to free_spaces if not already an obstacle
-            self.map_data['free_spaces'].add(end_pos)
-            self.logging.debug(f"Movement successful to {end_pos}")
-            # If he could move, we will remove it from obstacle.
-            self.map_data['obstacles'].discard(end_pos)
+        # If movement failed after retries, mark as obstacle
+        target_pos = self.current_target
+        if target_pos and target_pos not in self.map_data['free_spaces']:
+            self.map_data['obstacles'].add(target_pos)
+            self.logging.debug(f"Movement failed at {start_pos}. Marking target {target_pos} as obstacle.")
         else:
-            target_pos = self.current_target
-            # Only add to obstacles if not already a free space
-            if target_pos and target_pos not in self.map_data['free_spaces']:
-                self.map_data['obstacles'].add(target_pos)
-                self.logging.debug(f"Movement failed at {start_pos}. Marking target {target_pos} as obstacle.")
-            else:
-                self.logging.debug(f"Movement failed at {start_pos}. But is already a free space at {target_pos}. Maybe there is a character on that position")
-            # Save updated map data immediately
-            self.save_map_data()
+            self.logging.debug(f"Movement failed at {start_pos}. But is already a free space at {target_pos}.")
         
-        return moved
+        self.save_map_data()
+        return False
     
     def _find_alternative_path(self, target_x: int, target_y: int) -> bool:
         """Calculate path using A* algorithm with obstacle avoidance."""
@@ -403,56 +420,118 @@ class Movement:
         self.logging.error("No viable path found.")
         return False
 
+
+    def _find_path_bfs(self, start_x: int, start_y: int, target_x: int, target_y: int) -> Optional[List[Tuple[int, int]]]:
+        """
+        Use BFS to find a path from (start_x, start_y) to (target_x, target_y).
+        Returns a list of coordinates representing the path, or None if no path is found.
+        """
+        queue = deque()
+        queue.append((start_x, start_y, []))  # (x, y, path)
+        visited = set()
+        start_time = time.time()  # Track the start time
+
+        while queue:
+            # Check if the timeout has been reached
+            if time.time() - start_time > 5:  # 5-second timeout
+                self.logging.warning("Pathfinding timed out. No valid path found.")
+                return None
+
+            x, y, path = queue.popleft()
+            if (x, y) == (target_x, target_y):
+                return path + [(x, y)]  # Return the full path
+
+            if (x, y) in visited:
+                continue
+            visited.add((x, y))
+
+            # Explore all possible directions
+            for direction, (dx, dy) in self.DIRECTIONS.items():
+                new_x = x + dx
+                new_y = y + dy
+
+                # Skip if the new coordinate is an obstacle or out of bounds
+                if (new_x, new_y) in self.map_data['obstacles'] or (new_x, new_y) in self.map_data['permanent_obstacles']:
+                    continue
+
+                # Add the new coordinate to the queue
+                queue.append((new_x, new_y, path + [(x, y)]))
+
+        # If no path is found, try to find the closest reachable coordinate
+        closest_coord = None
+        min_distance = float('inf')
+        for coord in visited:
+            distance = self._calculate_distance(coord[0], coord[1], target_x, target_y)
+            if distance < min_distance:
+                closest_coord = coord
+                min_distance = distance
+
+        if closest_coord:
+            return path + [closest_coord]  # Return the path to the closest reachable coordinate
+
+        return None  # No path found
+
+    def _execute_movement_towards(self, target_x: int, target_y: int):
+        """Move the bot towards the target coordinate."""
+        current_x, current_y = self.get_current_coords_from_game()
+        dx = target_x - current_x
+        dy = target_y - current_y
+
+        self.logging.debug(f"Moving towards ({target_x}, {target_y}). Current position: ({current_x}, {current_y})")
+
+        # Determine the best direction to move
+        if dx > 0:
+            self.interface.mouse_right()
+        elif dx < 0:
+            self.interface.mouse_left()
+        if dy > 0:
+            self.interface.mouse_top()
+        elif dy < 0:
+            self.interface.mouse_down()
+
+        time.sleep(1)  # Wait for the bot to move
+    
     def move_to(self, target_x: int, target_y: int) -> bool:
-        """Move towards the target coordinates while handling obstacles."""
-        self.current_target = (target_x, target_y)
-        self.path_history = []
-        self.obstacle_locations = set()
+        """Move towards the target coordinates using pathfinding."""
+        current_x, current_y = self.get_current_coords_from_game()
+        self.logging.debug(f"Current position: ({current_x}, {current_y}), Target: ({target_x}, {target_y})")
+        
+        if not current_x or not current_y:
+            self.logging.error("Failed to retrieve current position.")
+            return False
 
-        while True:
-            current_pos = self.get_current_coords_from_game()
-            if not current_pos:
-                self.logging.error("Failed to retrieve current position.")
-                return False
-            
-            self.path_history.append(current_pos)
-            self.map_data['free_spaces'].add(current_pos)
-            self.map_data['obstacles'].discard(current_pos)  # Ensure it's not marked as an obstacle
-
-            # Check if the bot has reached the target
-            if self._calculate_distance(*current_pos, target_x, target_y) <= self.CLOSE_ENOUGH_DISTANCE:
-                self.logging.info(f"Reached target location: {target_x}, {target_y}")
-                return True
-
-            # Detect circular path (bot getting stuck)
-            if len(self.path_history) > 10 and len(set(self.path_history[-5:])) < 2:
-                self.logging.warning("Circular path detected, marking as obstacle.")
-                self.obstacle_locations.add(current_pos)
-                self.map_data['obstacles'].add(current_pos)
-                return self._find_alternative_path(target_x, target_y)
-
-            # Determine the best movement direction
-            direction = self._get_best_direction(*current_pos, target_x, target_y)
-            if direction is None:
-                self.logging.warning("No valid directions found. Bot is completely blocked.")
+        # Track attempts to reach the target
+        attempt_count = 0
+        while attempt_count < 3:  # Allow up to 3 attempts
+            # Find a path to the target using BFS
+            path = self._find_path_bfs(current_x, current_y, target_x, target_y)
+            if not path:
+                self.logging.warning(f"No valid path found to ({target_x}, {target_y}). Marking as unreachable.")
+                self.map_data['permanent_obstacles'].add((target_x, target_y))
+                self.save_map_data()
                 return False
 
-            start_pos = self.get_current_coords_from_game()
-            # Try moving in the chosen direction
-            self._execute_movement(direction)
+            # Follow the path step by step
+            for step_x, step_y in path:
+                self.logging.info(f"Moving to ({step_x}, {step_y})")
+                self._execute_movement_towards(step_x, step_y)
+                time.sleep(2)  # Increase delay to allow movement to complete
 
-            # Verify if movement was successful
-            if not self._verify_movement(start_pos=start_pos):
-                self.logging.warning(f"Movement failed in direction {direction}, searching for alternative path.")
-                if current_pos not in self.map_data['free_spaces']:
-                    self.map_data['obstacles'].add(current_pos)
-                return self._find_alternative_path(target_x, target_y)
+                # Verify if the bot successfully moved to the target position
+                new_x, new_y = self.get_current_coords_from_game()
+                self.logging.debug(f"New position after movement: ({new_x}, {new_y})")
+                if (new_x, new_y) != (step_x, step_y):
+                    self.logging.warning(f"Failed to move to ({step_x}, {step_y}). Attempt {attempt_count + 1}.")
+                    attempt_count += 1
+                    break  # Retry the entire path
             else:
-                # Successfully moved: mark as free space
-                new_pos = self.get_current_coords_from_game()
-                self.map_data['free_spaces'].add(new_pos)
-                self.map_data['obstacles'].discard(new_pos)  # Ensure it's not marked as an obstacle
+                self.logging.info(f"Successfully reached target location: ({target_x}, {target_y})")
                 return True
+
+        self.logging.warning(f"Failed to reach target after {attempt_count} attempts. Marking as obstacle.")
+        self.map_data['obstacles'].add((target_x, target_y))
+        self.save_map_data()
+        return False
 
     def explore_map(self, map_name: str):
         """Explore the map to create a map of obstacles and free spaces."""
@@ -469,7 +548,7 @@ class Movement:
         self.save_map_data()
         
         # Start by moving to unexplored coordinates
-        self.move_to_unexplored()
+        self.move_to_unexplored(current_pos)
         self.logging.info("Moved to an unexplored coordinate. Continuing exploration.")
         time.sleep(1)  # Wait for the bot to settle
         

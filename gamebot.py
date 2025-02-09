@@ -278,9 +278,19 @@ class GameBot:
         """Ejecuta el bucle principal del bot"""
         
         if self.EXPLORE_MODE:
+            self.interface.focus_application()
+            self.movement.map_data['map_name'] = "lorencia"
+            self.movement.save_map_data()  # Save the map name immediately
+            self.movement.load_map_data()  # Load existing map data if available.
+
+            # Move to the map if not already there
+            #self.movement.move_to_location(self.movement.map_data['map_name'], avoid_checks=True, do_not_open_stats=True)
+            
             while self.running:
-                self.interface.focus_application()
-                self.movement.explore_map("lorencia")
+                success = self.movement.explore_new_area()
+                if not success:
+                    self.logging.warning("Failed to explore a new area. Trying again...")
+                #self.movement.explore_map("lorencia")
                 #self.interface.find_cursor_image()
                 time.sleep(1)
         else:
