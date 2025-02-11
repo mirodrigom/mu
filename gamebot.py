@@ -281,7 +281,7 @@ class GameBot:
         
         if self.EXPLORE_MODE:
             self.interface.focus_application()
-            self.movement.map_data['map_name'] = "dungeon3"
+            self.movement.map_data['map_name'] = "tarkan"
             
             # Create grid object
             grid = Grid(memory=self.memory)
