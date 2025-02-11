@@ -164,11 +164,13 @@ class Configuration:
         }
 
         full_path = os.path.join(self.dirs['json'], "maps", map_name + ".json")
+        if not os.path.exists(full_path):
+            self.save_map_data(map_name=map_name,data=default_data)
         try:
             # Try to load the map data from the file
             with open(full_path, 'r') as f:
                 data = json.load(f)
-                self.map_data = {
+                return {
                     'obstacles': set(tuple(obs) for obs in data.get('obstacles', [])),
                     'permanent_obstacles': set(tuple(obs) for obs in data.get('permanent_obstacles', [])),
                     'respawn_zone': set(tuple(free) for free in data.get('respawn_zone', [])),
@@ -177,7 +179,8 @@ class Configuration:
         except (FileNotFoundError, json.JSONDecodeError):
             # If the file doesn't exist or is invalid, initialize with default data
             self.logging.warning(f"Map file not found or invalid. Initializing with default data.")
-            self.save_map_data(default_data)  # Save the default data to the file
+            self.save_map_data(map_name=map_name, data=default_data)  # Save the default data to the file
+        return {}
 
     def get_class(self):
         if not self.file:

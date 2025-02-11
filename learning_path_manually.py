@@ -7,8 +7,7 @@ class LearningPathManually:
     """
     A class to manually capture and save free spaces by continuously checking for new coordinates.
     """
-    def __init__(self, map_name: str, memory, movement):
-        self.memory = memory  # Memory interface to read coordinates from the game
+    def __init__(self, map_name: str, movement):
         self.movement = movement
         self.logging = logging.getLogger(__name__ )
         self.map_name = map_name

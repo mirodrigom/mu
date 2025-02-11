@@ -7,21 +7,23 @@ from collections import defaultdict, deque
 
 
 class LearningPathAutomatically:
-    def __init__(self, map_name: str, movement):
+    def __init__(self, map_name: str, movement, interface):
         self.movement = movement
+        self.interface = interface
         self.logging = logging.getLogger(__name__)
         self.map_name = map_name
         self.current_target = None
         self.MAX_STUCK_COUNT = 3
         self.stuck_timeout = 300  # Time (in seconds) before resetting to Lorencia
-        self.exploration_directions = list(self.DIRECTIONS.keys())  # All possible directions
+        self.exploration_directions = list(self.movement.DIRECTIONS.keys())  # All possible directions
         self.movement.load_map_data(map=map_name)
 
-    def move_to_unexplored(self, current_pos) -> bool:
+    def move_to_unexplored(self) -> bool:
         """
         Move the bot to the closest unexplored coordinate using free_spaces for navigation.
         Returns True if successful, False otherwise.
         """
+        current_pos = self.movement.get_current_coords_from_game()
         unexplored_coord = self.get_unexplored_coordinates(current_pos)
         if unexplored_coord:
             self.logging.info(f"Moving to unexplored coordinate: {unexplored_coord}")
@@ -38,7 +40,7 @@ class LearningPathAutomatically:
             self.logging.info("No unexplored coordinates found.")
             return False
         
-    def explore_randomly(self):
+    def start_capturing(self):
         """Explore the map randomly, avoiding repetitive movements."""
         self.logging.info("Starting random exploration...")
         

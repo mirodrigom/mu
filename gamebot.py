@@ -10,12 +10,14 @@ from gameclass import GameClass
 from memory import Memory
 from movement import Movement
 from learning_path_manually import LearningPathManually
+from learning_path_automatically import LearningPathAutomatically
 from grid_system import Grid
 
 class GameBot:
     
     consecutive_errors = 0
     EXPLORE_MODE = True
+    EXPLORE_MANUAL_MODE = True
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
@@ -211,7 +213,7 @@ class GameBot:
                     x = obj["location"][0]
                     y = obj["location"][1]
                 
-                self.movement.move_to(x, y)
+                self.movement.walk_to(target_x=x, target_y=y)
                 self.check_and_click_play(x, y)
                 break
         
@@ -280,15 +282,16 @@ class GameBot:
         """Ejecuta el bucle principal del bot"""
         
         if self.EXPLORE_MODE:
-            self.interface.focus_application()
-            self.movement.map_data['map_name'] = "tarkan"
-            
+            self.interface.focus_application()            
             # Create grid object
             grid = Grid(memory=self.memory)
             
             # Create learner before starting grid
-            learner = LearningPathManually(self.movement.map_data['map_name'], self.memory)
-            
+            if self.EXPLORE_MANUAL_MODE:
+                learner = LearningPathManually(map_name="lorencia", movement=self.movement)   
+            else:
+                learner = LearningPathAutomatically(map_name="lorencia", movement=self.movement, interface=self.interface)
+
             try:
                 # Start capturing in a separate thread
                 import threading
@@ -304,13 +307,12 @@ class GameBot:
                 
                 # Stop the learner
                 learner.stop_capturing()
+
                 
             finally:
                 if grid.root:
                     grid.root.destroy()
-            # Move to the map if not already there
-            #self.movement.move_to_location(self.movement.map_data['map_name'], avoid_checks=True, do_not_open_stats=True)
-            
+
         else:
             while self.running:
                 try:

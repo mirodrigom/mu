@@ -27,6 +27,8 @@ class Interface:
     dashboard_width = 0
     dashboard_x = 0
     dashboard_y = 0
+
+    center_distance = 250
     
     window_stats_open = False
     center_screen = None
@@ -1017,28 +1019,28 @@ class Interface:
     #Horizontal/Vertical
     def mouse_top(self):
         x, y = self.get_character_center()
-        y = y - 50
+        y = y - self.center_distance
         self.logging.info(f"Top mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
         
     def mouse_down(self):
         x, y = self.get_character_center()
-        y = y + 50
+        y = y + self.center_distance
         self.logging.info(f"Down mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
         
     def mouse_left(self):
         x, y = self.get_character_center()
-        x = x - 50
+        x = x - self.center_distance
         self.logging.info(f"Left mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
         
     def mouse_right(self):
         x, y = self.get_character_center()
-        x = x + 50
+        x = x + self.center_distance
         self.logging.info(f"Right mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
@@ -1046,32 +1048,32 @@ class Interface:
     #Diagonal
     def mouse_top_right(self):
         x, y = self.get_character_center()
-        x = x + 50
-        y = y - 50
+        x = x + self.center_distance
+        y = y - self.center_distance
         self.logging.info(f"Top/Right mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
         
     def mouse_top_left(self):
         x, y = self.get_character_center()
-        x = x - 50
-        y = y - 50
+        x = x - self.center_distance
+        y = y - self.center_distance
         self.logging.info(f"Top/Left mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
         
     def mouse_down_right(self):
         x, y = self.get_character_center()
-        x = x + 50
-        y = y + 50
+        x = x + self.center_distance
+        y = y + self.center_distance
         self.logging.info(f"Down/Right mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
         
     def mouse_down_left(self):
         x, y = self.get_character_center()
-        x = x - 50
-        y = y + 50
+        x = x - self.center_distance
+        y = y + self.center_distance
         self.logging.info(f"Down/Left mouse click on these coords: ({x},{y})")
         if not self.check_npc_in_cursor(x,y):
             self.mouse_click(x,y)
