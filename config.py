@@ -146,7 +146,7 @@ class Configuration:
                 'respawn_zone': list(data['respawn_zone']),
                 'free_spaces': list(data['free_spaces']),
             }
-            full_path = os.path.join(self.file['json'], map_name + ".json")
+            full_path = os.path.join(self.dirs['json'], "maps", map_name + ".json")
             with open(full_path, 'w') as f:
                 json.dump(data_to_save, f, indent=4)
             self.logging.info(f"Map data saved")
@@ -163,7 +163,7 @@ class Configuration:
             'map_name': None
         }
 
-        full_path = os.path.join(self.dirs['json'], map_name + ".json")
+        full_path = os.path.join(self.dirs['json'], "maps", map_name + ".json")
         try:
             # Try to load the map data from the file
             with open(full_path, 'r') as f:
