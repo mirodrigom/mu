@@ -138,6 +138,47 @@ class Configuration:
         logging.getLogger('PIL').setLevel(logging.WARNING)
         logging.getLogger('pytesseract').setLevel(logging.WARNING)
 
+    def save_map_data(self, map_name, data):
+        try:
+            data_to_save = {
+                'obstacles': list(data['obstacles']),
+                'permanent_obstacles': list(data['permanent_obstacles']),
+                'respawn_zone': list(data['respawn_zone']),
+                'free_spaces': list(data['free_spaces']),
+            }
+            full_path = os.path.join(self.file['json'], map_name + ".json")
+            with open(full_path, 'w') as f:
+                json.dump(data_to_save, f, indent=4)
+            self.logging.info(f"Map data saved")
+        except Exception as e:
+            self.logging.error(f"Failed to save map data: {e}")
+
+    def load_map_data(self, map_name):
+        """Load map data from a JSON file. If the file is missing or invalid, initialize with default data."""
+        default_data = {
+            'obstacles': set(),  # Temporary obstacles
+            'permanent_obstacles': set(),  # Permanent obstacles (unreachable coordinates)
+            'respawn_zone': set(),
+            'free_spaces': set(),  # Free spaces
+            'map_name': None
+        }
+
+        full_path = os.path.join(self.dirs['json'], map_name + ".json")
+        try:
+            # Try to load the map data from the file
+            with open(full_path, 'r') as f:
+                data = json.load(f)
+                self.map_data = {
+                    'obstacles': set(tuple(obs) for obs in data.get('obstacles', [])),
+                    'permanent_obstacles': set(tuple(obs) for obs in data.get('permanent_obstacles', [])),
+                    'respawn_zone': set(tuple(free) for free in data.get('respawn_zone', [])),
+                    'free_spaces': set(tuple(free) for free in data.get('free_spaces', [])),
+                }
+        except (FileNotFoundError, json.JSONDecodeError):
+            # If the file doesn't exist or is invalid, initialize with default data
+            self.logging.warning(f"Map file not found or invalid. Initializing with default data.")
+            self.save_map_data(default_data)  # Save the default data to the file
+
     def get_class(self):
         if not self.file:
             raise ValueError("Config file not loaded")

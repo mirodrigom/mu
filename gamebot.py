@@ -311,15 +311,6 @@ class GameBot:
             # Move to the map if not already there
             #self.movement.move_to_location(self.movement.map_data['map_name'], avoid_checks=True, do_not_open_stats=True)
             
-            '''
-            while self.running:
-                success = self.movement.explore_new_area()
-                if not success:
-                    self.logging.warning("Failed to explore a new area. Trying again...")
-                #self.movement.explore_map("lorencia")
-                #self.interface.find_cursor_image()
-                time.sleep(1)
-            '''
         else:
             while self.running:
                 try:
