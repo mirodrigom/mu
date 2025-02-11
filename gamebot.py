@@ -9,6 +9,8 @@ from config import Configuration
 from gameclass import GameClass
 from memory import Memory
 from movement import Movement
+from learning_path_manually import LearningPathManually
+from grid_system import Grid
 
 class GameBot:
     
@@ -279,13 +281,37 @@ class GameBot:
         
         if self.EXPLORE_MODE:
             self.interface.focus_application()
-            self.movement.map_data['map_name'] = "lorencia"
-            self.movement.save_map_data()  # Save the map name immediately
-            self.movement.load_map_data()  # Load existing map data if available.
-
+            self.movement.map_data['map_name'] = "dungeon3"
+            
+            # Create grid object
+            grid = Grid(memory=self.memory)
+            
+            # Create learner before starting grid
+            learner = LearningPathManually(self.movement.map_data['map_name'], self.memory)
+            
+            try:
+                # Start capturing in a separate thread
+                import threading
+                capture_thread = threading.Thread(target=learner.start_capturing)
+                capture_thread.daemon = True
+                capture_thread.start()
+                
+                # Run grid
+                grid.run()
+                
+            except KeyboardInterrupt:
+                print("Saving data before exit...")
+                
+                # Stop the learner
+                learner.stop_capturing()
+                
+            finally:
+                if grid.root:
+                    grid.root.destroy()
             # Move to the map if not already there
             #self.movement.move_to_location(self.movement.map_data['map_name'], avoid_checks=True, do_not_open_stats=True)
             
+            '''
             while self.running:
                 success = self.movement.explore_new_area()
                 if not success:
@@ -293,6 +319,7 @@ class GameBot:
                 #self.movement.explore_map("lorencia")
                 #self.interface.find_cursor_image()
                 time.sleep(1)
+            '''
         else:
             while self.running:
                 try:

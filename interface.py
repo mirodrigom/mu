@@ -989,7 +989,10 @@ class Interface:
         self.enter()
         self.set_current_map(map_name = map_name)
         self.window_stats_open = False
-        
+
+    def use_spell(self):
+        pyautogui.rightClick()
+
     def move_mouse_to_coords_without_click(self, x, y):
         pyautogui.moveTo(x, y)
         time.sleep(1)

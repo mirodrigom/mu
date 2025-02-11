@@ -23,11 +23,11 @@ def visualize_map(map_data):
     plt.grid(True)
     plt.show()
 
-def load_map_data():
+def load_map_data(file_path):
     """Load map data from a file."""
     map_data = {}
     try:
-        with open("./map_data.json", 'r') as f:
+        with open(file_path, 'r') as f:
             data = json.load(f)
             # Convert to lists instead of sets to preserve duplicates
             map_data['obstacles'] = [tuple(coord) for coord in data['obstacles']]
@@ -38,6 +38,6 @@ def load_map_data():
     return map_data
 
 # Load and visualize the map
-map_data = load_map_data()
+map_data = load_map_data(file_path="./dungeon3.json")
 print(map_data)
 visualize_map(map_data)
