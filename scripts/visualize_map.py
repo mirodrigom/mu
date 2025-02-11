@@ -37,6 +37,6 @@ def load_map_data(file_path):
     return map_data
 
 # Load and visualize the map
-map_data = load_map_data(file_path="./json/maps/dungeon3.json")
+map_data = load_map_data(file_path="./json/maps/lorencia.json")
 print(map_data)
 visualize_map(map_data=map_data, map_name="lorencia")

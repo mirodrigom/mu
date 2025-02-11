@@ -110,7 +110,7 @@ class Movement:
         elif dy < 0:
             self.interface.mouse_down()
 
-        time.sleep(1.0)  # Increase delay to allow the bot to move
+        time.sleep(0.1)  # Increase delay to allow the bot to move
 
     def save_respawn_zone(self):
         x, y = self.get_current_coords_from_game()
@@ -134,6 +134,10 @@ class Movement:
 
     def astar(self, start, goal):
         """A* algorithm to find the shortest path from start to goal."""
+        if start not in self.map_data["free_spaces"] or goal not in self.map_data["free_spaces"]:
+            self.logging.warning("Start or goal position is not in free_spaces.")
+            return None
+
         open_set = []
         heappush(open_set, (0, start))  # Priority queue: (priority, node)
         came_from = {}  # To reconstruct the path
@@ -162,11 +166,16 @@ class Movement:
                     heappush(open_set, (f_score[neighbor], neighbor))
 
         return None  # No path found
-    
+
     def find_best_route_to_target(self, target_x, target_y):
         """Find the best path to the target (x, y) using A* algorithm."""
         start = self.get_current_coords_from_game()
         goal = (target_x, target_y)  # Target position
+
+        # Ensure the goal is in free_spaces
+        if goal not in self.map_data["free_spaces"]:
+            self.logging.warning(f"Target position {goal} is not in free_spaces.")
+            return None
 
         # Call A* and return the path
         path = self.astar(start, goal)
@@ -193,7 +202,7 @@ class Movement:
             self._execute_movement_towards(step_x, step_y)
 
             # Wait for the bot to reach the target step
-            time.sleep(1.0)  # Adjust delay as needed
+            time.sleep(0.1)  # Adjust delay as needed
 
             # Update current coordinates after movement
             current_x, current_y = self.get_current_coords_from_game()
@@ -204,11 +213,10 @@ class Movement:
                 self.logging.debug(f"Reached step: ({step_x}, {step_y})")
             else:
                 self.logging.warning(f"Failed to reach step: ({step_x}, {step_y})")
-                return False
+                #return False
 
         self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
         return True
-        
 
     def move_to_location(self, map_name: str, avoid_checks=False, stuck=False, do_not_open_stats=False):
         if not avoid_checks:

@@ -1,7 +1,7 @@
 {
     "current_reset": 0,
     "current_level": 0,
-    "current_map": "",
+    "current_map": "lorencia",
     "current_coords": [],
     "current_strenght": 0,
     "current_agility": 0,
@@ -17,8 +17,8 @@
     "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        133,
-        135
+        137,
+        132
     ],
     "current_position_level": [],
     "current_position_reset": []

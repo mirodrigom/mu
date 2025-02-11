@@ -16,8 +16,8 @@ from grid_system import Grid
 class GameBot:
     
     consecutive_errors = 0
-    EXPLORE_MODE = True
-    EXPLORE_MANUAL_MODE = True
+    EXPLORE_MODE = False
+    EXPLORE_MANUAL_MODE = False
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
