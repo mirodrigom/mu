@@ -5,15 +5,15 @@
         "140": {
             "map": "tarkan",
             "location": [
-                123,
-                91
+                156,
+                161
             ]
         },
         "50": {
             "map": "dungeon3",
             "location": [
-                32,
-                63
+                8,
+                68
             ]
         },
         "0": [
@@ -43,10 +43,10 @@
     "application_name": "MEGAMU",
     "dashboard_name": "MEGAMU - Dashboard",
     "stat_distribution": {
-        "strenght": 0.7,
-        "agility": 0.1,
-        "vitality": 0.1,
-        "energy": 0.1
+        "strenght": 0.68,
+        "agility": 0.13,
+        "vitality": 0.12,
+        "energy": 0.11
     },
     "max_level": 400,
     "coordinate_samples": 3,

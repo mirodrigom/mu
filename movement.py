@@ -185,7 +185,7 @@ class Movement:
             self.logging.warning("No valid path to the target.")
             return None
 
-    def walk_to(self, target_x, target_y, max_retries=3):
+    def walk_to(self, target_x, target_y):
         """
         Move the bot to the target coordinates (x, y) using A* pathfinding and step-by-step movement.
         :param target_x: Target X coordinate.
@@ -193,47 +193,47 @@ class Movement:
         :param max_retries: Maximum number of retries if the bot fails to move.
         :return: True if the target is reached, False otherwise.
         """
-        # Find the best path using A*
-        path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
-        if not path:
-            self.logging.warning("No valid path to the target.")
-            return False
+        while True:
+            # Find the best path using A*
+            path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
+            if not path:
+                self.logging.warning("No valid path to the target.")
+                return False
 
-        self.logging.info(f"Found path to target: {path}")
+            self.logging.info(f"Found path to target: {path}")
 
-        # Move along the path step-by-step
-        for step in path:
-            step_x, step_y = step
-            retries = 0
-
-            while retries < max_retries:
-                # Execute movement towards the step
-                self._execute_movement_towards(step_x, step_y)
-
-                # Wait for the bot to move
-                time.sleep(0.3)  # Adjust delay as needed
-
-                # Update current coordinates after movement
+            # Move along the path step-by-step
+            for step in path:
+                step_x, step_y = step
+                retries = 0
                 current_x, current_y = self.get_current_coords_from_game()
-                self.logging.debug(f"Current position after movement: ({current_x}, {current_y})")
+                while (current_x, current_y) != (step_x, step_y):
+                    # Execute movement towards the step
+                    self._execute_movement_towards(step_x, step_y)
 
-                # Check if the bot reached the target step
-                if (current_x, current_y) == (step_x, step_y):
-                    self.logging.debug(f"Reached step: ({step_x}, {step_y})")
-                    break  # Move to the next step
-                else:
-                    retries += 1
-                    self.logging.warning(f"Failed to reach step: ({step_x}, {step_y}). Retry {retries}/{max_retries}")
+                    # Wait for the bot to move
+                    time.sleep(0.2)  # Adjust delay as needed
 
-                    # If max retries reached, mark the step as an obstacle and recalculate the path
-                    if retries >= max_retries:
-                        self.logging.warning(f"Step ({step_x}, {step_y}) is unreachable. Marking as obstacle.")
-                        self.map_data["obstacles"].add((step_x, step_y))
-                        self.map_data["free_spaces"].discard((step_x, step_y))
-                        return self.walk_to(target_x, target_y)  # Recalculate path and try again
+                    # Update current coordinates after movement
+                    current_x, current_y = self.get_current_coords_from_game()
+                    self.logging.debug(f"Current position after movement: ({current_x}, {current_y})")
 
-        self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
-        return True
+                    # Check if the bot reached the target step
+                    if (current_x, current_y) != (step_x, step_y):
+                        path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
+                        retries += 1
+                        self.logging.warning(f"Failed to reach step: ({step_x}, {step_y}). Retry {retries}")
+                            
+
+
+            # Check if we reached the final target
+            current_x, current_y = self.get_current_coords_from_game()
+            if (current_x, current_y) == (target_x, target_y):
+                self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
+                return True
+
+            # If we didn't reach the target, recalculate the path and try again
+            self.logging.info("Recalculating path to target...")
 
     def move_to_location(self, map_name: str, avoid_checks=False, stuck=False, do_not_open_stats=False):
         if not avoid_checks:

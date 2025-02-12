@@ -16,8 +16,10 @@ from grid_system import Grid
 class GameBot:
     
     consecutive_errors = 0
+    EXPLORE_MAP = "dungeon3"
     EXPLORE_MODE = False
     EXPLORE_MANUAL_MODE = False
+    SKIP_ATTRIBUTES = True
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
@@ -41,6 +43,8 @@ class GameBot:
     
     def distribute_attributes(self):
         """Distribuye puntos de atributos disponibles según la configuración."""
+        if self.SKIP_ATTRIBUTES == True:
+            return
         try:
             # First read all stats
             current_state = self.config.get_game_state()
@@ -122,6 +126,20 @@ class GameBot:
                     if self.memory.verify_address(memory_attr_addr[0]):
                         setattr(self.memory, memory_attr_name, memory_attr_addr[0])
                         self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
+                else:
+                    while memory_attr_addr and len(memory_attr_addr) != 1:
+                        if(attr == "available_points"):
+                            # choise a random attribute like agility
+                            self.interface.command_add_attributes(attribute="agility", points=1)
+                            memory_attr_addr = self.memory.another_scan(memory_attr_addr, points - 1)
+                        else:
+                            self.interface.command_add_attributes(attribute=attr, points=1)
+                            memory_attr_addr = self.memory.another_scan(memory_attr_addr, points + 1)
+                        time.sleep(1)
+                    if self.memory.verify_address(memory_attr_addr[0]):
+                        setattr(self.memory, memory_attr_name, memory_attr_addr[0])
+                        self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
+
         
         return self.get_value_based_on_memory_address(getattr(self.memory, memory_attr_name, None))
 
@@ -151,21 +169,23 @@ class GameBot:
                         stats[stat] = self.memory.get_level()
                     if stat == 'reset':
                         stats[stat] = self.memory.get_reset()
-                    if stat == 'available_points':
-                        stats[stat] = self.get_attribute_points(current_state=current_state, attr="available_points", attr_spanish="Puntos", memory_attr_name="available_points_addr", find_memory_method=self.memory.find_available_points_memory, get_coords_method=self.interface.get_available_attributes, get_points_method=self.interface.get_available_points_ocr, set_coords_method=self.interface.set_available_attributes)
+                    if self.SKIP_ATTRIBUTES == False:
+                        if stat == 'available_points':
+                            stats[stat] = self.get_attribute_points(current_state=current_state, attr="available_points", attr_spanish="Puntos", memory_attr_name="available_points_addr", find_memory_method=self.memory.find_available_points_memory, get_coords_method=self.interface.get_available_attributes, get_points_method=self.interface.get_available_points_ocr, set_coords_method=self.interface.set_available_attributes)
                                 
                 # Attributes
-                for attr in self.gameclass.attributes:
-                    if attr == 'strenght':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Fuerza", "strenght_addr", self.memory.find_str_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("strenght", coords))
-                    if attr == 'agility':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Agilidad", "agility_addr", self.memory.find_agi_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("agility", coords))
-                    if attr == 'vitality':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Vitalidad", "vitality_addr", self.memory.find_vit_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("vitality", coords))
-                    if attr == 'energy':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Energía", "energy_addr", self.memory.find_ene_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("energy", coords))
-                    if attr == 'command':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))
+                if self.SKIP_ATTRIBUTES == False:
+                    for attr in self.gameclass.attributes:
+                        if attr == 'strenght':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Fuerza", "strenght_addr", self.memory.find_str_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("strenght", coords))
+                        if attr == 'agility':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Agilidad", "agility_addr", self.memory.find_agi_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("agility", coords))
+                        if attr == 'vitality':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Vitalidad", "vitality_addr", self.memory.find_vit_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("vitality", coords))
+                        if attr == 'energy':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Energía", "energy_addr", self.memory.find_ene_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("energy", coords))
+                        if attr == 'command':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))
 
 
                     
@@ -199,7 +219,7 @@ class GameBot:
                 continue
                 time.sleep(1)
 
-    def check_level_kill_or_reset(self, level):
+    def check_level_kill_or_reset(self, level, helper):
         for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
             if level >= int(threshold):
                 if isinstance(obj, list):
@@ -212,10 +232,11 @@ class GameBot:
                     self.movement.move_to_location(map_name=obj["map"])
                     x = obj["location"][0]
                     y = obj["location"][1]
-                
-                self.movement.walk_to(target_x=x, target_y=y)
-                self.check_and_click_play(x, y)
-                break
+                # is not muhelper active
+                if not helper:
+                    self.movement.walk_to(target_x=x, target_y=y)
+                    self.check_and_click_play(x, y)
+                    break
         
     def lets_kill_some_mobs(self):
         
@@ -237,10 +258,10 @@ class GameBot:
             self.reset_character()
         # No esta farmeando
         elif not mu_helper_active and level < max_level:
-            self.check_level_kill_or_reset(level=level)
+            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
         # Ponete a farmear
         elif mu_helper_active:
-            self.check_level_kill_or_reset(level=level)
+            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
     
     def check_and_click_play(self, x, y):
         """Check play button and update location state"""
@@ -288,9 +309,9 @@ class GameBot:
             
             # Create learner before starting grid
             if self.EXPLORE_MANUAL_MODE:
-                learner = LearningPathManually(map_name="lorencia", movement=self.movement)   
+                learner = LearningPathManually(map_name=self.EXPLORE_MAP, movement=self.movement)   
             else:
-                learner = LearningPathAutomatically(map_name="lorencia", movement=self.movement, interface=self.interface)
+                learner = LearningPathAutomatically(map_name=self.EXPLORE_MAP, movement=self.movement, interface=self.interface)
 
             try:
                 # Start capturing in a separate thread
@@ -323,7 +344,6 @@ class GameBot:
                     if self.first_time:
                         #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
                         self.first_time = False
-                        '''
                         self.logging.info("1. Read stats")
                         self.read_all_stats()
                         self.logging.info("2. Assign attributes")
@@ -331,14 +351,13 @@ class GameBot:
                         
                         self.logging.info("3. Show last stats after add attributes")
                         self.read_all_stats()
-                        '''
                     else:
                         self.logging.info("1. Lets go to kill some mobs")
                         self.lets_kill_some_mobs()
                         self.logging.info(f"2. Wait {self.config.file['check_interval']} seconds until check and add stats")
                         time.sleep(self.config.file['check_interval'])
-                        #self.read_all_stats()
-                        #self.distribute_attributes()
+                        self.read_all_stats()
+                        self.distribute_attributes()
                 except KeyboardInterrupt:
                     self.logging.info("Bot stopped by user")
                     break

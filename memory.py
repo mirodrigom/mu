@@ -212,6 +212,37 @@ class Memory:
                 print(f"Address: 0x{addr:X}, Current Value: {current_value}")
             
         return filtered_matches if filtered_matches else None
+    
+    def reuse_scan(self, addresses: list, expected_value: int) -> list:
+        """Scan specific memory addresses for a new value"""
+        if not addresses:
+            print("No addresses provided for reuse_scan.")
+            return None
+
+        print(f"Scanning {len(addresses)} addresses for value {expected_value}...")
+        start_time = time.time()
+
+        matches = []
+
+        for addr in addresses:
+            try:
+                value = self.pm.read_int(addr)
+                if value == expected_value:
+                    matches.append(addr)
+            except Exception as e:
+                self.logging.error(f"Error reading address 0x{addr:X}: {str(e)}")
+                continue
+
+        print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
+        print(f"Found {len(matches)} matches")
+
+        if matches:
+            print("\nResults:")
+            for addr in matches:
+                current_value = self.get_value_of_memory(addr)
+                print(f"Address: 0x{addr:X}, Current Value: {current_value}")
+
+        return matches if matches else None
 
     def next_scan(self, expected_value, previous_addresses):
         """Check which addresses from previous scan now contain the new value"""
@@ -230,6 +261,9 @@ class Memory:
                 continue
                 
         return matching_addresses if matching_addresses else None
+    
+    def another_scan(self, address, value):
+        return self.reuse_scan(addresses=address, expected_value=value)
 
     # Stat-specific search methods
     def find_available_points_memory(self, value):
