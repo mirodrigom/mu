@@ -44,26 +44,18 @@ class Movement:
         self.config.save_map_data(map_name=map, data=self.map_data)
 
 
-    def _execute_movement(self, direction: str):
+    def _execute_movement(self, target_x: int, target_y: int):
         """Execute movement in the given direction and update movement history."""
-        dx, dy = self.DIRECTIONS[direction]
-        
-        self.logging.info(f"Moving to {direction}...")
-        self.logging.debug(f"Movement history before update: {list(self.movement_history)}")
+
+        current_x, current_y = self.get_current_coords_from_game()
+        dx = target_x - current_x
+        dy = target_y - current_y
+
+        self.logging.debug(f"Moving towards ({target_x}, {target_y}). Current position: ({current_x}, {current_y})")
         
         if self.movement_will_be_with == "mouse":
-            self.logging.debug(f"Using mouse for movement: {direction}")
             # Diagonal movements
-            if direction == 'NE':
-                self.interface.mouse_top_right()
-            elif direction == 'NW':
-                self.interface.mouse_top_left()
-            elif direction == 'SE':
-                self.interface.mouse_down_right()
-            elif direction == 'SW':
-                self.interface.mouse_down_left()
-            # Cardinal directions
-            elif dx > 0:
+            if dx > 0:
                 self.interface.mouse_right()
             elif dx < 0:
                 self.interface.mouse_left()
@@ -72,7 +64,6 @@ class Movement:
             elif dy < 0:
                 self.interface.mouse_down()
         else:
-            self.logging.debug(f"Using keyboard for movement: {direction}")
             # Keyboard movements (unchanged)
             if dx > 0:
                 self.interface.arrow_key_right(press=True)
@@ -90,26 +81,6 @@ class Movement:
             self.interface.release_all_keys()
         
         # Increase delay after movement to allow the game to process it
-        time.sleep(0.5)  # Increased from 1.0 to 2.0 seconds
-
-    def _execute_movement_towards(self, target_x: int, target_y: int):
-        """Move the bot towards the target coordinate."""
-        current_x, current_y = self.get_current_coords_from_game()
-        dx = target_x - current_x
-        dy = target_y - current_y
-
-        self.logging.debug(f"Moving towards ({target_x}, {target_y}). Current position: ({current_x}, {current_y})")
-
-        # Determine the best direction to move
-        if dx > 0:
-            self.interface.mouse_right()
-        elif dx < 0:
-            self.interface.mouse_left()
-        elif dy > 0:
-            self.interface.mouse_top()
-        elif dy < 0:
-            self.interface.mouse_down()
-
         time.sleep(0.1)  # Increase delay to allow the bot to move
 
     def save_respawn_zone(self):
@@ -213,7 +184,7 @@ class Movement:
                 while (current_x, current_y) != (step_x, step_y):
                     self.check_abrupt_movements()
                     # Execute movement towards the step
-                    self._execute_movement_towards(step_x, step_y)
+                    self._execute_movement(step_x, step_y)
 
                     # Wait for the bot to move
                     time.sleep(0.2)  # Adjust delay as needed

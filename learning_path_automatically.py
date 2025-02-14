@@ -150,7 +150,7 @@ class LearningPathAutomatically:
             # Follow the path step by step
             for step_x, step_y in path:
                 self.logging.info(f"Moving to ({step_x}, {step_y})")
-                self.movement._execute_movement_towards(step_x, step_y)
+                self.movement._execute_movement(step_x, step_y)
                 time.sleep(0.5)  # Increase delay to allow movement to complete
 
                 # Verify if the bot successfully moved to the target position
