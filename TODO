@@ -1,3 +1,4 @@
-DONE: Ver tema del mouse para ver si podemos evitar hacer click en un NPC utilizando OCR del mouse cerca del medio de la pantalla
-TODO: Si las coordenadas cambian abruptamente es porque cambio de map_data o lo mataron
+BUG: Ver tema del mouse para ver si podemos evitar hacer click en un NPC utilizando OCR del mouse cerca del medio de la pantalla
+DONE: Si las coordenadas cambian abruptamente es porque cambio de map_data o lo mataron
 DONE: Si no encuentra la posicion de memoria, y encuentra varias, deberia seguir filtrando asignando un punto y filtrando nuevamente
+

@@ -19,7 +19,7 @@ class GameBot:
     EXPLORE_MAP = "dungeon3"
     EXPLORE_MODE = False
     EXPLORE_MANUAL_MODE = False
-    SKIP_ATTRIBUTES = True
+    SKIP_ATTRIBUTES = False
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
@@ -147,7 +147,8 @@ class GameBot:
         """Read and save all character stats"""
         while True:
             try:
-                self.interface.open_stats_window()
+                if not self.memory.all_memory_is_loaded(self.gameclass.attributes):
+                    self.interface.open_stats_window()
                 
                 current_state = self.config.get_game_state()                
                 # Read all stats
@@ -185,10 +186,7 @@ class GameBot:
                         if attr == 'energy':
                             stats[attr] = self.get_attribute_points(current_state, attr, "Energía", "energy_addr", self.memory.find_ene_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("energy", coords))
                         if attr == 'command':
-                            stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))
-
-
-                    
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))                  
                 
                 # Update state
                 state = {
@@ -204,7 +202,6 @@ class GameBot:
                 }
                 self.config.update_game_state(state)
                 
-                
                 self.logging.info("Final stats:")
                 self.logging.info(f"Available Points: {state['available_points']}")
                 self.logging.info(f"Strength: {state['current_strenght']}")
@@ -216,30 +213,37 @@ class GameBot:
 
             except Exception as e:
                 self.logging.error(f"Error reading stats: {e}")
-                continue
                 time.sleep(1)
+                continue
 
     def check_level_kill_or_reset(self, level, helper):
         for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
             if level >= int(threshold):
                 if isinstance(obj, list):
                     location_obj = next((loc for loc in obj if loc["map"] == self.gameclass.start_location), obj[0])
-                    self.movement.move_to_location(map_name=location_obj["map"])
+                    self.movement.move_to_location(map_name=location_obj["map"], do_not_open_stats=True)
                     x = location_obj["location"][0]
                     y = location_obj["location"][1]
                 else:
                     # Handle single location case as before
-                    self.movement.move_to_location(map_name=obj["map"])
+                    self.movement.move_to_location(map_name=obj["map"], do_not_open_stats=True)
                     x = obj["location"][0]
                     y = obj["location"][1]
-                # is not muhelper active
-                if not helper:
-                    self.movement.walk_to(target_x=x, target_y=y)
-                    self.check_and_click_play(x, y)
-                    break
+                
+                # Break the loop after moving to the first valid location
+                break
+        if not helper:
+            self.movement.walk_to(target_x=x, target_y=y)
+            self.check_and_click_play(x, y)
+
+    def abrupt_coordinates_change(self):
+        abrupt_change = self.movement.check_abrupt_movements()
+        if abrupt_change:
+            self.logging.info("Coordinates abrupt changed")
+            current_state = self.config.get_game_state()
+            self.movement.move_to_location(map_name=current_state['current_map'], avoid_checks=True, do_not_open_stats=True)
         
     def lets_kill_some_mobs(self):
-        
         current_state = self.config.get_game_state()
         level = self.interface.get_level(current_state)
         reset = self.interface.get_reset(current_state)
@@ -285,9 +289,9 @@ class GameBot:
 
     def reset_character(self):
         """Reset character and manage stats window"""
-        self.interface.open_stats_window()
+        #self.interface.open_stats_window()
         self.interface.command_reset()
-        self.interface.open_stats_window()
+        #self.interface.open_stats_window()
 
         current_state = self.config.get_game_state()
         new_reset = current_state['current_reset'] + 1
@@ -296,7 +300,7 @@ class GameBot:
             'current_level': 0,
             'current_map': self.gameclass.start_location
         })
-        self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
+        #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
         self.distribute_attributes()
 
     def run(self):

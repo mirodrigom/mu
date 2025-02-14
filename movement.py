@@ -15,7 +15,7 @@ class Movement:
         self.config = config
         self.memory = memory
         self.stuck_positions = defaultdict(int)  # Track direction failure counts
-        self.effective_movements = deque(maxlen=10)  # Track recent movements
+        self.last_movements = deque(maxlen=10)
         self.logging = logging.getLogger(__name__)
         self.movement_will_be_with = "mouse"
         
@@ -240,8 +240,9 @@ class Movement:
             current_state = self.config.get_game_state()
             if map_name != current_state['current_map'] or stuck is True:
                 self.logging.info("Dentro de move to location")
+                self.logging.debug(f"map_name: {map_name}  != current_state_map: {current_state} ")
                 self.logging.info(current_state)
-                self.save_map_data(map=current_state['current_map'])
+                self.save_map_data(map=map_name)
                 self.interface.set_mu_helper_status(False)
                 self.interface.command_move_to_map(map_name=map_name)
                 self.config.update_game_state({'current_map': map_name})
@@ -263,9 +264,21 @@ class Movement:
     def get_current_coords_from_game(self):
         try:
             x, y = self.memory.get_coordinates()
+            self.last_movements.append([x,y])
             self.interface.set_current_coords([x, y])
             self.logging.info(f"[POSITION] [{x}, {y}]")
             return x, y
         except Exception as e:
             self.logging.error(f"Failed to read coordinates from game memory: {e}")
             return (0, 0)  # Return a default position or handle the error appropriately
+        
+    def check_abrupt_movements(self):
+        if len(self.last_movements) >= 2:
+            last_x, last_y = self.last_movements[-1]
+            prev_x, prev_y = self.last_movements[-2]
+            self.logging.debug("Last_X = {last_x}  || Last_Y = {last_y}")
+            self.logging.debug("Prev_X = {prev_x}  || Prev_Y = {prev_y}")
+            # Check if the difference in x and y is greater than or equal to 10
+            if abs(last_x - prev_x) >= 10 and abs(last_y - prev_y) >= 10:
+                return True
+        return False

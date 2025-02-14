@@ -283,3 +283,15 @@ class Memory:
     
     def find_com_memory(self, value):
         return self.first_scan(expected_value=value, hex_suffix="D60")
+    
+    def all_memory_is_loaded(self, game_class_attributes):
+        value = False
+        if len(game_class_attributes) == 5 and self.command_addr:
+            value = True
+
+        if self.strenght_addr and self.agility_addr and self.vitality_addr and self.energy_addr and self.plugin_dll and self.available_points_addr:
+            value = True
+        else:
+            value = False
+
+        return value

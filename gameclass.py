@@ -55,7 +55,9 @@ class GameClass:
             level_to_reset = 380
         elif reset > 25 and reset <= 50:
             level_to_reset = 390
-        elif reset > 50:
+        elif reset > 50 and reset < 74:
+            level_to_reset = 395
+        elif reset >= 75:
             level_to_reset = 400
 
         self.logging.info(f"This character will reset at level: {level_to_reset} / Number of resets {reset}")
