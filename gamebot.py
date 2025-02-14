@@ -231,15 +231,9 @@ class GameBot:
                 break
         self.logging.debug(f"Helper status => {helper}")
         if not helper:
+            self.movement.last_movements.clear()
             self.movement.walk_to(target_x=x, target_y=y)
-            self.check_and_click_play(x, y)
-
-    def abrupt_coordinates_change(self):
-        abrupt_change = self.movement.check_abrupt_movements()
-        if abrupt_change:
-            self.logging.info("Coordinates abrupt changed")
-            current_state = self.config.get_game_state()
-            self.movement.move_to_location(map_name=current_state['current_map'], avoid_checks=True, do_not_open_stats=True)
+            self.check_and_click_play(x, y)           
         
     def lets_kill_some_mobs(self):
         current_state = self.config.get_game_state()
@@ -299,6 +293,7 @@ class GameBot:
             'current_map': self.gameclass.start_location
         })
         #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
+        self.read_all_stats()
         self.distribute_attributes()
 
     def run(self):
@@ -365,6 +360,7 @@ class GameBot:
                             count = 1
                         else:
                             count += 1
+                        time.sleep(2)
                 except KeyboardInterrupt:
                     self.logging.info("Bot stopped by user")
                     break

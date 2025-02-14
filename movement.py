@@ -195,6 +195,7 @@ class Movement:
         """
         while True:
             # Find the best path using A*
+            
             path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
             if not path:
                 self.logging.warning("No valid path to the target.")
@@ -207,7 +208,10 @@ class Movement:
                 step_x, step_y = step
                 retries = 0
                 current_x, current_y = self.get_current_coords_from_game()
+                self.logging.debug(f"current_x en walk_to => {current_x}")
+                self.logging.debug(f"current_y en walk_to => {current_y}")
                 while (current_x, current_y) != (step_x, step_y):
+                    self.check_abrupt_movements()
                     # Execute movement towards the step
                     self._execute_movement_towards(step_x, step_y)
 
@@ -223,6 +227,10 @@ class Movement:
                         path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
                         retries += 1
                         self.logging.warning(f"Failed to reach step: ({step_x}, {step_y}). Retry {retries}")
+                        if retries >= 300:
+                            self.logging.error("Exceeded maximum retries. Aborting movement.")
+                            return False
+                            
                             
 
 
@@ -248,6 +256,7 @@ class Movement:
                 self.config.update_game_state({'current_map': map_name})
                 self.load_map_data(map=map_name)
                 self.save_respawn_zone()
+                self.last_movements.clear()
             else:
                 self.logging.info(f"Character already in {map_name}. No need to move again")
         else:
@@ -257,6 +266,7 @@ class Movement:
             self.interface.command_move_to_map(map_name=map_name)
             self.load_map_data(map=map_name)
             self.save_respawn_zone()
+            self.last_movements.clear()
         
         if not do_not_open_stats:
             self.interface.open_stats_window()
@@ -273,12 +283,21 @@ class Movement:
             return (0, 0)  # Return a default position or handle the error appropriately
         
     def check_abrupt_movements(self):
-        if len(self.last_movements) >= 2:
+        if len(self.last_movements) == 10:
             last_x, last_y = self.last_movements[-1]
-            prev_x, prev_y = self.last_movements[-2]
-            self.logging.debug("Last_X = {last_x}  || Last_Y = {last_y}")
-            self.logging.debug("Prev_X = {prev_x}  || Prev_Y = {prev_y}")
-            # Check if the difference in x and y is greater than or equal to 10
-            if abs(last_x - prev_x) >= 10 and abs(last_y - prev_y) >= 10:
-                return True
+            
+            # Iterate through all previous movements except the last one
+            for prev_x, prev_y in list(self.last_movements)[:-1]:
+                #self.logging.debug(f"Last_X = {last_x}  || Last_Y = {last_y}")
+                #self.logging.debug(f"Prev_X = {prev_x}  || Prev_Y = {prev_y}")
+                
+                # Check if the difference in x and y is greater than or equal to 20
+                if abs(last_x - prev_x) >= 20 and abs(last_y - prev_y) >= 20:
+                    self.logging.debug(f"List: {self.last_movements}")
+                    self.logging.warning("Detected abrupt movement. Change map or killed.")
+                    self.get_current_coords_from_game()
+                    current_state = self.config.get_game_state()
+                    self.move_to_location(map_name=current_state['current_map'], avoid_checks=True, do_not_open_stats=True)
+                    time.sleep(2)
+                    return True
         return False
