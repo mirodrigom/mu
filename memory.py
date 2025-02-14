@@ -45,12 +45,14 @@ class Memory:
     plugin_dll = None
     available_points_addr = None
         
-    def __init__(self):
+    def __init__(self, config):
         self.logging = logging.getLogger(__name__)
         self.pm = Pymem("megamu.exe")
+        self.config = config
         self.load_plugin_module()
         self._chunk_size = 4096 * 256  # 1MB chunks
         self._max_workers = 8
+        self.load_memory_addr_from_file()
         
     def load_plugin_module(self):
         self.plugin_dll = module_from_name(self.pm.process_handle, "Plugin.dll").lpBaseOfDll
@@ -284,12 +286,48 @@ class Memory:
     def find_com_memory(self, value):
         return self.first_scan(expected_value=value, hex_suffix="D60")
     
+    def load_memory_addr_from_file(self):
+        current_status = self.config.get_memory_status()
+        if current_status["current_memory_available_points"]:
+            self.available_points_addr = current_status["current_memory_available_points"]
+        if current_status["current_memory_strenght"]: 
+            self.strenght_addr = current_status["current_memory_strenght"]
+        if current_status["current_memory_agility"]: 
+            self.agility_addr = current_status["current_memory_agility"]
+        if current_status["current_memory_vitality"]: 
+            self.vitality_addr = current_status["current_memory_vitality"]
+        if current_status["current_memory_energy"]: 
+            self.energy_addr = current_status["current_memory_energy"]
+        if current_status["current_memory_command"]:
+            self.command_addr = current_status["current_memory_command"]
+
+    def set_memory_addr_attr(self, attr, memory_addresses):
+        self.logging.debug(f"Updating memory address of {attr} to {memory_addresses}")
+        if attr == "available_points":
+            self.available_points_addr = memory_addresses
+            self.config.update_memory_status("current_memory_available_points", memory_addresses)
+        elif attr == "strenght":
+            self.strenght_addr = memory_addresses
+            self.config.update_memory_status("current_memory_strenght", memory_addresses)
+        elif attr == "agility":
+            self.agility_addr = memory_addresses
+            self.config.update_memory_status("current_memory_agility", memory_addresses)
+        elif attr == "vitality":
+            self.vitality_addr = memory_addresses
+            self.config.update_memory_status("current_memory_vitality", memory_addresses)
+        elif attr == "energy":
+            self.energy_addr = memory_addresses
+            self.config.update_memory_status("current_memory_energy", memory_addresses)
+        elif attr == "command":
+            self.command_addr = memory_addresses
+            self.config.update_memory_status("current_memory_command", memory_addresses)
+    
     def all_memory_is_loaded(self, game_class_attributes):
         value = False
         if len(game_class_attributes) == 5 and self.command_addr:
             value = True
 
-        if self.strenght_addr and self.agility_addr and self.vitality_addr and self.energy_addr and self.plugin_dll and self.available_points_addr:
+        if self.strenght_addr and self.agility_addr and self.vitality_addr and self.energy_addr and self.available_points_addr:
             value = True
         else:
             value = False

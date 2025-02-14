@@ -44,9 +44,9 @@
     "dashboard_name": "MEGAMU - Dashboard",
     "stat_distribution": {
         "strenght": 0.68,
-        "agility": 0.13,
-        "vitality": 0.12,
-        "energy": 0.11
+        "agility": 0.12,
+        "vitality": 0.08,
+        "energy": 0.08
     },
     "max_level": 400,
     "coordinate_samples": 3,

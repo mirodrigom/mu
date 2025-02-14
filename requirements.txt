@@ -32,3 +32,4 @@ vulture==2.14
 mouse
 pymem
 matplotlib
+psutil

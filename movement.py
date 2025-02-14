@@ -242,7 +242,7 @@ class Movement:
                 self.logging.info("Dentro de move to location")
                 self.logging.debug(f"map_name: {map_name}  != current_state_map: {current_state} ")
                 self.logging.info(current_state)
-                self.save_map_data(map=map_name)
+                #self.save_map_data(map=map_name)
                 self.interface.set_mu_helper_status(False)
                 self.interface.command_move_to_map(map_name=map_name)
                 self.config.update_game_state({'current_map': map_name})
@@ -251,7 +251,7 @@ class Movement:
             else:
                 self.logging.info(f"Character already in {map_name}. No need to move again")
         else:
-            self.save_map_data(map=current_state['current_map'])
+            #self.save_map_data(map=current_state['current_map'])
             self.logging.info(f"Character is moving to {map_name} without checking the current map.")
             self.interface.set_mu_helper_status(False)
             self.interface.command_move_to_map(map_name=map_name)

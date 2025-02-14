@@ -1,49 +1,24 @@
 {
     "current_reset": 80,
-    "current_level": 1,
-    "current_map": "lorencia",
+    "current_level": 152,
+    "current_map": "tarkan",
     "current_coords": [],
-    "current_strenght": 21816,
-    "current_agility": 4191,
-    "current_vitality": 3869,
-    "current_energy": 27,
+    "current_strenght": 0,
+    "current_agility": 0,
+    "current_vitality": 0,
+    "current_energy": 0,
     "current_command": 0,
-    "available_points": 1,
+    "available_points": 0,
     "mulheper_active": false,
-    "current_position_available_points": [
-        1261,
-        353,
-        1310,
-        365
-    ],
-    "current_position_strenght": [
-        1262,
-        403,
-        1321,
-        429
-    ],
-    "current_position_agility": [
-        1261,
-        461,
-        1328,
-        483
-    ],
-    "current_position_vitality": [
-        1261,
-        547,
-        1333,
-        561
-    ],
-    "current_position_energy": [
-        1262,
-        600,
-        1327,
-        619
-    ],
+    "current_position_available_points": [],
+    "current_position_strenght": [],
+    "current_position_agility": [],
+    "current_position_vitality": [],
+    "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        134,
-        152
+        205,
+        77
     ],
     "current_position_level": [],
     "current_position_reset": []

@@ -2,6 +2,11 @@ import os
 import logging
 import json
 import sys
+import psutil
+import pywintypes
+import win32gui
+import win32process
+import pygetwindow as gw
 
 from pynput import keyboard
 
@@ -40,6 +45,81 @@ class Configuration:
         # Disable buffering
         sys.stdout.reconfigure(line_buffering=True)
         sys.stderr.reconfigure(line_buffering=True)
+
+
+
+
+    def get_pid_by_window_title(self):
+        try:
+            title = self.file["application_name"]
+            # Get the window by title
+            window = gw.getWindowsWithTitle(title)[0]
+            
+            # Get the window handle
+            hwnd = window._hWnd
+            
+            # Get the PID from the window handle
+            _, pid = win32process.GetWindowThreadProcessId(hwnd)
+            
+            # Use psutil to get the process object
+            process = psutil.Process(pid)
+            
+            return process.pid
+        except IndexError:
+            print(f"No window with title '{title}' found.")
+            return None
+        except psutil.NoSuchProcess:
+            print(f"Process with PID {pid} not found.")
+            return None
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+
+    def get_memory_status(self):
+        """Read current state from file with default values"""
+        try:
+            clean_object = {
+                    "current_memory_available_points": None,
+                    "current_memory_strenght": None,
+                    "current_memory_agility": None,
+                    "current_memory_vitality": None,
+                    "current_memory_energy": None,
+                    "current_memory_command": None,
+                    "process_id": self.get_pid_by_window_title()
+                }
+            self.logging.debug(f"Clean object: {clean_object}")
+
+            state_file = os.path.join(self.dirs['json'], 'memory.json')
+            if os.path.exists(state_file):
+                with open(state_file, 'r') as f:
+                    file_object = json.load(f)
+                
+                if file_object["process_id"] == clean_object["process_id"]:
+                    return file_object
+                
+            return clean_object
+        except Exception as e:
+            self.logging.error(f"Error reading game state: {e}")
+            return None
+        
+    def update_memory_status(self, key=None, value=None):
+        """Update a specific key/value pair in the memory status."""
+        try:
+            current_state = self.get_memory_status() or {}
+            self.logging.debug(f"Current state: {current_state}")
+            # Update only the specified key/value pair
+            if key is not None and value is not None:
+                current_state[key] = value
+
+            state_file = os.path.join(self.dirs['json'], 'memory.json')
+            self.logging.debug(f"Saving to: {state_file}")
+            with open(state_file, 'w') as f:
+                json.dump(current_state, f, indent=4)
+            self.logging.info(f"Memory status updated")
+            return True
+        except Exception as e:
+            self.logging.error(f"Error writing game state: {e}")
+            return False
         
     def start_status(self):
         return {
