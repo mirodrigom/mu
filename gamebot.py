@@ -1,6 +1,7 @@
 import time
 import logging
 import os
+import threading
 
 from logger_config import setup_logging
 from interface import Interface
@@ -16,10 +17,10 @@ from grid_system import Grid
 class GameBot:
     
     consecutive_errors = 0
-    EXPLORE_MAP = "dungeon3"
-    EXPLORE_MODE = False
-    EXPLORE_MANUAL_MODE = False
-    SKIP_ATTRIBUTES = False
+    EXPLORE_MAP = "noria"
+    EXPLORE_MODE = True
+    EXPLORE_MANUAL_MODE = True
+    SKIP_ATTRIBUTES = True
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
@@ -295,37 +296,37 @@ class GameBot:
         self.distribute_attributes()
 
     def run(self):
-        """Ejecuta el bucle principal del bot"""
-        
         if self.EXPLORE_MODE:
-            self.interface.focus_application()            
-            # Create grid object
-            grid = Grid(memory=self.memory)
+            self.interface.focus_application()  # Focus the target application
             
-            # Create learner before starting grid
+            # Initialize the learner based on the mode
             if self.EXPLORE_MANUAL_MODE:
-                learner = LearningPathManually(map_name=self.EXPLORE_MAP, movement=self.movement)   
+                learner = LearningPathManually(map_name=self.EXPLORE_MAP, movement=self.movement)
             else:
                 learner = LearningPathAutomatically(map_name=self.EXPLORE_MAP, movement=self.movement, interface=self.interface)
 
+            # Initialize the grid
+            grid = Grid(memory=self.memory, learner=learner)
+
+            # Start the capture thread
+            capture_thread = threading.Thread(target=learner.start_capturing)
+            capture_thread.daemon = True  # Daemonize the thread to exit when the main thread exits
+            capture_thread.start()
+
             try:
-                # Start capturing in a separate thread
-                import threading
-                capture_thread = threading.Thread(target=learner.start_capturing)
-                capture_thread.daemon = True
-                capture_thread.start()
-                
-                # Run grid
+                # Run the grid
                 grid.run()
-                
             except KeyboardInterrupt:
                 print("Saving data before exit...")
-                
-                # Stop the learner
-                learner.stop_capturing()
-
-                
+            except Exception as e:
+                print(f"An error occurred: {e}")
             finally:
+                # Ensure the learner stops capturing and the thread is joined
+                learner.stop_capturing()
+                if capture_thread.is_alive():
+                    capture_thread.join()
+                
+                # Destroy the grid window if it exists
                 if grid.root:
                     grid.root.destroy()
 

@@ -1,15 +1,15 @@
 {
-    "current_reset": 5,
-    "current_level": 192,
-    "current_map": "tarkan",
+    "current_reset": 0,
+    "current_level": 0,
+    "current_map": "",
     "current_coords": [],
-    "current_strenght": 22830,
-    "current_agility": 4047,
-    "current_vitality": 2705,
-    "current_energy": 2705,
+    "current_strenght": 0,
+    "current_agility": 0,
+    "current_vitality": 0,
+    "current_energy": 0,
     "current_command": 0,
-    "available_points": 176,
-    "mulheper_active": true,
+    "available_points": 0,
+    "mulheper_active": false,
     "current_position_available_points": [],
     "current_position_strenght": [],
     "current_position_agility": [],
@@ -17,8 +17,8 @@
     "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        156,
-        161
+        176,
+        114
     ],
     "current_position_level": [],
     "current_position_reset": []

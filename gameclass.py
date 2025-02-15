@@ -46,13 +46,13 @@ class GameClass:
         self.name = self.config.get_class()
 
     def set_level_to_reset(self, reset):
-        level_to_reset = 350
+        level_to_reset = 380
         if reset > 0 and reset <= 5:
-            level_to_reset = 360
-        elif reset > 5 and reset <= 15:
-            level_to_reset = 370
-        elif reset > 15 and reset <= 25:
             level_to_reset = 380
+        elif reset > 5 and reset <= 15:
+            level_to_reset = 385
+        elif reset > 15 and reset <= 25:
+            level_to_reset = 390
         elif reset > 25 and reset <= 50:
             level_to_reset = 390
         elif reset > 50 and reset < 74:

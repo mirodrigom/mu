@@ -1,29 +1,33 @@
 from tkinter import *
-from memory import Memory
+from typing import Set, Tuple
 
 class Grid:
-
-    #148 queda muy bien
-    def __init__(self, memory, screen_width=1920, screen_height=1080, cell_size=210):
+    def __init__(self, memory, learner, screen_width=1920, screen_height=1080, cell_size=210):
+        """
+        Initialize the grid overlay.
+        
+        :param memory: Memory object for retrieving current coordinates.
+        :param learner: LearningPathManually instance for managing recorded coordinates.
+        :param screen_width: Width of the grid in pixels.
+        :param screen_height: Height of the grid in pixels.
+        :param cell_size: Size of each grid cell in pixels.
+        """
         self.memory = memory
+        self.learner = learner  # Instance of LearningPathManually
         self.width = screen_width
         self.height = screen_height
         self.cell_size = cell_size
         self.cols = self.width // cell_size
         self.rows = self.height // cell_size
+        self.center_col = (self.width // (2 * cell_size))
+        self.center_row = (self.height // (2 * cell_size))
         
-        # Calculate center indices
-        # Calculate center indices
-        self.center_col = (self.width // (2 * cell_size))  # Added +1 to adjust center
-        self.center_row = (self.height // (2 * cell_size))  # Added +1 to adjust center
-        
-        # Create window
+        # Initialize Tkinter root and canvas
         self.root = Tk()
-        self.root.attributes('-alpha', 0.7)
-        self.root.attributes('-topmost', True)
-        self.root.overrideredirect(True)
+        self.root.attributes('-alpha', 0.7)  # Set transparency
+        self.root.attributes('-topmost', True)  # Keep window on top
+        self.root.overrideredirect(True)  # Remove window borders
         
-        # Create canvas
         self.canvas = Canvas(
             self.root, 
             width=screen_width, 
@@ -33,37 +37,33 @@ class Grid:
         )
         self.canvas.pack()
         
-        # Make window transparent
-        self.root.wm_attributes('-transparentcolor', 'white')
+        self.root.wm_attributes('-transparentcolor', 'white')  # Make white background transparent
         
-        # Store text items and their background rectangles in a dictionary
+        # Store text items and background rectangles for each cell
         self.coordinate_texts = {}
         self.text_backgrounds = {}
         
-        # Initial coordinates
+        # Initialize current position
         self.current_x = 0
         self.current_y = 0
         
-        # Draw initial grid
+        # Draw the grid and update coordinates
         self.draw_grid()
-        self.update_coordinates(0, 0)  # Start at (0,0)
+        self.update_coordinates(0, 0)
         
+        # Load recorded coordinates at startup
+        self.load_recorded_coordinates()
+
     def draw_grid(self):
-        # Draw vertical and horizontal lines
+        """Draw the grid lines and initialize cell texts and backgrounds."""
         for x in range(0, self.width, self.cell_size):
-            self.canvas.create_line(x, 0, x, self.height, fill='#A0A0A0', dash=(4,4))
+            self.canvas.create_line(x, 0, x, self.height, fill='#A0A0A0', dash=(4, 4))
         for y in range(0, self.height, self.cell_size):
-            self.canvas.create_line(0, y, self.width, y, fill='#A0A0A0', dash=(4,4))
+            self.canvas.create_line(0, y, self.width, y, fill='#A0A0A0', dash=(4, 4))
         
-        # Define the cells to be made [''''''=/'''''']
-        green_cells = [
-            (self.center_col, self.center_row),  # Center cell
-            #(self.center_col -1, self.center_row),  # Right cell
-            #(self.center_col, self.center_row - 1),  # Left cell
-            #(self.center_col -1,  self.center_row -1)   # Bottom cell
-        ]
+        # Highlight the center cell in green
+        green_cells = [(self.center_col, self.center_row)]  # Center cell
         
-        # Create green squares for the specified cells
         for col, row in green_cells:
             x = col * self.cell_size
             y = row * self.cell_size
@@ -74,33 +74,36 @@ class Grid:
                 outline='#008000'
             )
         
-        # Create text items for each cell
+        # Create text items and background rectangles for all cells
         for col in range(self.cols):
             for row in range(self.rows):
-                x = col * self.cell_size + self.cell_size/2
-                y = row * self.cell_size + self.cell_size/2
-                # Create background rectangle first
+                x = col * self.cell_size + self.cell_size / 2
+                y = row * self.cell_size + self.cell_size / 2
+                
+                # Background rectangle for text
                 bg_rect = self.canvas.create_rectangle(
-                    0, 0, 0, 0,  # Initial size, will be updated
-                    fill='yellow' if (col != self.center_col or row != self.center_row) else '#00FF00',
+                    0, 0, 0, 0,
+                    fill='yellow',  # Default color for unrecorded cells
                     outline=''
                 )
-                # Create text item
+                
+                # Text item for coordinates
                 text_item = self.canvas.create_text(
                     x, y,
                     text="",
                     fill='black'
                 )
-                # Store text and background rectangle
+                
+                # Store references to text and background
                 self.coordinate_texts[(col, row)] = text_item
                 self.text_backgrounds[(col, row)] = bg_rect
 
     def update_coordinates(self, base_x, base_y):
-        """Update all coordinates relative to the center position"""
+        """Update the coordinate labels for all cells based on the current position."""
         self.current_x = base_x
         self.current_y = base_y
         
-        # Draw center coordinates bigger and bolder
+        # Update the center cell's text
         center_text = self.coordinate_texts.get((self.center_col, self.center_row))
         center_bg = self.text_backgrounds.get((self.center_col, self.center_row))
         if center_text:
@@ -108,21 +111,18 @@ class Grid:
                 center_text,
                 text=f"({base_x}, {base_y})",
                 font=('Arial', 12, 'bold'),
-                fill='black'  # Ensure center is black
+                fill='black'
             )
-            # Update the background rectangle for the center text
             bbox = self.canvas.bbox(center_text)
             if bbox:
                 self.canvas.coords(center_bg, bbox)
         
-        # Update all other cells with relative coordinates
+        # Update all other cells' texts
         for col in range(self.cols):
             for row in range(self.rows):
-                # Skip center as it's already updated
                 if col == self.center_col and row == self.center_row:
                     continue
-                    
-                # Calculate relative coordinates
+                
                 rel_x = base_x + (col - self.center_col)
                 rel_y = base_y + (self.center_row - row)
                 
@@ -132,33 +132,73 @@ class Grid:
                     self.canvas.itemconfig(
                         text_item,
                         text=f"({rel_x}, {rel_y})",
-                        font=('Arial', 10),  # Slightly bigger font
-                        fill='#000000'  # Pure black color for better visibility
+                        font=('Arial', 10),
+                        fill='#000000'
                     )
-                    # Update the background rectangle for the text
                     bbox = self.canvas.bbox(text_item)
                     if bbox:
                         self.canvas.coords(bg_rect, bbox)
-                    
+
+    def update_background_colors(self, recorded_coords: Set[Tuple[int, int]]):
+        """Update the background color of cells based on recorded coordinates."""
+        for col in range(self.cols):
+            for row in range(self.rows):
+                rel_x = self.current_x + (col - self.center_col)
+                rel_y = self.current_y + (self.center_row - row)
+                
+                bg_rect = self.text_backgrounds.get((col, row))
+                if bg_rect:
+                    if (rel_x, rel_y) in recorded_coords:
+                        self.canvas.itemconfig(bg_rect, fill='#00FF00')  # Change to green
+                    else:
+                        self.canvas.itemconfig(bg_rect, fill='yellow')  # Reset to yellow
+
+    def load_recorded_coordinates(self):
+        """Load recorded coordinates from the learner and update the grid."""
+        if hasattr(self, 'learner'):
+            recorded_coords = self.learner.get_recorded_coords()
+            print(f"Loaded recorded coordinates: {recorded_coords}")  # Debug log
+            self.update_background_colors(recorded_coords)
+
+    def check_surrounding_coordinates(self, recorded_coords: Set[Tuple[int, int]]):
+        """Check if surrounding coordinates have been discovered."""
+        surrounding_coords = [
+            (self.current_x + dx, self.current_y + dy)
+            for dx in [-1, 0, 1]
+            for dy in [-1, 0, 1]
+            if not (dx == 0 and dy == 0)
+        ]
+        
+        for coord in surrounding_coords:
+            if coord in recorded_coords:
+                print(f"Coordinate {coord} has been discovered.")
+            else:
+                print(f"Coordinate {coord} has not been discovered.")
+
     def check_coordinates(self):
-        """Check coordinates using the provided method"""
+        """Check and update the current coordinates from memory."""
         try:
             x, y = self.memory.get_coordinates()
             self.update_coordinates(x, y)
-        except:
-            print("Error getting coordinates")
-    
+        except Exception as e:
+            print(f"Error getting coordinates: {e}")
+
     def run(self):
+        """Start the main loop for the grid application."""
         self.root.geometry(f"{self.width}x{self.height}+0+0")
-        self.root.bind('<Escape>', lambda e: self.root.destroy())
+        self.root.bind('<Escape>', lambda e: self.root.destroy())  # Exit on Escape key
         
-        # Update coordinates periodically
         def update_loop():
+            """Continuous update loop for the grid."""
             self.check_coordinates()
-            self.root.after(50, update_loop)  # Check every 100ms
+            
+            # Update background colors based on recorded coordinates
+            if hasattr(self, 'learner'):
+                recorded_coords = self.learner.get_recorded_coords()
+                self.update_background_colors(recorded_coords)
+                self.check_surrounding_coordinates(recorded_coords)
+            
+            self.root.after(50, update_loop)  # Schedule next update
         
-        update_loop()
-        self.root.mainloop()
-
-
-# Create and run the grid
+        update_loop()  # Start the update loop
+        self.root.mainloop()  # Start the Tkinter event loop
