@@ -72,41 +72,43 @@ class Memory:
     def _get_memory_regions(self):
         """Get relevant memory regions efficiently"""
         regions = []
-        current_address = 0
-        
-        while current_address < 0x7FFFFFFFFFFFFFFF:
-            mbi = MEMORY_BASIC_INFORMATION64()
+        try:
+            current_address = 0
             
-            try:
-                result = windll.kernel32.VirtualQueryEx(
-                    self.pm.process_handle,
-                    c_void_p(current_address),
-                    byref(mbi),
-                    sizeof(mbi)
-                )
+            while current_address < 0x7FFFFFFFFFFFFFFF:
+                mbi = MEMORY_BASIC_INFORMATION64()
                 
-                if result == 0:
-                    break
-
-                if (mbi.State & 0x1000):  # MEM_COMMIT
-                    region = MemoryRegion(
-                        int(mbi.BaseAddress), 
-                        int(mbi.RegionSize),
-                        mbi.Protect,
-                        mbi.Type
+                try:
+                    result = windll.kernel32.VirtualQueryEx(
+                        self.pm.process_handle,
+                        c_void_p(current_address),
+                        byref(mbi),
+                        sizeof(mbi)
                     )
                     
-                    if region.is_valid_target:
-                        regions.append(region)
-                
-                current_address = mbi.BaseAddress + mbi.RegionSize
-                if current_address >= 0x7FFFFFFFFFFFFFFF:
-                    break
-                    
-            except Exception as e:
-                self.logging.error(f"Error querying memory at 0x{current_address:X}: {str(e)}")
-                break
+                    if result == 0:
+                        break
 
+                    if (mbi.State & 0x1000):  # MEM_COMMIT
+                        region = MemoryRegion(
+                            int(mbi.BaseAddress), 
+                            int(mbi.RegionSize),
+                            mbi.Protect,
+                            mbi.Type
+                        )
+                        
+                        if region.is_valid_target:
+                            regions.append(region)
+                    
+                    current_address = mbi.BaseAddress + mbi.RegionSize
+                    if current_address >= 0x7FFFFFFFFFFFFFFF:
+                        break
+                        
+                except Exception as e:
+                    self.logging.error(f"Error querying memory at 0x{current_address:X}: {str(e)}")
+                    break
+        except Exception as e:
+            self.logging.error(f"Error getting memory regions: {str(e)}")
         return regions
 
     def _scan_region(self, region: MemoryRegion, value: int, progress_callback=None) -> list:
@@ -151,6 +153,7 @@ class Memory:
             val2 = self.pm.read_int(addr)
             return val1 == val2 and val1 != 0
         except:
+            self.logging.error(f"Error verifying address 0x{addr:X}")
             return False
 
     def get_value_of_memory(self, address: int) -> int:
@@ -163,106 +166,115 @@ class Memory:
 
     def first_scan(self, expected_value: int, hex_suffix: str) -> list:
         """Initial memory scan with progress tracking"""
-        print(f"Scanning for value {expected_value} with pattern {hex_suffix}...")
-        start_time = time.time()
-        
-        regions = self._get_memory_regions()
-        print(f"Found {len(regions)} relevant memory regions to scan")
-        
-        total_size = sum(region.size for region in regions)
-        scanned_size = 0
-        
-        def update_progress(size):
-            nonlocal scanned_size
-            scanned_size += size
-            progress = int((scanned_size / total_size) * 100)
-            print(f"Progress: {progress}%", end='\r')
-        
-        matches = []
-        with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
-            futures = []
-            for region in regions:
-                future = executor.submit(self._scan_region, region, expected_value, update_progress)
-                futures.append(future)
+        try:
+            print(f"Scanning for value {expected_value} with pattern {hex_suffix}...")
+            start_time = time.time()
             
-            for future in futures:
-                try:
-                    region_matches = future.result()
-                    matches.extend(region_matches)
-                except Exception as e:
-                    self.logging.error(f"Error processing region: {str(e)}")
-        
-        print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
-        
-        # Filter addresses by pattern
-        pattern_value = int(hex_suffix, 16)
-        pattern_length = len(hex_suffix)
-        mask = (1 << (pattern_length * 4)) - 1
-        
-        filtered_matches = [
-            addr for addr in matches 
-            if addr & mask == pattern_value
-        ]
-        
-        print(f"Found {len(matches)} initial matches")
-        print(f"Found {len(filtered_matches)} matches after pattern filtering")
-        
-        if filtered_matches:
-            print("\nResults:")
-            for addr in filtered_matches:
-                current_value = self.get_value_of_memory(addr)
-                print(f"Address: 0x{addr:X}, Current Value: {current_value}")
+            regions = self._get_memory_regions()
+            print(f"Found {len(regions)} relevant memory regions to scan")
             
-        return filtered_matches if filtered_matches else None
+            total_size = sum(region.size for region in regions)
+            scanned_size = 0
+            
+            def update_progress(size):
+                nonlocal scanned_size
+                scanned_size += size
+                progress = int((scanned_size / total_size) * 100)
+                print(f"Progress: {progress}%", end='\r')
+            
+            matches = []
+            with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
+                futures = []
+                for region in regions:
+                    future = executor.submit(self._scan_region, region, expected_value, update_progress)
+                    futures.append(future)
+                
+                for future in futures:
+                    try:
+                        region_matches = future.result()
+                        matches.extend(region_matches)
+                    except Exception as e:
+                        self.logging.error(f"Error processing region: {str(e)}")
+            
+            print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
+            
+            # Filter addresses by pattern
+            pattern_value = int(hex_suffix, 16)
+            pattern_length = len(hex_suffix)
+            mask = (1 << (pattern_length * 4)) - 1
+            
+            filtered_matches = [
+                addr for addr in matches 
+                if addr & mask == pattern_value
+            ]
+            
+            print(f"Found {len(matches)} initial matches")
+            print(f"Found {len(filtered_matches)} matches after pattern filtering")
+            
+            if filtered_matches:
+                print("\nResults:")
+                for addr in filtered_matches:
+                    current_value = self.get_value_of_memory(addr)
+                    print(f"Address: 0x{addr:X}, Current Value: {current_value}")
+                
+            return filtered_matches if filtered_matches else None
+        except Exception as e:
+            self.logging.error(f"Error during first scan: {str(e)}")
     
     def reuse_scan(self, addresses: list, expected_value: int) -> list:
         """Scan specific memory addresses for a new value"""
-        if not addresses:
-            print("No addresses provided for reuse_scan.")
-            return None
+        try:
+            if not addresses:
+                print("No addresses provided for reuse_scan.")
+                return None
 
-        print(f"Scanning {len(addresses)} addresses for value {expected_value}...")
-        start_time = time.time()
+            print(f"Scanning {len(addresses)} addresses for value {expected_value}...")
+            start_time = time.time()
 
-        matches = []
+            matches = []
 
-        for addr in addresses:
-            try:
-                value = self.pm.read_int(addr)
-                if value == expected_value:
-                    matches.append(addr)
-            except Exception as e:
-                self.logging.error(f"Error reading address 0x{addr:X}: {str(e)}")
-                continue
+            for addr in addresses:
+                try:
+                    value = self.pm.read_int(addr)
+                    if value == expected_value:
+                        matches.append(addr)
+                except Exception as e:
+                    self.logging.error(f"Error reading address 0x{addr:X}: {str(e)}")
+                    continue
 
-        print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
-        print(f"Found {len(matches)} matches")
+            print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
+            print(f"Found {len(matches)} matches")
 
-        if matches:
-            print("\nResults:")
-            for addr in matches:
-                current_value = self.get_value_of_memory(addr)
-                print(f"Address: 0x{addr:X}, Current Value: {current_value}")
+            if matches:
+                print("\nResults:")
+                for addr in matches:
+                    current_value = self.get_value_of_memory(addr)
+                    print(f"Address: 0x{addr:X}, Current Value: {current_value}")
 
-        return matches if matches else None
+            return matches if matches else None
+        except Exception as e:
+            self.logging.error(f"Error during reuse scan: {str(e)}")
 
     def next_scan(self, expected_value, previous_addresses):
         """Check which addresses from previous scan now contain the new value"""
-        if not previous_addresses:
-            return None
-            
-        self.logging.info(f"Checking {len(previous_addresses)} addresses for value: {expected_value}")
-        matching_addresses = []
-        
-        for addr in previous_addresses:
-            try:
-                value = self.pm.read_int(addr)
-                if value == expected_value:
-                    matching_addresses.append(addr)
-            except Exception:
-                continue
+        try:
+            if not previous_addresses:
+                return None
                 
-        return matching_addresses if matching_addresses else None
+            self.logging.info(f"Checking {len(previous_addresses)} addresses for value: {expected_value}")
+            matching_addresses = []
+            
+            for addr in previous_addresses:
+                try:
+                    value = self.pm.read_int(addr)
+                    if value == expected_value:
+                        matching_addresses.append(addr)
+                except Exception:
+                    continue
+                    
+            return matching_addresses if matching_addresses else None
+        except Exception as e:
+            self.logging.error(f"Error during next scan: {str(e)}")
     
     def another_scan(self, address, value):
         return self.reuse_scan(addresses=address, expected_value=value)

@@ -18,9 +18,9 @@ class GameBot:
     
     consecutive_errors = 0
     EXPLORE_MAP = "noria"
-    EXPLORE_MODE = True
-    EXPLORE_MANUAL_MODE = True
-    SKIP_ATTRIBUTES = True
+    EXPLORE_MODE = False
+    EXPLORE_MANUAL_MODE = False
+    SKIP_ATTRIBUTES = False
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
@@ -103,46 +103,51 @@ class GameBot:
 
     def get_attribute_points(self, current_state, attr, attr_spanish, memory_attr_name, find_memory_method, get_coords_method, get_points_method, set_coords_method):
         self.logging.info(f"memory address => {getattr(self.memory, memory_attr_name, None)}")
+        try:
+            if not getattr(self.memory, memory_attr_name, None):
+                # Get the attribute coordinates
+                coords_attr = get_coords_method(current_state)
+                if len(coords_attr) == 0:
+                    coords_attr = self.interface.get_text_from_screen(attr_spanish)
 
-        if not getattr(self.memory, memory_attr_name, None):
-            # Get the attribute coordinates
-            coords_attr = get_coords_method(current_state)
-            if len(coords_attr) == 0:
-                coords_attr = self.interface.get_text_from_screen(attr_spanish)
+                # Save the attribute reference
+                set_coords_method(coords_attr)
 
-            # Save the attribute reference
-            set_coords_method(coords_attr)
+                # Get the points using OCR
+                points = get_points_method(coords_attr)
+                self.logging.info(f"current value => {points}")
 
-            # Get the points using OCR
-            points = get_points_method(coords_attr)
-            self.logging.info(f"current value => {points}")
+                # Only proceed with memory scan if we have a valid value
+                if points and points > 0:
+                    memory_attr_addr = find_memory_method(points)
 
-            # Only proceed with memory scan if we have a valid value
-            if points and points > 0:
-                memory_attr_addr = find_memory_method(points)
+                    # Verify we found exactly one match
+                    if memory_attr_addr and len(memory_attr_addr) == 1:
+                        # Verify the address is stable
+                        self.logging.debug("Inside memory_attr_addr")
+                        if self.memory.verify_address(memory_attr_addr[0]):
+                            self.memory.set_memory_addr_attr(attr, memory_attr_addr[0])
+                            self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
+                    else:
+                        self.logging.debug("Inside else of memory_attr_addr")
+                        while memory_attr_addr and len(memory_attr_addr) != 1:
+                            if(attr == "available_points"):
+                                # choise a random attribute like agility
+                                self.interface.command_add_attributes(attribute="agility", points=1)
+                                memory_attr_addr = self.memory.another_scan(memory_attr_addr, points - 1)
+                            else:
+                                self.interface.command_add_attributes(attribute=attr, points=1)
+                                memory_attr_addr = self.memory.another_scan(memory_attr_addr, points + 1)
+                            time.sleep(1)
+                        if self.memory.verify_address(memory_attr_addr[0]):
+                            self.memory.set_memory_addr_attr(attr, memory_attr_addr[0])
+                            self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
 
-                # Verify we found exactly one match
-                if memory_attr_addr and len(memory_attr_addr) == 1:
-                    # Verify the address is stable
-                    if self.memory.verify_address(memory_attr_addr[0]):
-                        self.memory.set_memory_addr_attr(attr, memory_attr_addr[0])
-                        self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
-                else:
-                    while memory_attr_addr and len(memory_attr_addr) != 1:
-                        if(attr == "available_points"):
-                            # choise a random attribute like agility
-                            self.interface.command_add_attributes(attribute="agility", points=1)
-                            memory_attr_addr = self.memory.another_scan(memory_attr_addr, points - 1)
-                        else:
-                            self.interface.command_add_attributes(attribute=attr, points=1)
-                            memory_attr_addr = self.memory.another_scan(memory_attr_addr, points + 1)
-                        time.sleep(1)
-                    if self.memory.verify_address(memory_attr_addr[0]):
-                        self.memory.set_memory_addr_attr(attr, memory_attr_addr[0])
-                        self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
-
-        
-        return self.get_value_based_on_memory_address(getattr(self.memory, memory_attr_name, None))
+            
+            return self.get_value_based_on_memory_address(getattr(self.memory, memory_attr_name, None))
+        except Exception as e:
+            self.logging.error(f"Error reading {attr} points: {e}")
+            return None
 
     def read_all_stats(self):
         """Read and save all character stats"""
@@ -296,6 +301,7 @@ class GameBot:
         self.distribute_attributes()
 
     def run(self):
+        self.logging.info("Running")
         if self.EXPLORE_MODE:
             self.interface.focus_application()  # Focus the target application
             
@@ -368,7 +374,7 @@ class GameBot:
                     self.logging.error(f"Error in main loop: {e}")
                     time.sleep(1)
 
-if __name__ == "__main__":
-    bot = GameBot()
-    time.sleep(2)
-    bot.run()
+#if __name__ == "__main__":
+#    bot = GameBot()
+#    time.sleep(2)
+#    bot.run()
