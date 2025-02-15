@@ -1079,7 +1079,7 @@ class Interface:
             self.mouse_click(x,y)
 
         
-    def _release_all_keys(self):
+    def release_all_keys(self):
         """Release all movement keys."""
         self.arrow_key_up(release=True)
         self.arrow_key_down(release=True)

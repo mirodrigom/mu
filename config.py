@@ -87,16 +87,18 @@ class Configuration:
                     "current_memory_command": None,
                     "process_id": self.get_pid_by_window_title()
                 }
-            self.logging.debug(f"Clean object: {clean_object}")
 
             state_file = os.path.join(self.dirs['json'], 'memory.json')
             if os.path.exists(state_file):
+                self.logging.info(f"Memory json file does exist: {state_file}")
                 with open(state_file, 'r') as f:
                     file_object = json.load(f)
                 
                 if file_object["process_id"] == clean_object["process_id"]:
+                    self.logging.debug(f"Clean object: {file_object}")
                     return file_object
-                
+            self.logging.info("Memory json file does not exist.")
+            self.logging.debug(f"Clean object: {clean_object}")
             return clean_object
         except Exception as e:
             self.logging.error(f"Error reading game state: {e}")
@@ -126,7 +128,6 @@ class Configuration:
                 "current_reset": 0,
                 "current_level": 0,
                 "current_map": "",
-                "current_coords": [],
                 "current_strenght": 0,
                 "current_agility": 0,
                 "current_vitality": 0,

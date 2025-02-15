@@ -17,10 +17,12 @@ class Movement:
         self.stuck_positions = defaultdict(int)  # Track direction failure counts
         self.last_movements = deque(maxlen=10)
         self.logging = logging.getLogger(__name__)
-        self.movement_will_be_with = "mouse"
+        self.movement_will_be_with = "keyboard"
         
         # Movement constants
-        self.STEP_SIZE = 1
+        self.STEP_SIZE = 3
+        self.MOVEMENT_DELAY = 0.2  # Delay between movements
+        self.MAX_RETRIES = 3  # Maximum retries for movement validation
         
         # Stuck detection
         self.movement_history = deque(maxlen=20)
@@ -43,10 +45,22 @@ class Movement:
     def save_map_data(self, map="lorencia"):
         self.config.save_map_data(map_name=map, data=self.map_data)
 
+    def is_close_enough(self, current, target, tolerance=1):
+        """
+        Check if the current position is within tolerance of the target.
+        :param current: Tuple (x, y) representing the current position.
+        :param target: Tuple (x, y) representing the target position.
+        :param tolerance: Maximum allowed distance from the target.
+        :return: True if within tolerance, False otherwise.
+        """
+        return abs(current[0] - target[0]) <= tolerance and abs(current[1] - target[1]) <= tolerance
 
     def _execute_movement(self, target_x: int, target_y: int):
-        """Execute movement in the given direction and update movement history."""
-
+        """
+        Execute movement in the given direction and update movement history.
+        :param target_x: Target X coordinate.
+        :param target_y: Target Y coordinate.
+        """
         current_x, current_y = self.get_current_coords_from_game()
         dx = target_x - current_x
         dy = target_y - current_y
@@ -64,24 +78,31 @@ class Movement:
             elif dy < 0:
                 self.interface.mouse_down()
         else:
-            # Keyboard movements (unchanged)
+            # Keyboard movements (adjusted for STEP_SIZE)
+            steps_x = abs(dx) // self.STEP_SIZE
+            steps_y = abs(dy) // self.STEP_SIZE
+
+            # Reduce step size as we approach the target
+            if steps_x == 0 and abs(dx) > 0:
+                steps_x = 1
+            if steps_y == 0 and abs(dy) > 0:
+                steps_y = 1
+
             if dx > 0:
-                self.interface.arrow_key_right(press=True)
+                for _ in range(steps_x):
+                    self.interface.arrow_key_right(press=True, release=True)
             elif dx < 0:
-                self.interface.arrow_key_left(press=True)
+                for _ in range(steps_x):
+                    self.interface.arrow_key_left(press=True, release=True)
             if dy > 0:
-                self.interface.arrow_key_up(press=True)
+                for _ in range(steps_y):
+                    self.interface.arrow_key_up(press=True, release=True)
             elif dy < 0:
-                self.interface.arrow_key_down(press=True)
+                for _ in range(steps_y):
+                    self.interface.arrow_key_down(press=True, release=True)
             
-            # Small delay to simulate natural movement
-            time.sleep(0.5)
-            
-            # Release keys
-            self.interface.release_all_keys()
-        
-        # Increase delay after movement to allow the game to process it
-        time.sleep(0.1)  # Increase delay to allow the bot to move
+            time.sleep(self.MOVEMENT_DELAY)  # Adjust delay as needed
+
 
     def save_respawn_zone(self):
         x, y = self.get_current_coords_from_game()
@@ -155,18 +176,29 @@ class Movement:
         else:
             self.logging.warning("No valid path to the target.")
             return None
+        
+    def validate_movement(self, expected_x, expected_y):
+        """
+        Validate whether the character moved to the expected position.
+        :param expected_x: Expected X coordinate.
+        :param expected_y: Expected Y coordinate.
+        :return: True if the character is at the expected position, False otherwise.
+        """
+        current_x, current_y = self.get_current_coords_from_game()
+        if (current_x, current_y) != (expected_x, expected_y):
+            self.logging.warning(f"Movement validation failed. Expected: ({expected_x}, {expected_y}), Actual: ({current_x}, {current_y})")
+            return False
+        return True
 
     def walk_to(self, target_x, target_y):
         """
         Move the bot to the target coordinates (x, y) using A* pathfinding and step-by-step movement.
         :param target_x: Target X coordinate.
         :param target_y: Target Y coordinate.
-        :param max_retries: Maximum number of retries if the bot fails to move.
         :return: True if the target is reached, False otherwise.
         """
         while True:
             # Find the best path using A*
-            
             path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
             if not path:
                 self.logging.warning("No valid path to the target.")
@@ -179,35 +211,25 @@ class Movement:
                 step_x, step_y = step
                 retries = 0
                 current_x, current_y = self.get_current_coords_from_game()
-                self.logging.debug(f"current_x en walk_to => {current_x}")
-                self.logging.debug(f"current_y en walk_to => {current_y}")
-                while (current_x, current_y) != (step_x, step_y):
+
+                while not self.is_close_enough((current_x, current_y), (step_x, step_y), tolerance=1):
                     self.check_abrupt_movements()
-                    # Execute movement towards the step
                     self._execute_movement(step_x, step_y)
-
-                    # Wait for the bot to move
-                    time.sleep(0.2)  # Adjust delay as needed
-
-                    # Update current coordinates after movement
+                    time.sleep(self.MOVEMENT_DELAY)  # Adjust delay as needed
                     current_x, current_y = self.get_current_coords_from_game()
-                    self.logging.debug(f"Current position after movement: ({current_x}, {current_y})")
 
-                    # Check if the bot reached the target step
-                    if (current_x, current_y) != (step_x, step_y):
-                        path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
+                    if not self.validate_movement(step_x, step_y):
                         retries += 1
-                        self.logging.warning(f"Failed to reach step: ({step_x}, {step_y}). Retry {retries}")
-                        if retries >= 300:
-                            self.logging.error("Exceeded maximum retries. Aborting movement.")
-                            return False
-                            
-                            
+                        if retries >= self.MAX_RETRIES:
+                            self.logging.warning("Failed to reach step. Recalculating path...")
+                            break
 
+                if retries >= self.MAX_RETRIES:
+                    break  # Exit the loop and recalculate the path
 
             # Check if we reached the final target
             current_x, current_y = self.get_current_coords_from_game()
-            if (current_x, current_y) == (target_x, target_y):
+            if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=1):
                 self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
                 return True
 
