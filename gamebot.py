@@ -3,13 +3,7 @@ import logging
 import os
 import threading
 
-from logger_config import setup_logging
-from interface import Interface
 from utils import Utils
-from config import Configuration
-from gameclass import GameClass
-from memory import Memory
-from movement import Movement
 from learning_path_manually import LearningPathManually
 from learning_path_automatically import LearningPathAutomatically
 from grid_system import Grid
@@ -24,18 +18,24 @@ class GameBot:
     """
     Un bot para automatizar acciones en un juego. Maneja movimientos, estadísticas y atributos del personaje.
     """
-    def __init__(self):
-        self.config = Configuration()
-        setup_logging()
+    def __init__(self, config=None, interface=None, gameclass=None, memory=None, movement=None, stop_event=None, root=None):
+        self.config = config
         self.logging = logging.getLogger(__name__)
-        self.interface = Interface(self.config)
-        self.gameclass = GameClass()
+        self.interface = interface
+        self.gameclass = gameclass
         self.utils = Utils()
-        self.memory = Memory(config=self.config)
-        self.movement = Movement(interface=self.interface, config=self.config, memory=self.memory)
-        
+        self.memory = memory
+        self.movement = movement
+        self.just_reset = False
+        self.stop_event = stop_event
+        self.root = root  # Store the root reference
+        self.grid_destroyed = False  # Add this flag
+        self._grid_lock = threading.Lock()
+        self.grid = None
+
         self.interface.load_ocr_packages()
         
+        self.manual_explore_running = False  # Add this new flag
         self.running = True
         self.reference_point = None
         self.first_time = True
@@ -138,7 +138,7 @@ class GameBot:
                             else:
                                 self.interface.command_add_attributes(attribute=attr, points=1)
                                 memory_attr_addr = self.memory.another_scan(memory_attr_addr, points + 1)
-                            time.sleep(1)
+                            self.interface.sleep_with_stop_check(1)
                         if self.memory.verify_address(memory_attr_addr[0]):
                             self.memory.set_memory_addr_attr(attr, memory_attr_addr[0])
                             self.logging.info(f"Set memory address to: 0x{memory_attr_addr[0]:X}")
@@ -214,7 +214,7 @@ class GameBot:
 
         except Exception as e:
             self.logging.error(f"Error reading stats: {e}")
-            time.sleep(1)
+            self.interface.sleep_with_stop_check(1)
 
     def check_level_kill_or_reset(self, level, helper):
         for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
@@ -255,6 +255,7 @@ class GameBot:
         if level >= reset_level and reset_level <= max_level:
             self.logging.info("Attempting to reset character...")
             self.interface.set_mu_helper_status(False)
+            self.interface.sleep_with_stop_check(2)
             self.reset_character()
         # No esta farmeando
         elif not mu_helper_active and level < max_level:
@@ -288,7 +289,7 @@ class GameBot:
         #self.interface.open_stats_window()
         self.interface.command_reset()
         #self.interface.open_stats_window()
-
+        self.interface.sleep_with_stop_check(2)
         current_state = self.config.get_game_state()
         new_reset = current_state['current_reset'] + 1
         self.config.update_game_state({
@@ -296,49 +297,97 @@ class GameBot:
             'current_level': 0,
             'current_map': self.gameclass.start_location
         })
+        self.interface.sleep_with_stop_check(3)
         #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
         self.read_all_stats()
         self.distribute_attributes()
+        self.just_reset = True
+
+    def save_manual_exploration_data(self):
+        """Save the manual exploration data and stop the capturing thread."""
+        if self.EXPLORE_MANUAL_MODE:
+            self.logging.info("Saving manual exploration data...")
+            try:
+                # First stop all running processes
+                self.running = False
+                self.manual_explore_running = False
+                self.stop_event.set()
+
+                # Stop grid first if it exists
+                if hasattr(self, 'grid') and self.grid:
+                    self.logging.info("Stopping grid...")
+                    self.grid.stop()
+                    self.grid = None
+                
+                # Then stop the learner and capturing thread
+                if hasattr(self, 'learner') and self.learner:
+                    self.logging.info("Stopping learner and capturing thread...")
+                    self.learner.stop_capturing()
+                    
+                    if hasattr(self, 'capture_thread') and self.capture_thread.is_alive():
+                        self.logging.info("Joining capture thread...")
+                        self.capture_thread.join(timeout=2)
+                        self.capture_thread = None
+
+                # Clear all exploration flags
+                self.EXPLORE_MANUAL_MODE = False
+                self.EXPLORE_MODE = False
+                self.logging.info("Manual exploration data saved and capturing thread stopped.")
+            except Exception as e:
+                self.logging.error(f"Error during cleanup: {e}")
+            finally:
+                # Ensure flags are cleared even if an error occurs
+                self.running = False
+                self.manual_explore_running = False
+                self.EXPLORE_MANUAL_MODE = False
+                self.EXPLORE_MODE = False
+                self.stop_event.set()
+
+    def destroy_grid_safely(self):
+        """Thread-safe grid window destruction"""
+        if hasattr(self, 'grid') and self.grid:
+            self.grid.stop()
+            self.grid = None
 
     def run(self):
         self.logging.info("Running")
         if self.EXPLORE_MODE:
-            self.interface.focus_application()  # Focus the target application
+            self.interface.focus_application()
             
-            # Initialize the learner based on the mode
             if self.EXPLORE_MANUAL_MODE:
-                learner = LearningPathManually(map_name=self.EXPLORE_MAP, movement=self.movement)
+                self.learner = LearningPathManually(map_name=self.EXPLORE_MAP, movement=self.movement, stop_event=self.stop_event)
             else:
-                learner = LearningPathAutomatically(map_name=self.EXPLORE_MAP, movement=self.movement, interface=self.interface)
+                self.learner = LearningPathAutomatically(map_name=self.EXPLORE_MAP, movement=self.movement, interface=self.interface)
 
             # Initialize the grid
-            grid = Grid(memory=self.memory, learner=learner)
-
+            self.grid = Grid(memory=self.memory, learner=self.learner)
+            
+            # Set the manual explore flag
+            self.manual_explore_running = True
+            
             # Start the capture thread
-            capture_thread = threading.Thread(target=learner.start_capturing)
-            capture_thread.daemon = True  # Daemonize the thread to exit when the main thread exits
-            capture_thread.start()
+            self.capture_thread = threading.Thread(target=self.learner.start_capturing)
+            self.capture_thread.daemon = True
+            self.capture_thread.start()
 
             try:
                 # Run the grid
-                grid.run()
-            except KeyboardInterrupt:
-                print("Saving data before exit...")
+                while self.manual_explore_running:  # Keep running only if manual_explore_running is True
+                    self.grid.run()
             except Exception as e:
-                print(f"An error occurred: {e}")
+                self.logging.error(f"An error occurred: {e}")
             finally:
-                # Ensure the learner stops capturing and the thread is joined
-                learner.stop_capturing()
-                if capture_thread.is_alive():
-                    capture_thread.join()
-                
-                # Destroy the grid window if it exists
-                if grid.root:
-                    grid.root.destroy()
-
+                # Cleanup only if manual_explore_running is False
+                if not self.manual_explore_running:
+                    self.learner.stop_capturing()
+                    if self.capture_thread.is_alive():
+                        self.capture_thread.join(timeout=2)
+                    
+                    # Safely destroy the grid window if it exists
+                    self.destroy_grid_safely()
         else:
             count = 1
-            while self.running:
+            while self.running and not self.stop_event.is_set():
                 try:
                     if not self.running:
                         return
@@ -359,22 +408,26 @@ class GameBot:
                         self.movement.check_abrupt_movements()
                         self.lets_kill_some_mobs()
                         self.logging.info(f"2. Wait {self.config.file['check_interval']} seconds until check and add stats")
-                        time.sleep(self.config.file['check_interval'])
-                        if count == 10:
+                        self.interface.sleep_with_stop_check(self.config.file['check_interval'])
+                        if count >= 10 and self.just_reset == False:
                             self.read_all_stats()
                             self.distribute_attributes()
                             count = 1
                         else:
+                            self.just_reset = False
                             count += 1
-                        time.sleep(2)
+                        self.interface.sleep_with_stop_check(2)
                 except KeyboardInterrupt:
                     self.logging.info("Bot stopped by user")
                     break
                 except Exception as e:
                     self.logging.error(f"Error in main loop: {e}")
-                    time.sleep(1)
+                    self.interface.sleep_with_stop_check(1)
+                finally:
+                    # Safely destroy the grid window if it exists
+                    self.destroy_grid_safely()
 
 #if __name__ == "__main__":
 #    bot = GameBot()
-#    time.sleep(2)
+#    self.interface.sleep_with_stop_check(2)
 #    bot.run()

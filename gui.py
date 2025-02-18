@@ -1,12 +1,22 @@
-from gamebot import GameBot
 import tkinter as tk
-from tkinter import ttk, scrolledtext
 import threading
 import os
+import logging
+
+from tkinter import ttk, scrolledtext
+from interface import Interface
+from config import Configuration
+from gameclass import GameClass
+from memory import Memory
+from movement import Movement
+from gamebot import GameBot
+from logger_config import setup_logging
+
 
 class GameBotGUI:
     def __init__(self):
-        self.bot = GameBot()  # Initialize the bot
+        setup_logging()
+        self.logging = logging.getLogger(__name__)
         self.root = tk.Tk()
         self.root.title("Avespalov Control")
         
@@ -43,11 +53,16 @@ class GameBotGUI:
         self.stop_button = ttk.Button(self.root, text="Stop Bot (F9)", command=self.stop_bot, style='TButton')
         self.stop_button.pack(pady=10)
         
+        # Add a new button for saving and stopping manual exploration
+        self.save_stop_button = ttk.Button(self.root, text="Save & Stop Manual Exploration", command=self.save_and_stop_manual, style='TButton')
+        self.save_stop_button.pack(pady=10)
+        self.save_stop_button.config(state=tk.DISABLED)  # Initially disabled
+        
         # Map selection dropdown
         self.map_var = tk.StringVar()
         self.map_selector = ttk.Combobox(self.root, textvariable=self.map_var)
-        self.map_selector['values'] = ["noria", "lorencia", "tarkan", "dungeon3"]
-        self.map_selector.current(0)  # Default to "noria"
+        self.map_selector['values'] = ["noria", "lorencia", "tarkan", "dungeon3", "losttower", "losttower5", "losttower7", "kanturu", "vulcanus"]
+        self.map_selector.current(0)
         self.map_selector.pack(pady=10)
         
         # Status display
@@ -80,6 +95,25 @@ class GameBotGUI:
         self.root.bind('<F9>', lambda event: self.stop_bot())
         self.root.bind('<Escape>', lambda event: self.toggle_gui_visibility())  # Hide/show GUI with Escape key
         
+        # Threads and events
+        self.stop_event = threading.Event()
+
+        # Initialize bot components
+        config = Configuration()
+        interface = Interface(config)
+        gameclass = GameClass()
+        memory = Memory(config)
+        movement = Movement(interface=interface, config=config, memory=memory)
+        self.bot = GameBot(
+            config=config,
+            interface=interface,
+            gameclass=gameclass,
+            memory=memory,
+            movement=movement,
+            stop_event=self.stop_event,
+            root=self.root  # Pass the root reference to GameBot
+        )
+
         # Start periodic status updates
         self.update_status()
         
@@ -89,10 +123,22 @@ class GameBotGUI:
         # Start the GUI
         self.root.mainloop()
     
-    def stop_bot(self):
-        """Stop the bot and ensure it's not running."""
-        self.bot.running = False
-        self.status_label.config(text="Status: Bot stopped")
+    def disable_buttons(self):
+        """Disable all buttons except the save & stop button."""
+        self.start_button.config(state=tk.DISABLED)
+        self.manual_explore_button.config(state=tk.DISABLED)
+        self.auto_explore_button.config(state=tk.DISABLED)
+        self.stop_button.config(state=tk.DISABLED)
+        self.save_stop_button.config(state=tk.NORMAL)
+
+    def enable_buttons(self):
+        """Enable all buttons and disable the save & stop button."""
+        self.start_button.config(state=tk.NORMAL)
+        self.manual_explore_button.config(state=tk.NORMAL)
+        self.auto_explore_button.config(state=tk.NORMAL)
+        self.stop_button.config(state=tk.NORMAL)
+        self.save_stop_button.config(state=tk.DISABLED)
+
     
     def start_bot(self):
         """Start the bot in normal mode."""
@@ -113,8 +159,11 @@ class GameBotGUI:
         self.bot.EXPLORE_MODE = True
         self.bot.EXPLORE_MANUAL_MODE = True
         self.bot.SKIP_ATTRIBUTES = False
+        self.bot.running = True
         threading.Thread(target=self.bot.run).start()
         self.status_label.config(text=f"Status: Bot manually exploring {selected_map}")
+        self.disable_buttons()  # Disable all buttons except save & stop
+        self.save_stop_button.config(state=tk.NORMAL)  # Enable the save & stop button
     
     def auto_explore(self):
         """Start the bot in automatic exploration mode."""
@@ -140,7 +189,7 @@ class GameBotGUI:
                     value = f"[{value[0]}, {value[1]}]"
                 label.config(text=f"{field.replace('_', ' ').title()}: {value}")
         except Exception as e:
-            print(f"Error updating status: {e}")
+            self.logging.error(f"Error updating status: {e}")
         
         # Schedule the next update
         self.root.after(5000, self.update_status)
@@ -164,6 +213,57 @@ class GameBotGUI:
         
         # Schedule the next update
         self.root.after(1000, self.update_logs)
+
+    def save_and_stop_manual(self):
+        """Save the manual exploration data and stop the process."""
+        self.logging.info("Save & Stop Manual Exploration button clicked.")
+        
+        def cleanup():
+            try:
+                # Disable buttons during cleanup
+                self.save_stop_button.config(state=tk.DISABLED)
+                
+                # Stop all bot operations
+                self.bot.running = False
+                self.bot.stop_event.set()
+                
+                # Save and cleanup exploration data
+                if hasattr(self.bot, 'save_manual_exploration_data'):
+                    self.logging.info("Calling save_manual_exploration_data on bot.")
+                    self.bot.save_manual_exploration_data()
+                
+                self.enable_buttons()
+                self.status_label.config(text="Status: Manual exploration saved and stopped")
+            except Exception as e:
+                self.logging.error(f"Error during cleanup: {e}")
+                self.enable_buttons()
+            finally:
+                # Ensure bot is fully stopped
+                if hasattr(self.bot, 'stop_event'):
+                    self.bot.stop_event.set()
+                if hasattr(self.bot, 'grid'):
+                    self.bot.grid = None
+        
+        # Schedule cleanup in the main thread
+        self.root.after_idle(cleanup)
+
+    def stop_bot(self):
+        """Stop the bot and ensure it's not running."""
+        self.bot.running = False
+        self.bot.manual_explore_running = False  # Add this line
+        self.stop_event.set()
+        self.status_label.config(text="Status: Bot stopped")
+        self.enable_buttons()
+        self.logging.info("Stopped")
+        
+        # Clean up the grid window if it exists
+        if hasattr(self.bot, 'grid') and self.bot.grid:
+            self.root.after(0, self.bot.destroy_grid_safely)
+
+    def destroy_grid_safely(self):
+        """Thread-safe grid window destruction."""
+        if hasattr(self.bot, 'grid') and self.bot.grid:
+            self.bot.destroy_grid_safely()
 
 if __name__ == "__main__":
     gui = GameBotGUI()

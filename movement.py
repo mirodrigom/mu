@@ -101,7 +101,7 @@ class Movement:
                 for _ in range(steps_y):
                     self.interface.arrow_key_down(press=True, release=True)
             
-            time.sleep(self.MOVEMENT_DELAY)  # Adjust delay as needed
+            self.interface.sleep_with_stop_check(self.MOVEMENT_DELAY)  # Adjust delay as needed
 
 
     def save_respawn_zone(self):
@@ -215,7 +215,7 @@ class Movement:
                 while not self.is_close_enough((current_x, current_y), (step_x, step_y), tolerance=1):
                     self.check_abrupt_movements()
                     self._execute_movement(step_x, step_y)
-                    time.sleep(self.MOVEMENT_DELAY)  # Adjust delay as needed
+                    self.interface.sleep_with_stop_check(self.MOVEMENT_DELAY)  # Adjust delay as needed
                     current_x, current_y = self.get_current_coords_from_game()
 
                     if not self.validate_movement(step_x, step_y):
@@ -291,6 +291,6 @@ class Movement:
                     self.get_current_coords_from_game()
                     current_state = self.config.get_game_state()
                     self.move_to_location(map_name=current_state['current_map'], avoid_checks=True, do_not_open_stats=True)
-                    time.sleep(2)
+                    self.interface.sleep_with_stop_check(2)
                     return True
         return False

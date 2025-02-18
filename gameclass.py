@@ -49,9 +49,7 @@ class GameClass:
         level_to_reset = 380
         if reset > 0 and reset <= 5:
             level_to_reset = 380
-        elif reset > 5 and reset <= 15:
-            level_to_reset = 385
-        elif reset > 15 and reset <= 25:
+        elif reset > 5 and reset <= 25:
             level_to_reset = 390
         elif reset > 25 and reset <= 50:
             level_to_reset = 390

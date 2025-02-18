@@ -415,7 +415,7 @@ class Interface:
         self.logging.debug(f"Attempting to locate {text_to_catch} text on screen")
         try:
             for attempt in range(10):
-                time.sleep(1)
+                self.sleep_with_stop_check(1)
                 try:
                     # Capture screen with DPI awareness already set
                     screen = ImageGrab.grab()
@@ -652,7 +652,7 @@ class Interface:
         self.logging.debug(f"Attempting to locate {attribute} text on screen")
         try:
             for attempt in range(5):
-                time.sleep(1)
+                self.sleep_with_stop_check(1)
                 try:
                     # Capture screen
                     screen = ImageGrab.grab()
@@ -703,7 +703,7 @@ class Interface:
         try:
             
             for attempt in range(5):
-                time.sleep(1)
+                self.sleep_with_stop_check(1)
                 try:
                     # Capture screen
                     screen = ImageGrab.grab()
@@ -776,7 +776,7 @@ class Interface:
         template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
         
         for attempt in range(5):
-            time.sleep(1)
+            self.sleep_with_stop_check(1)
             try:
                 # Capture screen
                 # Option 1: Using PIL
@@ -891,7 +891,7 @@ class Interface:
             # Scroll 5 times with the random amount
             for _ in range(scroll_count):
                 pyautogui.scroll(scroll_amount)  # Scroll by the random amount
-                time.sleep(0.5)  # Add a small delay between scrolls
+                self.sleep_with_stop_check(0.5)  # Add a small delay between scrolls
 
             # Log the scroll amount
             self.logging.info(f"Scrolled by: {scroll_amount} units (random)")
@@ -901,7 +901,7 @@ class Interface:
                 # Scroll 5 times with the specified amount
                 for _ in range(scroll_count):
                     pyautogui.scroll(number)  # Scroll by the specified amount
-                    time.sleep(0.01)  # Add a small delay between scrolls
+                    self.sleep_with_stop_check(0.01)  # Add a small delay between scrolls
 
                 # Log the scroll amount
                 self.logging.info(f"Scrolled by: {number} units (fixed)")
@@ -910,9 +910,9 @@ class Interface:
                 
     #################################### Commands ####################################
     def enter(self):
-        time.sleep(0.5)
+        self.sleep_with_stop_check(0.5)
         keyboard.press('enter')
-        time.sleep(0.1)  # Small delay between press and release
+        self.sleep_with_stop_check(0.1)  # Small delay between press and release
         keyboard.release('enter')
         
     def start_mu_helper(self):
@@ -921,21 +921,22 @@ class Interface:
     def escape_multiple_times(self):
         times = 5
         for _ in range(times):
-            time.sleep(0.3)
+            self.sleep_with_stop_check(0.3)
             keyboard.press('esc')
-            time.sleep(0.1)
+            self.sleep_with_stop_check(0.1)
             keyboard.release('esc')
         
     def escape(self):
-        time.sleep(0.3)
-        time.sleep(0.3)
+        self.sleep_with_stop_check(0.3)
+        self.sleep_with_stop_check(0.3)
         keyboard.press('esc')
-        time.sleep(0.1)
+        self.sleep_with_stop_check(0.1)
         keyboard.release('esc')
         
     def command_reset(self):
         self.enter()
         self.execute_command('/reset')
+        self.sleep_with_stop_check(0.2)
         self.enter()
         
     def command_add_attributes(self, attribute, points=0, str_attr=None, agi_attr=None, vit_attr=None, ene_attr=None, com_attr=None):
@@ -972,7 +973,7 @@ class Interface:
         else:
             self.logging.debug(f"attribute: {attribute}, points: {points}, str_attr: {str_attr}, agi_attr: {agi_attr}, vit_attr: {vit_attr}, ene_attr: {ene_attr}, com_attr: {com_attr}")
             self.logging.warning("Wrong attribute to add points.")
-        time.sleep(0.7)
+        self.sleep_with_stop_check(0.7)
         
     def execute_command(self, command):
         self.logging.debug(f"Command {command} is executing")
@@ -981,11 +982,11 @@ class Interface:
     def press_key(self, key):
         self.logging.debug(f"Command {key} is executing")
         keyboard.press(key)
-        time.sleep(0.4)  # Add small delay between press and release
+        self.sleep_with_stop_check(0.4)  # Add small delay between press and release
         keyboard.release(key)
         
     def command_move_to_map(self, map_name):
-        time.sleep(0.5)
+        self.sleep_with_stop_check(0.5)
         self.enter()
         self.execute_command(f'/move {map_name}')
         self.enter()
@@ -997,7 +998,7 @@ class Interface:
 
     def move_mouse_to_coords_without_click(self, x, y):
         pyautogui.moveTo(x, y)
-        time.sleep(1)
+        self.sleep_with_stop_check(1)
         
     def check_npc_in_cursor(self, x, y):
         return False
@@ -1006,7 +1007,7 @@ class Interface:
         self.move_mouse_to_coords_without_click(x, y)
         for _ in range(2):
             in_any_npc = self.find_cursor_image()
-            time.sleep(0.1)
+            self.sleep_with_stop_check(0.1)
             if in_any_npc is True:
                 break
             
@@ -1119,11 +1120,11 @@ class Interface:
             keyboard.release(key)
         
     def open_stats_window(self):
-        time.sleep(2)
+        self.sleep_with_stop_check(2)
         if not self.window_stats_open:
             self.logging.info("Open stat window")
             keyboard.press('c')
-            time.sleep(0.1)
+            self.sleep_with_stop_check(0.1)
             keyboard.release('c')
             self.window_stats_open = True
         else:
@@ -1211,3 +1212,12 @@ class Interface:
             return current_state["current_energy"]
         if attr == "command":
             return current_state["current_command"]
+        
+    def sleep_with_stop_check(self, seconds):
+        """Sleep for a given number of seconds, but check stop_event frequently."""
+        end_time = time.time() + seconds
+        while time.time() < end_time:
+            if self.stop_event.is_set():
+                return True  # Indicate that the stop event was triggered
+            time.sleep(0.1)  # Sleep for a short interval
+        return False  # Indicate that the sleep completed normally

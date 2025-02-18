@@ -67,7 +67,7 @@ class LearningPathAutomatically:
             self.logging.info(f"[TARGET] {target_pos}")
             # Attempt to move to the target position
             self.move_to(*target_pos)
-            time.sleep(0.5)  # Wait for the bot to move
+            self.interface.sleep_with_stop_check(0.5)  # Wait for the bot to move
             
             # Check if the bot successfully moved to the target position
             new_pos = self.movement.get_current_coords_from_game()
@@ -102,7 +102,7 @@ class LearningPathAutomatically:
         
         # Retry movement up to 3 times before marking as failed
         for _ in range(3):
-            time.sleep(0.5)  # Wait for the bot to move
+            self.interface.sleep_with_stop_check(0.5)  # Wait for the bot to move
             end_pos = self.movement.get_current_coords_from_game()
             self.logging.info(f"Ending position: {end_pos}")
             
@@ -151,7 +151,7 @@ class LearningPathAutomatically:
             for step_x, step_y in path:
                 self.logging.info(f"Moving to ({step_x}, {step_y})")
                 self.movement._execute_movement(step_x, step_y)
-                time.sleep(0.5)  # Increase delay to allow movement to complete
+                self.interface.sleep_with_stop_check(0.5)  # Increase delay to allow movement to complete
 
                 # Verify if the bot successfully moved to the target position
                 new_x, new_y = self.movement.get_current_coords_from_game()
@@ -269,7 +269,7 @@ class LearningPathAutomatically:
             
             self.logging.info(f"Attempting to move {direction} to ({target_x}, {target_y}).")
             self.move_to(target_x, target_y)
-            time.sleep(0.5)  # Wait for movement to complete
+            self.interface.sleep_with_stop_check(0.5)  # Wait for movement to complete
             
             # Check if the bot successfully moved
             new_x, new_y = self.movement.get_current_coords_from_game()

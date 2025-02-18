@@ -1,0 +1,27 @@
+{
+    "obstacles": [],
+    "permanent_obstacles": [],
+    "respawn_zone": [],
+    "free_spaces": [
+        [
+            52,
+            94
+        ],
+        [
+            53,
+            94
+        ],
+        [
+            52,
+            92
+        ],
+        [
+            53,
+            92
+        ],
+        [
+            52,
+            95
+        ]
+    ]
+}
