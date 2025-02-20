@@ -1,14 +1,14 @@
 {
-    "current_reset": 0,
-    "current_level": 0,
-    "current_map": "",
+    "current_reset": 96,
+    "current_level": 1,
+    "current_map": null,
     "current_coords": [],
-    "current_strenght": 0,
-    "current_agility": 0,
-    "current_vitality": 0,
-    "current_energy": 0,
+    "current_strenght": 26,
+    "current_agility": 26,
+    "current_vitality": 26,
+    "current_energy": 26,
     "current_command": 0,
-    "available_points": 0,
+    "available_points": 34600,
     "mulheper_active": false,
     "current_position_available_points": [],
     "current_position_strenght": [],
@@ -17,8 +17,8 @@
     "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        121,
-        133
+        209,
+        63
     ],
     "current_position_level": [],
     "current_position_reset": []
