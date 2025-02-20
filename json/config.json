@@ -2,6 +2,21 @@
     "class": "Mage Gladiator",
     "interface_scale": 125,
     "level_thresholds": {
+        "300": {
+            "map": "vulcanus",
+            "location": [
+                8,
+                68
+            ]
+        },
+        "160":
+        {
+            "map": "tarkan2",
+            "location": [
+                41,
+                151
+            ]
+        },
         "140": {
             "map": "tarkan",
             "location": [

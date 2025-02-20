@@ -47,4 +47,4 @@ class LearningPathManually:
     def get_recorded_coords(self) -> Set[Tuple[int, int]]:
         """Return the set of recorded coordinates."""
         with self.lock:
-            return self.recorded_coords.copy()  # Return a copy to avoid thread safety issues
+            return self.recorded_coords.copy()  # Return a copy to avoid thread safety issues   

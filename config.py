@@ -66,13 +66,13 @@ class Configuration:
             
             return process.pid
         except IndexError:
-            print(f"No window with title '{title}' found.")
+            self.logging.info(f"No window with title '{title}' found.")
             return None
         except psutil.NoSuchProcess:
-            print(f"Process with PID {pid} not found.")
+            self.logging.info(f"Process with PID {pid} not found.")
             return None
         except Exception as e:
-            print(f"An error occurred: {e}")
+            self.logging.info(f"An error occurred: {e}")
             return None
 
     def get_memory_status(self):

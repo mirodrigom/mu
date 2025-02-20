@@ -167,11 +167,11 @@ class Memory:
     def first_scan(self, expected_value: int, hex_suffix: str) -> list:
         """Initial memory scan with progress tracking"""
         try:
-            print(f"Scanning for value {expected_value} with pattern {hex_suffix}...")
+            self.logging.info(f"Scanning for value {expected_value} with pattern {hex_suffix}...")
             start_time = time.time()
             
             regions = self._get_memory_regions()
-            print(f"Found {len(regions)} relevant memory regions to scan")
+            self.logging.info(f"Found {len(regions)} relevant memory regions to scan")
             
             total_size = sum(region.size for region in regions)
             scanned_size = 0
@@ -180,7 +180,7 @@ class Memory:
                 nonlocal scanned_size
                 scanned_size += size
                 progress = int((scanned_size / total_size) * 100)
-                print(f"Progress: {progress}%", end='\r')
+                self.logging.info(f"Progress: {progress}%", end='\r')
             
             matches = []
             with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
@@ -196,7 +196,7 @@ class Memory:
                     except Exception as e:
                         self.logging.error(f"Error processing region: {str(e)}")
             
-            print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
+            self.logging.info(f"\nScan completed in {time.time() - start_time:.2f} seconds")
             
             # Filter addresses by pattern
             pattern_value = int(hex_suffix, 16)
@@ -208,14 +208,14 @@ class Memory:
                 if addr & mask == pattern_value
             ]
             
-            print(f"Found {len(matches)} initial matches")
-            print(f"Found {len(filtered_matches)} matches after pattern filtering")
+            self.logging.info(f"Found {len(matches)} initial matches")
+            self.logging.info(f"Found {len(filtered_matches)} matches after pattern filtering")
             
             if filtered_matches:
-                print("\nResults:")
+                self.logging.info("\nResults:")
                 for addr in filtered_matches:
                     current_value = self.get_value_of_memory(addr)
-                    print(f"Address: 0x{addr:X}, Current Value: {current_value}")
+                    self.logging.info(f"Address: 0x{addr:X}, Current Value: {current_value}")
                 
             return filtered_matches if filtered_matches else None
         except Exception as e:
@@ -225,10 +225,10 @@ class Memory:
         """Scan specific memory addresses for a new value"""
         try:
             if not addresses:
-                print("No addresses provided for reuse_scan.")
+                self.logging.info("No addresses provided for reuse_scan.")
                 return None
 
-            print(f"Scanning {len(addresses)} addresses for value {expected_value}...")
+            self.logging.info(f"Scanning {len(addresses)} addresses for value {expected_value}...")
             start_time = time.time()
 
             matches = []
@@ -242,14 +242,14 @@ class Memory:
                     self.logging.error(f"Error reading address 0x{addr:X}: {str(e)}")
                     continue
 
-            print(f"\nScan completed in {time.time() - start_time:.2f} seconds")
-            print(f"Found {len(matches)} matches")
+            self.logging.info(f"\nScan completed in {time.time() - start_time:.2f} seconds")
+            self.logging.info(f"Found {len(matches)} matches")
 
             if matches:
-                print("\nResults:")
+                self.logging.info("\nResults:")
                 for addr in matches:
                     current_value = self.get_value_of_memory(addr)
-                    print(f"Address: 0x{addr:X}, Current Value: {current_value}")
+                    self.logging.info(f"Address: 0x{addr:X}, Current Value: {current_value}")
 
             return matches if matches else None
         except Exception as e:

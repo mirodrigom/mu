@@ -140,7 +140,7 @@ class GameBotGUI:
                     value = f"[{value[0]}, {value[1]}]"
                 label.config(text=f"{field.replace('_', ' ').title()}: {value}")
         except Exception as e:
-            print(f"Error updating status: {e}")
+            self.logging.info(f"Error updating status: {e}")
         
         # Schedule the next update
         self.root.after(5000, self.update_status)

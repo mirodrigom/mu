@@ -1,3 +1,4 @@
+import logging
 from tkinter import *
 from typing import Set, Tuple
 
@@ -12,6 +13,7 @@ class Grid:
         :param screen_height: Height of the grid in pixels.
         :param cell_size: Size of each grid cell in pixels.
         """
+        self.logging = logging.getLogger(__name__)
         self.memory = memory
         self.learner = learner  # Instance of LearningPathManually
         self.width = screen_width
@@ -157,7 +159,7 @@ class Grid:
         """Load recorded coordinates from the learner and update the grid."""
         if hasattr(self, 'learner'):
             recorded_coords = self.learner.get_recorded_coords()
-            print(f"Loaded recorded coordinates: {recorded_coords}")  # Debug log
+            self.logging.info(f"Loaded recorded coordinates: {recorded_coords}")  # Debug log
             self.update_background_colors(recorded_coords)
 
     def check_surrounding_coordinates(self, recorded_coords: Set[Tuple[int, int]]):
@@ -171,9 +173,9 @@ class Grid:
         
         for coord in surrounding_coords:
             if coord in recorded_coords:
-                print(f"Coordinate {coord} has been discovered.")
+                self.logging.info(f"Coordinate {coord} has been discovered.")
             else:
-                print(f"Coordinate {coord} has not been discovered.")
+                self.logging.info(f"Coordinate {coord} has not been discovered.")
 
     def check_coordinates(self):
         """Check and update the current coordinates from memory."""
@@ -181,7 +183,7 @@ class Grid:
             x, y = self.memory.get_coordinates()
             self.update_coordinates(x, y)
         except Exception as e:
-            print(f"Error getting coordinates: {e}")
+            self.logging.info(f"Error getting coordinates: {e}")
 
     def run(self):
         """Start the main loop for the grid application."""

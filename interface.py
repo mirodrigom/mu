@@ -123,10 +123,10 @@ class Interface:
         try:
             # Load image if it's a path
             if isinstance(image_path, str):
-                print(f"Loading image from path: {image_path}")
+                self.logging.info(f"Loading image from path: {image_path}")
                 image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
                 if image is None:
-                    print(f"Failed to load image from: {image_path}")
+                    self.logging.info(f"Failed to load image from: {image_path}")
                     return None
             else:
                 image = image_path
@@ -156,7 +156,7 @@ class Interface:
             return gray
 
         except Exception as e:
-            print(f"Error in preprocess_image: {str(e)}")
+            self.logging.info(f"Error in preprocess_image: {str(e)}")
             return None
 
     def capture_region(self):
@@ -184,7 +184,7 @@ class Interface:
                 return screenshot_path
                 
         except Exception as e:
-            print(f"Error in capture_region: {str(e)}")
+            self.logging.info(f"Error in capture_region: {str(e)}")
             return None
         
     def take_screenshot_with_cursor_using_coords(self, coords, image_name):
@@ -235,7 +235,7 @@ class Interface:
             return path
             
         except Exception as e:
-            print(f"Error taking screenshot: {str(e)}")
+            self.logging.info(f"Error taking screenshot: {str(e)}")
             import traceback
             traceback.print_exc()
             return None
@@ -253,19 +253,19 @@ class Interface:
             # Take screenshot and get the path
             screenshot_path = self.take_screenshot_with_cursor_using_coords(coords=region, image_name="search_area.png")
             
-            print(f"Searching in region: {region}")
-            print(f"Looking for image: {target_image_path}")
+            self.logging.info(f"Searching in region: {region}")
+            self.logging.info(f"Looking for image: {target_image_path}")
             
             # Load both images using OpenCV with regular imread since there's no transparency
             screenshot_cv = cv2.imread(screenshot_path, cv2.IMREAD_COLOR)
             target = cv2.imread(target_image_path, cv2.IMREAD_COLOR)
             
             if target is None:
-                print(f"Could not load target image: {target_image_path}")
+                self.logging.info(f"Could not load target image: {target_image_path}")
                 return False, (0, 0)
                 
             if screenshot_cv is None:
-                print(f"Could not load screenshot: {screenshot_path}")
+                self.logging.info(f"Could not load screenshot: {screenshot_path}")
                 return False, (0, 0)
             
             # Convert both to grayscale
@@ -280,19 +280,19 @@ class Interface:
             threshold = 1
             found = max_val >= threshold
             
-            print(f"Best match value: {max_val:.3f}")
+            self.logging.info(f"Best match value: {max_val:.3f}")
             
             if found:
                 # Calculate absolute coordinates
                 abs_x = region[0] + max_loc[0] + target.shape[1]//2
                 abs_y = region[1] + max_loc[1] + target.shape[0]//2
-                print(f"Found at: ({abs_x}, {abs_y})")
+                self.logging.info(f"Found at: ({abs_x}, {abs_y})")
                 return True, (abs_x, abs_y)
                 
             return False, (0, 0)
             
         except Exception as e:
-            print(f"Error in check_for_image: {str(e)}")
+            self.logging.info(f"Error in check_for_image: {str(e)}")
             import traceback
             traceback.print_exc()
             return False, (0, 0)
