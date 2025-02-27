@@ -1,22 +1,7 @@
 {
-    "class": "Mage Gladiator",
+    "class": "Fairy Elf",
     "interface_scale": 125,
     "level_thresholds": {
-        "300": {
-            "map": "vulcanus",
-            "location": [
-                206,
-                63
-            ]
-        },
-        "160":
-        {
-            "map": "tarkan2",
-            "location": [
-                41,
-                151
-            ]
-        },
         "140": {
             "map": "tarkan",
             "location": [
@@ -42,8 +27,8 @@
             {
                 "map": "noria",
                 "location": [
-                    136,
-                    111
+                    157,
+                    67
                 ]
             },
             {
@@ -58,10 +43,10 @@
     "application_name": "MEGAMU",
     "dashboard_name": "MEGAMU - Dashboard",
     "stat_distribution": {
-        "strenght": 0.68,
-        "agility": 0.12,
-        "vitality": 0.08,
-        "energy": 0.08
+        "strenght": 0.05,
+        "agility": 0.55,
+        "vitality": 0.1,
+        "energy": 0.25
     },
     "max_level": 400,
     "coordinate_samples": 3,

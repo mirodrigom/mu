@@ -937,6 +937,8 @@ class Interface:
         self.enter()
         self.execute_command('/reset')
         self.enter()
+        time.sleep(0.5)  # Add a small delay to ensure the key is released
+        keyboard.release('enter')  # Explicitly release the Enter key
         
     def command_add_attributes(self, attribute, points=0, str_attr=None, agi_attr=None, vit_attr=None, ene_attr=None, com_attr=None):
         if attribute == "strenght":

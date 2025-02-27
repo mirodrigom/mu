@@ -32,7 +32,8 @@ class GameBot:
         self.running = True
         self.reference_point = None
         self.first_time = True
-        
+        self.last_reset_time = 0  # Initialize the last reset time
+        self.reset_cooldown = 60  # Cooldown period in seconds
         self.logging.info("GameBot initialized")
 
         # Add signal handler for Ctrl+C
@@ -366,17 +367,25 @@ class GameBot:
 
     def reset_character(self):
         """Reset character and manage stats window"""
+        self.logging.info("Attempting to reset character...")
+        current_state = self.config.get_game_state()
+        self.logging.info(f"Current state before reset: {current_state}")
+
+        current_time = time.time()
+        if current_time - self.last_reset_time < self.reset_cooldown:
+            self.logging.info("Reset is on cooldown. Skipping reset.")
+            return
         #self.interface.open_stats_window()
         self.interface.command_reset()
-        #self.interface.open_stats_window()
-
-        current_state = self.config.get_game_state()
-        new_reset = current_state['current_reset'] + 1
+        self.last_reset_time = time.time()  # Update the last reset time
+        new_state = self.config.get_game_state()
         self.config.update_game_state({
-            'current_reset': new_reset,
+            'current_reset': new_state['current_reset'] + 1,
             'current_level': 0,
-            'current_map': self.gameclass.start_location
+            'current_map': self.gameclass.start_location  # Ensure this is set to 'lorencia'
         })
+        self.logging.info(f"Current state after reset: {new_state}")
+
         #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
         self.read_all_stats()
         self.distribute_attributes()
