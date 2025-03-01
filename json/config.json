@@ -4,7 +4,7 @@
     "class": "Fairy Elf",
     "check_interval": 5,
     "max_level": 400,
-    "interface_scale": 125,
+    "interface_scale": 150,
     "stat_distribution": {
         "strenght": 0.05,
         "agility": 0.6,

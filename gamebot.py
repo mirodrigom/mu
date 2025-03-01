@@ -249,96 +249,128 @@ class GameBot:
             return None
 
     def read_all_stats(self):
-        """Read and save all character stats"""
-        try:
-            if not self.memory.all_memory_is_loaded(self.gameclass.attributes):
-                self.interface.open_stats_window()
-            
-            current_state = self.config.get_game_state()                
-            # Read all stats
-            stats = {
-                'level': 0,
-                'reset': 0,
-                'strenght': 0,
-                'agility': 0,
-                'vitality': 0,
-                'energy': 0,
-                'command': 0,  # Initialize command for all classes
-                'available_points': 0
-            }
-            
-            # Basic stats
-            stats['level'] = self.memory.get_level()
-            stats['reset'] = self.memory.get_reset()
+        """Read and save all character stats with improved error handling and retry logic"""
+        max_retries = 3
+        for retry in range(max_retries):
+            try:
+                if not self.memory.all_memory_is_loaded(self.gameclass.attributes):
+                    self.interface.open_stats_window()
+                    time.sleep(1)  # Give UI time to update
+                
+                current_state = self.config.get_game_state()                
+                # Read all stats
+                stats = {
+                    'level': 0,
+                    'reset': 0,
+                    'strenght': 0,
+                    'agility': 0,
+                    'vitality': 0,
+                    'energy': 0,
+                    'command': 0,  # Initialize command for all classes
+                    'available_points': 0
+                }
+                
+                # Basic stats
+                stats['level'] = self.memory.get_level()
+                stats['reset'] = self.memory.get_reset()
+                
+                # Debug level and reset values
+                self.logging.info(f"Current level: {stats['level']}, reset: {stats['reset']}")
 
-            #if not self.memory.all_memory_is_loaded(self.gameclass.attributes):
-            if self.SKIP_ATTRIBUTES == False:
-                stats['available_points'] = self.get_attribute_points(current_state=current_state, attr="available_points", attr_spanish="Puntos", memory_attr_name="available_points_addr", find_memory_method=self.memory.find_available_points_memory, get_coords_method=self.interface.get_available_attributes, get_points_method=self.interface.get_available_points_ocr, set_coords_method=self.interface.set_available_attributes)
+                # Always try to read available points
+                if self.SKIP_ATTRIBUTES == False:
+                    for attempt in range(3):  # Try a few times to read available points
+                        stats['available_points'] = self.get_attribute_points(
+                            current_state=current_state, 
+                            attr="available_points", 
+                            attr_spanish="Puntos", 
+                            memory_attr_name="available_points_addr", 
+                            find_memory_method=self.memory.find_available_points_memory, 
+                            get_coords_method=self.interface.get_available_attributes, 
+                            get_points_method=self.interface.get_available_points_ocr, 
+                            set_coords_method=self.interface.set_available_attributes
+                        )
                         
-            # Attributes
-            if self.SKIP_ATTRIBUTES == False:
-                for attr in self.gameclass.attributes:
-                    if attr == 'strenght':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Fuerza", "strenght_addr", self.memory.find_str_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("strenght", coords))
-                    if attr == 'agility':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Agilidad", "agility_addr", self.memory.find_agi_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("agility", coords))
-                    if attr == 'vitality':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Vitalidad", "vitality_addr", self.memory.find_vit_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("vitality", coords))
-                    if attr == 'energy':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Energía", "energy_addr", self.memory.find_ene_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("energy", coords))
-                    if attr == 'command':
-                        stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))                  
-        
-            # Update state
-            state = {
-                'current_level': stats['level'],
-                'current_reset': stats['reset'],
-                'current_strenght': stats['strenght'],
-                'current_agility': stats['agility'],
-                'current_vitality': stats['vitality'],
-                'current_energy': stats['energy'],
-                'current_command': stats['command'],
-                'available_points': stats['available_points']
-            }
+                        if stats['available_points'] is not None:
+                            break
+                        
+                        # Try reopening stats window if we couldn't read points
+                        self.logging.warning(f"Failed to read available points, attempt {attempt+1}/3")
+                        self.interface.escape()
+                        time.sleep(0.5)
+                        self.interface.open_stats_window()
+                        time.sleep(1)
+                            
+                # Attributes
+                if self.SKIP_ATTRIBUTES == False:
+                    for attr in self.gameclass.attributes:
+                        if attr == 'strenght':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Fuerza", "strenght_addr", self.memory.find_str_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("strenght", coords))
+                        if attr == 'agility':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Agilidad", "agility_addr", self.memory.find_agi_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("agility", coords))
+                        if attr == 'vitality':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Vitalidad", "vitality_addr", self.memory.find_vit_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("vitality", coords))
+                        if attr == 'energy':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Energía", "energy_addr", self.memory.find_ene_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("energy", coords))
+                        if attr == 'command':
+                            stats[attr] = self.get_attribute_points(current_state, attr, "Comando", "command_addr", self.memory.find_com_memory, lambda state: self.interface.get_attribute_reference(state, attr), lambda coords: self.interface.get_attr_ocr(coords, attr), lambda coords: self.interface.set_attribute_reference("command", coords))                  
             
-            self.logging.info("Final stats:")
-            self.logging.info(f"Available Points: {state['available_points']}")
-            self.logging.info(f"Strength: {state['current_strenght']}")
-            self.logging.info(f"Agility: {state['current_agility']}")
-            self.logging.info(f"Vitality: {state['current_vitality']}")
-            self.logging.info(f"Energy: {state['current_energy']}")
-            self.logging.info(f"Command: {state['current_command']}")
+                # Make sure to set a default of 0 for available_points if it's None
+                if stats['available_points'] is None:
+                    self.logging.warning("Setting available_points to 0 as fallback")
+                    stats['available_points'] = 0
 
-            self.config.update_game_state(state)
+                # Update state
+                state = {
+                    'current_level': stats['level'],
+                    'current_reset': stats['reset'],
+                    'current_strenght': stats['strenght'],
+                    'current_agility': stats['agility'],
+                    'current_vitality': stats['vitality'],
+                    'current_energy': stats['energy'],
+                    'current_command': stats['command'],
+                    'available_points': stats['available_points']
+                }
+                
+                self.logging.info("Final stats:")
+                self.logging.info(f"Available Points: {state['available_points']}")
+                self.logging.info(f"Strength: {state['current_strenght']}")
+                self.logging.info(f"Agility: {state['current_agility']}")
+                self.logging.info(f"Vitality: {state['current_vitality']}")
+                self.logging.info(f"Energy: {state['current_energy']}")
+                self.logging.info(f"Command: {state['current_command']}")
 
-        except Exception as e:
-            self.logging.error(f"Error reading stats: {e}")
-            time.sleep(1)
+                self.config.update_game_state(state)
+                return True
 
-  
+            except Exception as e:
+                self.logging.error(f"Error reading stats (attempt {retry+1}/{max_retries}): {e}")
+                if retry < max_retries - 1:
+                    self.logging.info("Retrying stats reading after error...")
+                    self.interface.reload_ui()  # Reset UI between attempts
+                    time.sleep(1)
+                else:
+                    self.logging.error("Failed to read stats after multiple attempts")
+                    # Set a minimal default state
+                    default_state = {
+                        'current_level': self.memory.get_level() or 1,
+                        'current_reset': self.memory.get_reset() or 0,
+                        'available_points': 0
+                    }
+                    self.config.update_game_state(default_state)
+
     def _perform_right_click_fallback(self, duration=3):
         """
         Perform a right-click fallback for the specified duration.
         This can help get unstuck in situations where normal movement fails.
+        Delegates to the Movement class implementation.
         
         Args:
             duration: How long to perform right-clicks, in seconds
         """
         try:
-            # Move mouse to target first
-            current_state = self.config.get_game_state()
-            if 'current_location' in current_state:
-                x, y = current_state['current_location']
-                self.interface.move_mouse_to_coords_without_click(x, y)
-            
-            # Perform right-clicks for the specified duration
-            start_time = time.time()
-            while time.time() - start_time < duration:
-                self.interface.use_spell()  # Right-click
-                time.sleep(0.2)  # Small delay between clicks
-                
-            # Short pause after right-clicking
-            time.sleep(0.5)
+            # Use the Movement class implementation
+            self.movement.perform_right_click_fallback(duration=duration)
             
         except Exception as e:
             self.logging.error(f"Error during right-click fallback: {e}")
@@ -441,7 +473,7 @@ class GameBot:
         max_level = self.config.file.get('max_level', 400)  # Use default of 400 if not specified
 
         # Add debug logging
-        self.logging.info(f"Current values - Level: {level}, Reset Level: {reset_level}, Max Level: {max_level}")
+        self.logging.info(f"Current values - Level: {level}, Reset Level: {reset_level}, Max Level: {max_level}, Helper Active: {mu_helper_active}")
 
         # Check if we're on reset cooldown
         current_time = time.time()
@@ -452,16 +484,38 @@ class GameBot:
             self.logging.info("Attempting to reset character...")
             self.interface.set_mu_helper_status(False)
             self.reset_character()
-        # No esta farmeando
-        elif not mu_helper_active and level < max_level:
+        else:
+            # Always call check_level_kill_or_reset - it will handle both cases:
+            # 1. If helper not active, it will try to reach the position and activate it
+            # 2. If already active but in wrong location, it will move to correct spot
             self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
-        # Ponete a farmear
-        elif mu_helper_active:
-            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
+            
+            # If we're here, verify helper is active
+            if not mu_helper_active:
+                # Explicitly check current position vs target position
+                current_state = self.config.get_game_state()
+                hunting_spot = self.config.get_hunting_spot(
+                    reset_count=reset, 
+                    current_level=level,
+                    character_start_location=self.gameclass.start_location
+                )
+                
+                if hunting_spot:
+                    target_x, target_y = hunting_spot["location"]
+                    current_x, current_y = self.movement.get_current_coords_from_game()
+                    
+                    # If we're close enough to target
+                    if self.is_at_target_location(current_x, current_y, target_x, target_y, tolerance=20):
+                        self.logging.info(f"At correct position ({current_x},{current_y}), activating helper")
+                        self.interface.start_mu_helper()
+                        self.interface.set_mu_helper_status(True)
+                    else:
+                        self.logging.warning(f"Not at correct position. Current: ({current_x},{current_y}), Target: ({target_x},{target_y})")
             
     def check_level_kill_or_reset(self, level, helper):
         """
         Determine the appropriate hunting location based on level and move there
+        Uses A* pathfinding to navigate through known free spaces
         """
         try:
             # Get current reset
@@ -481,8 +535,13 @@ class GameBot:
                 location = hunting_spot["location"]
                 
                 self.logging.info(f"Moving to hunting spot for level {level}: {map_name} at {location}")
+                # This call will ensure map_data is loaded with free_spaces
                 self.movement.move_to_location(map_name=map_name, do_not_open_stats=True)
                 x, y = location
+                
+                # Explicitly add the target location to free_spaces to ensure pathfinding works
+                if self.movement.map_data and 'free_spaces' in self.movement.map_data:
+                    self.movement.map_data['free_spaces'].add((x, y))
             else:
                 # Fallback to start location if no hunting spot is found
                 map_name = self.gameclass.start_location
@@ -490,23 +549,34 @@ class GameBot:
                 self.logging.warning(f"No suitable hunting spot found for level {level}, using default location: {map_name} at ({x},{y})")
                 self.movement.move_to_location(map_name=map_name, do_not_open_stats=True)
             
-            self.logging.debug(f"Helper status => {helper}")
-            if not helper:
+            # Get current coordinates
+            current_x, current_y = self.movement.get_current_coords_from_game()
+            
+            # Check if we're at the target location - if not, try to navigate there
+            # even if the helper is active
+            if not self.is_at_target_location(current_x, current_y, x, y, tolerance=10) or not helper:
+                self.logging.info(f"Not at target location or helper not active. Current: ({current_x},{current_y}), Target: ({x},{y})")
+                
+                # Reset movement tracking
                 self.movement.last_movements.clear()
                 
-                # Attempt to walk to the target location
+                # Attempt to walk to the target location using A* pathfinding
                 max_attempts = 3
                 for attempt in range(max_attempts):
-                    self.logging.info(f"Attempt {attempt+1}/{max_attempts} to walk to ({x}, {y})")
+                    self.logging.info(f"Attempt {attempt+1}/{max_attempts} to walk to ({x}, {y}) using A* pathfinding")
+                    
+                    # Use the walk_to method which implements A* pathfinding through free_spaces
                     reached_zone = self.movement.walk_to(target_x=x, target_y=y)
+                    
                     if reached_zone:
                         self.logging.info(f"Successfully reached target: ({x}, {y})")
                         self.check_and_click_play(x, y)
                         break
                     elif attempt < max_attempts - 1:
-                        self.logging.warning(f"Failed to reach target, retrying... ({attempt+1}/{max_attempts})")
+                        self.logging.warning(f"Failed to reach target with A*, retrying... ({attempt+1}/{max_attempts})")
+                        
                         # Try right-click fallback between attempts
-                        self.movement._perform_right_click_fallback(duration=3)
+                        self.movement.perform_right_click_fallback(duration=3)
                         time.sleep(1)
                     else:
                         self.logging.error(f"Failed to reach target after {max_attempts} attempts")
@@ -516,8 +586,20 @@ class GameBot:
                             self.logging.info("Location is close enough, trying to start MU helper...")
                             self.interface.start_mu_helper()
                             self.interface.set_mu_helper_status(True)
+            else:
+                self.logging.info(f"Already at target location ({current_x},{current_y}) and helper is active.")
+                # Ensure helper is still active by clicking it again
+                if not helper:
+                    self.interface.start_mu_helper()
+                    self.interface.set_mu_helper_status(True)
+                
         except Exception as e:
             self.logging.error(f"Error in check_level_kill_or_reset: {e}")
             # Try to start helper anyway if we had an error
             self.interface.start_mu_helper()
             self.interface.set_mu_helper_status(True)
+
+    # Helper method to check if we're at the target location
+    def is_at_target_location(self, current_x, current_y, target_x, target_y, tolerance=10):
+        """Check if current position is close enough to target position"""
+        return abs(current_x - target_x) <= tolerance and abs(current_y - target_y) <= tolerance

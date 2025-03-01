@@ -267,57 +267,95 @@ class Movement:
 
     def walk_to(self, target_x, target_y):
         """
-        Enhanced walk_to with fallback direct movement if pathfinding fails.
-        This ensures the character can still move even without a valid path.
+        Enhanced walk_to that prioritizes using A* pathfinding through known free spaces.
+        This ensures the character uses the most efficient path to the destination.
         """
         # First, make sure target location is in free_spaces
+        if not self.map_data:
+            self.logging.error("Map data not loaded. Cannot perform pathfinding.")
+            return False
+            
         self.map_data['free_spaces'].add((target_x, target_y))
         
-        # Try using A* pathfinding first
+        # Get current position
+        current_x, current_y = self.get_current_coords_from_game()
+        self.logging.info(f"Starting A* pathfinding from ({current_x}, {current_y}) to ({target_x}, {target_y})")
+        
+        # If we're already close enough, return success
+        if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10):
+            self.logging.info(f"Already at target location ({target_x}, {target_y})")
+            return True
+            
+        # Add current position to free_spaces to ensure we have a valid starting point
+        self.map_data['free_spaces'].add((current_x, current_y))
+        
+        # Use A* pathfinding to find a path
         path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
         
-        if path:
-            self.logging.info(f"Found path to target: {path}")
-            # Use pathfinding with the existing code
-            for step in path:
+        if path and len(path) > 1:  # Ensure we have a valid path with at least 2 points
+            self.logging.info(f"Found A* path with {len(path)} steps to target")
+            
+            # Follow the path using pathfinding
+            for step_index, step in enumerate(path[1:], 1):  # Skip the first step (current position)
                 step_x, step_y = step
                 retries = 0
-                current_x, current_y = self.get_current_coords_from_game()
-
-                while not self.is_close_enough((current_x, current_y), (step_x, step_y), tolerance=1):
-                    self.check_abrupt_movements()
+                
+                self.logging.info(f"Moving to step {step_index}/{len(path)-1}: ({step_x}, {step_y})")
+                
+                # Try to reach this step
+                max_step_attempts = 3
+                for attempt in range(max_step_attempts):
+                    # Execute a movement toward this step
                     self._execute_movement(step_x, step_y)
-                    time.sleep(self.MOVEMENT_DELAY)
+                    time.sleep(self.MOVEMENT_DELAY * 1.5)  # Longer delay to ensure movement completes
+                    
+                    # Get new position after movement
                     current_x, current_y = self.get_current_coords_from_game()
-
-                    if not self.validate_movement(step_x, step_y):
-                        retries += 1
-                        if retries >= self.MAX_RETRIES:
-                            self.logging.warning("Failed to reach step. Using direct movement...")
-                            break
-
-                if retries >= self.MAX_RETRIES:
+                    
+                    # Check if we've reached this step
+                    if self.is_close_enough((current_x, current_y), (step_x, step_y), tolerance=5):
+                        self.logging.info(f"Reached step {step_index}: ({step_x}, {step_y})")
+                        break
+                        
+                    retries += 1
+                    if retries >= max_step_attempts:
+                        self.logging.warning(f"Failed to reach step {step_index} after {max_step_attempts} attempts")
+                        # Mark this point as an obstacle
+                        self.map_data['obstacles'].add((step_x, step_y))
+                        self.map_data['free_spaces'].discard((step_x, step_y))
+                        break
+                
+                # Check if we're already close to final target
+                if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10):
+                    self.logging.info(f"Reached destination: ({target_x}, {target_y})")
                     break
         else:
-            self.logging.warning("No valid path found. Using direct movement approach...")
+            self.logging.warning("No valid A* path found. Creating grid of free spaces...")
             
-            # Fallback: Use direct movement without pathfinding
+            # Create a basic grid of free spaces between current position and target
+            for x in range(min(current_x, target_x), max(current_x, target_x) + 1, 5):
+                for y in range(min(current_y, target_y), max(current_y, target_y) + 1, 5):
+                    self.map_data['free_spaces'].add((x, y))
+            
+            self.logging.info("Added grid of free spaces. Trying direct movement as fallback...")
+            
+            # Fallback: Use direct movement as a last resort
             # This ensures we can move even without a proper path
-            max_attempts = 20
+            max_attempts = 15
             attempts = 0
             
-            current_x, current_y = self.get_current_coords_from_game()
-            
-            while not self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=5) and attempts < max_attempts:
+            while not self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10) and attempts < max_attempts:
                 attempts += 1
                 
                 # Calculate the direction vector
                 dx = target_x - current_x
                 dy = target_y - current_y
                 
-                # Move in larger steps to prevent getting stuck
-                step_size = max(5, min(abs(dx), abs(dy), 20))
-                
+                # Move in smaller steps to improve accuracy
+                step_size = min(abs(dx), abs(dy), 15)
+                if step_size < 5:
+                    step_size = 5  # Minimum step size
+                    
                 # Normalize and scale the direction
                 total = abs(dx) + abs(dy)
                 if total > 0:
@@ -326,20 +364,33 @@ class Movement:
                 else:
                     step_x, step_y = target_x, target_y
                     
+                # Log the step
+                self.logging.info(f"Direct movement step {attempts}/{max_attempts}: Moving to ({step_x}, {step_y})")
+                
                 # Execute movement
                 self._execute_movement(step_x, step_y)
                 time.sleep(self.MOVEMENT_DELAY * 1.5)  # Longer delay for direct movement
                 
                 # Update position
                 current_x, current_y = self.get_current_coords_from_game()
+                self.logging.info(f"Direct movement: Now at ({current_x}, {current_y}), target: ({target_x}, {target_y})")
                 
                 # Add this position to free_spaces
                 self.map_data['free_spaces'].add((current_x, current_y))
                 
-                self.logging.info(f"Direct movement: Now at ({current_x}, {current_y}), target: ({target_x}, {target_y})")
-                
-                # Add to free_spaces
-                self.map_data['free_spaces'].add((current_x, current_y))
+                # Check if we're still at the same position (stuck)
+                if attempts > 3 and not hasattr(self, '_last_position'):
+                    self._last_position = (current_x, current_y)
+                    self._stuck_count = 0
+                elif hasattr(self, '_last_position'):
+                    if self._last_position == (current_x, current_y):
+                        self._stuck_count += 1
+                        if self._stuck_count >= 3:
+                            self.logging.warning(f"Stuck at ({current_x}, {current_y}) after {self._stuck_count} attempts. Breaking out.")
+                            break
+                    else:
+                        self._last_position = (current_x, current_y)
+                        self._stuck_count = 0
         
         # Final position check
         current_x, current_y = self.get_current_coords_from_game()
@@ -349,23 +400,41 @@ class Movement:
         current_map = current_state.get('current_map', 'lorencia')
         self.config.save_map_data(map_name=current_map, data=self.map_data)
         
-        # Use increased tolerance (5→10) for determining if we reached the target
+        # Use increased tolerance (10) for determining if we reached the target
         if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10):
             self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
             return True
         else:
             self.logging.warning(f"Failed to reach target. Current position: ({current_x}, {current_y}), Target: ({target_x}, {target_y})")
-            
-            # NEW: Right-click fallback when movement fails
-            self.logging.info("Performing right-click fallback for 3 seconds...")
-            self._perform_right_click_fallback(duration=3)
-            
-            # Check position again after right-click fallback
-            current_x, current_y = self.get_current_coords_from_game()
-            if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10):
-                self.logging.info(f"Right-click fallback successful! Now at target: ({target_x}, {target_y})")
-                return True
             return False
+
+    # Add this method to Movement class
+    def perform_right_click_fallback(self, duration=3):
+        """
+        Perform a right-click fallback for the specified duration.
+        This can help get unstuck in situations where normal movement fails.
+        
+        Args:
+            duration: How long to perform right-clicks, in seconds
+        """
+        try:
+            # Get current position
+            current_x, current_y = self.get_current_coords_from_game()
+            
+            # Move mouse to current position first
+            self.interface.move_mouse_to_coords_without_click(current_x, current_y)
+            
+            # Perform right-clicks for the specified duration
+            start_time = time.time()
+            while time.time() - start_time < duration:
+                self.interface.use_spell()  # Right-click
+                time.sleep(0.2)  # Small delay between clicks
+                
+            # Short pause after right-clicking
+            time.sleep(0.5)
+            
+        except Exception as e:
+            self.logging.error(f"Error during right-click fallback: {e}")
 
     def load_map_data(self, map_name):
         """
