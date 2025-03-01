@@ -46,9 +46,6 @@ class Configuration:
         sys.stdout.reconfigure(line_buffering=True)
         sys.stderr.reconfigure(line_buffering=True)
 
-
-
-
     def get_pid_by_window_title(self):
         try:
             title = self.file["application_name"]
@@ -200,10 +197,99 @@ class Configuration:
         except Exception as e:
             self.logging.error(f"Error saving game state: {e}")
         
-    def load_config(self, config_path: str):
-        config_file = os.path.join(self.dirs['json'], config_path)
-        with open(config_file) as f:
-            self.file = json.load(f)
+    
+
+    def _convert_new_config_format(self, new_config):
+        """
+        Convert the new config format to the format expected by the existing code.
+        """
+        old_format = {
+            "class": new_config.get("class", "Fairy Elf"),
+            "interface_scale": new_config.get("interface_scale", 100),
+            "application_name": new_config.get("application_name", "MEGAMU"),
+            "dashboard_name": new_config.get("dashboard_name", "MU-Dashboard"),
+            "stat_distribution": new_config.get("stat_distribution", {}),
+            "max_level": new_config.get("max_level", 400),
+            "check_interval": new_config.get("check_interval", 5),
+            # Create level thresholds from hunting spots
+            "level_thresholds": self._generate_level_thresholds(new_config),
+            # Add validation rules
+            "validation": {
+                "strenght": {"min": 1, "max": 32767},
+                "agility": {"min": 1, "max": 32767},
+                "vitality": {"min": 1, "max": 32767},
+                "energy": {"min": 1, "max": 32767},
+                "command": {"min": 1, "max": 32767}
+            }
+        }
+        
+        return old_format
+    
+    def _generate_level_thresholds(self, new_config):
+        """
+        Generate level thresholds from hunting spots in new config format.
+        """
+        thresholds = {}
+        
+        # Get the first reset config (for initial setup)
+        if not new_config.get("reset_config"):
+            return {}
+            
+        reset_config = new_config["reset_config"][0]
+        hunting_spots = reset_config.get("hunting_spots", {})
+        
+        # Sort spots by level_range
+        sorted_spots = sorted(
+            hunting_spots.items(), 
+            key=lambda x: x[1].get("level_range", [0, 0])[0]
+        )
+        
+        # Starting location (lowest level range)
+        # For level 0, we need to handle multiple maps
+        if sorted_spots and sorted_spots[0][1].get("maps"):
+            maps = sorted_spots[0][1]["maps"]
+            map_list = []
+            
+            for map_name, map_data in maps.items():
+                map_list.append({
+                    "map": map_data["map"],
+                    "location": map_data["location"]
+                })
+                
+            thresholds["0"] = map_list
+        elif sorted_spots:
+            # Fallback if no maps specified
+            first_spot = sorted_spots[0][1]
+            thresholds["0"] = {
+                "map": first_spot.get("map", "lorencia"),
+                "location": first_spot.get("location", [128, 128])
+            }
+        
+        # Process other hunting spots
+        for spot_id, spot_data in sorted_spots:
+            if "level_range" in spot_data and len(spot_data["level_range"]) >= 2:
+                min_level = str(spot_data["level_range"][0])
+                
+                # Skip level 0 as we handled it specially
+                if min_level == "0" or min_level == "1":
+                    continue
+                    
+                if "map" in spot_data:
+                    thresholds[min_level] = {
+                        "map": spot_data["map"],
+                        "location": spot_data["location"]
+                    }
+                elif "maps" in spot_data:
+                    # If multiple maps, include them all as a list
+                    map_list = []
+                    for map_name, map_data in spot_data["maps"].items():
+                        map_list.append({
+                            "map": map_data["map"],
+                            "location": map_data["location"]
+                        })
+                    thresholds[min_level] = map_list
+        
+        return thresholds
                 
     def setup_keyboard_listener(self):
         """Configura un listener para detectar la tecla F9 que detiene el bot"""
@@ -287,3 +373,199 @@ class Configuration:
         if not self.file:
             raise ValueError("Config file not loaded")
         return self.file['stat_distribution']
+                  
+    def get_hunting_spot(self, reset_count, current_level, character_start_location):
+        """
+        Get the appropriate hunting spot based on reset count and level.
+        
+        Returns: dict with 'map' and 'location' keys.
+        """
+        # Check if we're using the new config format
+        if not self.file or 'reset_config' not in self.file:
+            # Use original level threshold logic
+            for threshold, obj in sorted(self.file.get('level_thresholds', {}).items(), key=lambda x: int(x[0]), reverse=True):
+                if current_level >= int(threshold):
+                    if isinstance(obj, list):
+                        # Find location matching character start location or use first
+                        location_obj = next((loc for loc in obj if loc["map"] == character_start_location), obj[0])
+                        return {
+                            'map': location_obj["map"],
+                            'location': location_obj["location"]
+                        }
+                    else:
+                        return {
+                            'map': obj["map"],
+                            'location': obj["location"]
+                        }
+            # Default fallback
+            return {'map': character_start_location, 'location': [128, 128]}
+        
+        # Find the applicable reset config
+        reset_config = None
+        for rc in self.file.get('reset_config', []):
+            reset_range = rc.get('reset_range', [0, 999])
+            if reset_range[0] <= reset_count <= reset_range[1]:
+                reset_config = rc
+                break
+                
+        if not reset_config and self.file.get('reset_config'):
+            reset_config = self.file['reset_config'][0]
+            
+        if not reset_config:
+            return {'map': character_start_location, 'location': [128, 128]}
+            
+        # Find the appropriate hunting spot based on level
+        hunting_spots = reset_config.get('hunting_spots', {})
+        appropriate_spot = None
+        
+        # Sort by level range and find appropriate spot
+        for spot_id, spot_data in sorted(
+            hunting_spots.items(), 
+            key=lambda x: x[1].get('level_range', [0, 0])[0]
+        ):
+            level_range = spot_data.get('level_range', [0, 999])
+            if level_range[0] <= current_level <= level_range[1]:
+                appropriate_spot = spot_data
+                break
+                
+        if not appropriate_spot:
+            return {'map': character_start_location, 'location': [128, 128]}
+            
+        # If spot has a specific map
+        if 'map' in appropriate_spot and 'location' in appropriate_spot:
+            return {
+                'map': appropriate_spot['map'],
+                'location': appropriate_spot['location']
+            }
+            
+        # If spot has multiple maps, try to match the character's start location
+        if 'maps' in appropriate_spot:
+            # Try to find the map matching the character's start location
+            if character_start_location in appropriate_spot['maps']:
+                map_data = appropriate_spot['maps'][character_start_location]
+                return {
+                    'map': map_data['map'],
+                    'location': map_data['location']
+                }
+                
+            # If no match, use the first map
+            if appropriate_spot['maps']:
+                first_map = next(iter(appropriate_spot['maps'].values()))
+                return {
+                    'map': first_map['map'],
+                    'location': first_map['location']
+                }
+                
+        # Fallback
+        return {'map': character_start_location, 'location': [128, 128]}
+    
+    def load_config(self, config_path: str):
+        """
+        Load configuration file and convert it to the expected format.
+        Supports both old and new config formats.
+        """
+        config_file = os.path.join(self.dirs['json'], config_path)
+        try:
+            with open(config_file) as f:
+                config_data = json.load(f)
+            
+            # Store the original config data for direct access
+            self.original_config = config_data
+                
+            # Check if this is the new config format (has reset_config key)
+            if 'reset_config' in config_data:
+                # Convert for backwards compatibility
+                self.file = self._convert_new_config_format(config_data)
+                
+                # Add the reset_config directly to ensure it's accessible
+                # This ensures we can directly access it in get_reset_level
+                self.file['reset_config'] = config_data.get('reset_config', [])
+                
+                if hasattr(self, 'logging'):
+                    self.logging.info("Loaded new config format with reset_config")
+            else:
+                # Old format - use as is
+                self.file = config_data
+                if hasattr(self, 'logging'):
+                    self.logging.info("Loaded legacy config format")
+                    
+        except Exception as e:
+            if hasattr(self, 'logging'):
+                self.logging.error(f"Error loading config: {e}")
+            else:
+                print(f"Error loading config: {e}")
+            raise
+            
+    def get_reset_level(self, reset_count):
+        """
+        Get the reset level based on current reset count using the new config format.
+        Falls back to default values if using old config format.
+        """
+        try:
+            # Log the request
+            if hasattr(self, 'logging'):
+                self.logging.debug(f"Getting reset level for reset count: {reset_count}")
+            
+            # Check if the original config data is directly accessible
+            if hasattr(self, 'original_config') and self.original_config and 'reset_config' in self.original_config:
+                # Direct access to original config data
+                for reset_config in self.original_config.get('reset_config', []):
+                    reset_range = reset_config.get('reset_range', [0, 999])
+                    if len(reset_range) >= 2 and reset_range[0] <= reset_count <= reset_range[1]:
+                        level = reset_config.get('reset_level')
+                        if level is not None:
+                            if hasattr(self, 'logging'):
+                                self.logging.debug(f"Found reset level {level} for reset count {reset_count} in range {reset_range}")
+                            return level
+            
+            # Check if we have the file loaded with reset_config included
+            if self.file and 'reset_config' in self.file:
+                # New config format - find the applicable reset config
+                for reset_config in self.file.get('reset_config', []):
+                    reset_range = reset_config.get('reset_range', [0, 999])
+                    if len(reset_range) >= 2 and reset_range[0] <= reset_count <= reset_range[1]:
+                        level = reset_config.get('reset_level')
+                        if level is not None:
+                            if hasattr(self, 'logging'):
+                                self.logging.debug(f"Found reset level {level} for reset count {reset_count} in range {reset_range}")
+                            return level
+                        
+                # If no range matches, but we have reset_config data, reload the config file
+                # This is a fallback in case the conversion process changed the data structure
+                try:
+                    config_file = os.path.join(self.dirs['json'], 'config.json')
+                    with open(config_file) as f:
+                        direct_config = json.load(f)
+                    
+                    if 'reset_config' in direct_config:
+                        for reset_config in direct_config.get('reset_config', []):
+                            reset_range = reset_config.get('reset_range', [0, 999])
+                            if len(reset_range) >= 2 and reset_range[0] <= reset_count <= reset_range[1]:
+                                level = reset_config.get('reset_level')
+                                if level is not None:
+                                    if hasattr(self, 'logging'):
+                                        self.logging.debug(f"Found reset level {level} for reset count {reset_count} in direct config")
+                                    return level
+                except Exception as e:
+                    if hasattr(self, 'logging'):
+                        self.logging.error(f"Error reading direct config: {e}")
+            
+            # Default fallback based on common values
+            if hasattr(self, 'logging'):
+                self.logging.warning(f"No specific reset level found for reset count {reset_count}, using fallback")
+                
+            if reset_count <= 5:
+                return 380
+            elif reset_count <= 15:
+                return 385
+            elif reset_count <= 50:
+                return 390
+            elif reset_count < 75:
+                return 395
+            else:
+                return 400
+                
+        except Exception as e:
+            if hasattr(self, 'logging'):
+                self.logging.error(f"Error in get_reset_level: {e}")
+            return 390  # Safe fallback if anything goes wrong

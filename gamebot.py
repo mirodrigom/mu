@@ -132,16 +132,19 @@ class GameBot:
             # First read all stats
             current_state = self.config.get_game_state()
 
-            # Check if we have read stats correctly
-            if (current_state['available_points'] == -1 or
-                current_state['current_strenght'] == -1 or
-                current_state['current_agility'] == -1 or
-                current_state['current_vitality'] == -1 or
-                current_state['current_command'] == -1):
-                self.logging.error("Stats not properly read, values still at -1")
+            # Check if we have read stats correctly and that available_points exists and is not None
+            available_points = current_state.get('available_points')
+            if available_points is None:
+                self.logging.error("No available points value found in game state")
+                return False
+                
+            # Convert to integer if not already
+            try:
+                available_points = int(available_points)
+            except (TypeError, ValueError):
+                self.logging.error(f"Invalid available points value: {available_points}")
                 return False
 
-            available_points = current_state['available_points']
             if available_points <= 0:
                 self.logging.info("No points available to distribute")
                 return False
@@ -149,24 +152,38 @@ class GameBot:
             self.logging.info(f"Starting distribution of {available_points} available points")
             self.logging.info(f"Stat distribution config: {self.config.file['stat_distribution']}")
             
-            # Old Way
-
-            for stat, ratio in self.config.file['stat_distribution'].items():
-                stat_points = int(available_points * ratio)
-                if stat_points <= 0:
-                    self.logging.info(f"Skipping {stat} - no points to allocate (ratio: {ratio})")
-                else:
-                    self.interface.command_add_attributes(attribute=stat, points=stat_points)
-                    self.logging.info(f"Allocating {stat_points} points to {stat}")
+            # Process each attribute individually with defensive programming
+            for attribute, ratio in self.config.file['stat_distribution'].items():
+                try:
+                    # Ensure ratio is a number
+                    if ratio is None:
+                        self.logging.info(f"Skipping {attribute} - ratio is None")
+                        continue
+                        
+                    # Convert to float if not already
+                    try:
+                        ratio = float(ratio)
+                    except (TypeError, ValueError):
+                        self.logging.error(f"Invalid ratio for {attribute}: {ratio}")
+                        continue
+                    
+                    points_to_allocate = int(available_points * ratio)
+                    if points_to_allocate <= 0:
+                        self.logging.info(f"Skipping {attribute} - no points to allocate (ratio: {ratio})")
+                    else:
+                        self.interface.command_add_attributes(attribute=attribute, points=points_to_allocate)
+                        self.logging.info(f"Allocating {points_to_allocate} points to {attribute}")
+                except Exception as e:
+                    self.logging.error(f"Error distributing points for {attribute}: {e}")
 
         except Exception as e:
-            self.logging.error(f"Error distributing points for {stat}: {e}")
+            self.logging.error(f"Error in distribute_attributes: {e}")
 
         # Read stats again after distribution
         self.logging.info("Distribution complete, reading final stats")
         
         return True
-    
+
     def get_value_based_on_memory_address(self, address):
         points = None
         if address:
@@ -298,73 +315,72 @@ class GameBot:
             self.logging.error(f"Error reading stats: {e}")
             time.sleep(1)
 
-    def check_level_kill_or_reset(self, level, helper):
-        for threshold, obj in sorted(self.config.file['level_thresholds'].items(), key=lambda x: int(x[0]), reverse=True):
-            if level >= int(threshold):
-                if isinstance(obj, list):
-                    location_obj = next((loc for loc in obj if loc["map"] == self.gameclass.start_location), obj[0])
-                    self.movement.move_to_location(map_name=location_obj["map"], do_not_open_stats=True)
-                    x = location_obj["location"][0]
-                    y = location_obj["location"][1]
-                else:
-                    # Handle single location case as before
-                    self.movement.move_to_location(map_name=obj["map"], do_not_open_stats=True)
-                    x = obj["location"][0]
-                    y = obj["location"][1]
+  
+    def _perform_right_click_fallback(self, duration=3):
+        """
+        Perform a right-click fallback for the specified duration.
+        This can help get unstuck in situations where normal movement fails.
+        
+        Args:
+            duration: How long to perform right-clicks, in seconds
+        """
+        try:
+            # Move mouse to target first
+            current_state = self.config.get_game_state()
+            if 'current_location' in current_state:
+                x, y = current_state['current_location']
+                self.interface.move_mouse_to_coords_without_click(x, y)
+            
+            # Perform right-clicks for the specified duration
+            start_time = time.time()
+            while time.time() - start_time < duration:
+                self.interface.use_spell()  # Right-click
+                time.sleep(0.2)  # Small delay between clicks
                 
-                # Break the loop after moving to the first valid location
-                break
-        self.logging.debug(f"Helper status => {helper}")
-        if not helper:
-            self.movement.last_movements.clear()
-            reached_zone = self.movement.walk_to(target_x=x, target_y=y)
-            if reached_zone:
-                self.check_and_click_play(x, y)           
-        
-    def lets_kill_some_mobs(self):
-        current_state = self.config.get_game_state()
-        level = self.interface.get_level(current_state)
-        reset = self.interface.get_reset(current_state)
-        mu_helper_active = self.interface.get_mu_helper_status(current_state)
-        
-        reset_level = self.gameclass.set_level_to_reset(reset)
-        max_level = self.config.file['max_level']
+            # Short pause after right-clicking
+            time.sleep(0.5)
+            
+        except Exception as e:
+            self.logging.error(f"Error during right-click fallback: {e}")
 
-        # Add debug logging
-        self.logging.info(f"Current values - Level: {level}, Reset Level: {reset_level}, Max Level: {max_level}")
-
-        # Reset
-        if level >= reset_level and reset_level <= max_level:
-            self.logging.info("Attempting to reset character...")
-            self.interface.set_mu_helper_status(False)
-            self.reset_character()
-        # No esta farmeando
-        elif not mu_helper_active and level < max_level:
-            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
-        # Ponete a farmear
-        elif mu_helper_active:
-            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
-    
     def check_and_click_play(self, x, y):
-        """Check play button and update location state"""
+        """Check play button and update location state with increased tolerance"""
         try:
             self.movement.get_current_coords_from_game()
             current_state = self.config.get_game_state()
             current_x, currenty_y = self.interface.get_current_coords(current_state=current_state)
             mu_helper_active = self.interface.get_mu_helper_status(current_state)
             
-            if abs(current_x - x) <= 10 and abs(currenty_y - y) <= 10 and not mu_helper_active:
-                #self.interface.mouse_click(play_coords[0] + 5, play_coords[1] + 3)
+            # Increased tolerance from 10 to 20 to allow for more flexibility in position
+            if abs(current_x - x) <= 20 and abs(currenty_y - y) <= 20 and not mu_helper_active:
                 self.interface.start_mu_helper()
                 self.interface.set_mu_helper_status(True)
                 self.interface.set_current_coords([x, y])
-                self.logging.info("Play button clicked - was inactive (green)")
+                self.logging.info(f"Play button clicked - was inactive (green). Position: ({current_x}, {currenty_y}), Target: ({x}, {y})")
             elif mu_helper_active:
                 self.logging.info("Play already active (red) - skipping click")
+            else:
+                self.logging.warning(f"Position too far from target. Current: ({current_x}, {currenty_y}), Target: ({x}, {y}), Difference: ({abs(current_x - x)}, {abs(currenty_y - y)})")
+                
+                # Try right-click fallback if we're too far from target
+                self.logging.info("Attempting right-click fallback to reach target...")
+                self.movement._perform_right_click_fallback(duration=3)
+                
+                # Check position again
+                self.movement.get_current_coords_from_game()
+                current_state = self.config.get_game_state()
+                current_x, currenty_y = self.interface.get_current_coords(current_state=current_state)
+                
+                # Try again with the new position
+                if abs(current_x - x) <= 20 and abs(currenty_y - y) <= 20 and not mu_helper_active:
+                    self.interface.start_mu_helper()
+                    self.interface.set_mu_helper_status(True)
+                    self.interface.set_current_coords([x, y])
+                    self.logging.info(f"Play button clicked after right-click fallback. Position: ({current_x}, {currenty_y}), Target: ({x}, {y})")
 
         except Exception as e:
             self.logging.error(f"Error checking play button: {e}")
-
+   
     def reset_character(self):
         """Reset character and manage stats window"""
         self.logging.info("Attempting to reset character...")
@@ -374,18 +390,134 @@ class GameBot:
         current_time = time.time()
         if current_time - self.last_reset_time < self.reset_cooldown:
             self.logging.info("Reset is on cooldown. Skipping reset.")
-            return
-        #self.interface.open_stats_window()
+            
+            # If we can't reset due to cooldown, start hunting instead
+            self.check_level_kill_or_reset(level=current_state.get('current_level', 0), helper=False)
+            return False
+            
+        # Try to reset
         self.interface.command_reset()
         self.last_reset_time = time.time()  # Update the last reset time
+        
+        # Wait a moment for the reset to complete
+        time.sleep(3)
+        
+        # Update game state with new data
         new_state = self.config.get_game_state()
+        new_reset_count = new_state.get('current_reset', 0) + 1
         self.config.update_game_state({
-            'current_reset': new_state['current_reset'] + 1,
-            'current_level': 0,
-            'current_map': self.gameclass.start_location  # Ensure this is set to 'lorencia'
+            'current_reset': new_reset_count,
+            'current_level': 1,  # Reset always sets level to 1
+            'current_map': self.gameclass.start_location  # Ensure this is set to character's start location
         })
-        self.logging.info(f"Current state after reset: {new_state}")
+        self.logging.info(f"Current state after reset: {self.config.get_game_state()}")
 
-        #self.interface.scroll(random_number=False, number=-10000, scroll_count=50)
+        # Reset memory cache
+        self.memory.load_memory_addr_from_file()
+        
+        # Read new stats and distribute attributes
         self.read_all_stats()
         self.distribute_attributes()
+        
+        # Start hunting at level 1
+        self.check_level_kill_or_reset(level=1, helper=False)
+        
+        return True
+
+    def lets_kill_some_mobs(self):
+        current_state = self.config.get_game_state()
+        level = current_state.get('current_level', 0)
+        reset = current_state.get('current_reset', 0)
+        mu_helper_active = current_state.get('mulheper_active', False)
+        
+        # Use the adapter to get the reset level based on current reset count
+        reset_level = self.gameclass.set_level_to_reset(reset)
+        
+        # Ensure reset_level has a valid value
+        if reset_level is None:
+            self.logging.warning("Reset level is None, using default value of 400")
+            reset_level = 400  # Default fallback if for some reason reset_level is None
+            
+        max_level = self.config.file.get('max_level', 400)  # Use default of 400 if not specified
+
+        # Add debug logging
+        self.logging.info(f"Current values - Level: {level}, Reset Level: {reset_level}, Max Level: {max_level}")
+
+        # Check if we're on reset cooldown
+        current_time = time.time()
+        reset_cooldown_active = (current_time - self.last_reset_time < self.reset_cooldown)
+        
+        # Reset only if not on cooldown
+        if level >= reset_level and reset_level <= max_level and not reset_cooldown_active:
+            self.logging.info("Attempting to reset character...")
+            self.interface.set_mu_helper_status(False)
+            self.reset_character()
+        # No esta farmeando
+        elif not mu_helper_active and level < max_level:
+            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
+        # Ponete a farmear
+        elif mu_helper_active:
+            self.check_level_kill_or_reset(level=level, helper=mu_helper_active)
+            
+    def check_level_kill_or_reset(self, level, helper):
+        """
+        Determine the appropriate hunting location based on level and move there
+        """
+        try:
+            # Get current reset
+            current_state = self.config.get_game_state()
+            reset = current_state.get('current_reset', 0)
+            
+            # Use the adapter to find the appropriate hunting spot
+            hunting_spot = self.config.get_hunting_spot(
+                reset_count=reset, 
+                current_level=level,
+                character_start_location=self.gameclass.start_location
+            )
+            
+            if hunting_spot:
+                # Move to the appropriate map
+                map_name = hunting_spot["map"]
+                location = hunting_spot["location"]
+                
+                self.logging.info(f"Moving to hunting spot for level {level}: {map_name} at {location}")
+                self.movement.move_to_location(map_name=map_name, do_not_open_stats=True)
+                x, y = location
+            else:
+                # Fallback to start location if no hunting spot is found
+                map_name = self.gameclass.start_location
+                x, y = 128, 128  # Default coordinates
+                self.logging.warning(f"No suitable hunting spot found for level {level}, using default location: {map_name} at ({x},{y})")
+                self.movement.move_to_location(map_name=map_name, do_not_open_stats=True)
+            
+            self.logging.debug(f"Helper status => {helper}")
+            if not helper:
+                self.movement.last_movements.clear()
+                
+                # Attempt to walk to the target location
+                max_attempts = 3
+                for attempt in range(max_attempts):
+                    self.logging.info(f"Attempt {attempt+1}/{max_attempts} to walk to ({x}, {y})")
+                    reached_zone = self.movement.walk_to(target_x=x, target_y=y)
+                    if reached_zone:
+                        self.logging.info(f"Successfully reached target: ({x}, {y})")
+                        self.check_and_click_play(x, y)
+                        break
+                    elif attempt < max_attempts - 1:
+                        self.logging.warning(f"Failed to reach target, retrying... ({attempt+1}/{max_attempts})")
+                        # Try right-click fallback between attempts
+                        self.movement._perform_right_click_fallback(duration=3)
+                        time.sleep(1)
+                    else:
+                        self.logging.error(f"Failed to reach target after {max_attempts} attempts")
+                        # Try to click play anyway, with higher tolerance
+                        current_x, current_y = self.movement.get_current_coords_from_game()
+                        if abs(current_x - x) <= 30 and abs(current_y - y) <= 30:
+                            self.logging.info("Location is close enough, trying to start MU helper...")
+                            self.interface.start_mu_helper()
+                            self.interface.set_mu_helper_status(True)
+        except Exception as e:
+            self.logging.error(f"Error in check_level_kill_or_reset: {e}")
+            # Try to start helper anyway if we had an error
+            self.interface.start_mu_helper()
+            self.interface.set_mu_helper_status(True)

@@ -1,15 +1,15 @@
 {
-    "current_reset": 11,
-    "current_level": 391,
+    "current_reset": 14,
+    "current_level": 1,
     "current_map": "noria",
     "current_coords": [],
-    "current_strenght": 22,
-    "current_agility": 25,
-    "current_vitality": 20,
-    "current_energy": 15,
+    "current_strenght": -1339898992,
+    "current_agility": 2202,
+    "current_vitality": 446,
+    "current_energy": 2151,
     "current_command": 0,
-    "available_points": 4320,
-    "mulheper_active": false,
+    "available_points": 1,
+    "mulheper_active": true,
     "current_position_available_points": [],
     "current_position_strenght": [],
     "current_position_agility": [],
@@ -17,8 +17,8 @@
     "current_position_energy": [],
     "current_position_command": [],
     "current_location": [
-        156,
-        161
+        163,
+        97
     ],
     "current_position_level": [],
     "current_position_reset": []

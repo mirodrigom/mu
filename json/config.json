@@ -1,77 +1,94 @@
 {
-    "class": "Fairy Elf",
-    "interface_scale": 125,
-    "level_thresholds": {
-        "140": {
-            "map": "tarkan",
-            "location": [
-                156,
-                161
-            ]
-        },
-        "50": {
-            "map": "dungeon3",
-            "location": [
-                8,
-                68
-            ]
-        },
-        "0": [
-            {
-                "map": "lorencia",
-                "location": [
-                    128,
-                    200
-                ]
-            },
-            {
-                "map": "noria",
-                "location": [
-                    157,
-                    67
-                ]
-            },
-            {
-                "map": "elbeland",
-                "location": [
-                    114,
-                    217
-                ]
-            }
-        ]
-    },
     "application_name": "MEGAMU",
-    "dashboard_name": "MEGAMU - Dashboard",
+    "dashboard_name": "MU-Dashboard",
+    "class": "Fairy Elf",
+    "check_interval": 5,
+    "max_level": 400,
+    "interface_scale": 125,
     "stat_distribution": {
         "strenght": 0.05,
-        "agility": 0.55,
-        "vitality": 0.1,
-        "energy": 0.25
+        "agility": 0.6,
+        "vitality": 0.05,
+        "energy": 0.25,
+        "command": 0.0
     },
-    "max_level": 400,
-    "coordinate_samples": 3,
-    "error_threshold": 3,
-    "check_interval": 5,
-    "validation": {
-        "strenght": {
-            "min": 1,
-            "max": 32767
+    "starting_locations": {
+        "lorencia": {
+            "coords": [148, 133]
         },
-        "agility": {
-            "min": 1,
-            "max": 32767
+        "noria": {
+            "coords": [174, 112]
         },
-        "vitality": {
-            "min": 1,
-            "max": 32767
-        },
-        "energy": {
-            "min": 1,
-            "max": 32767
-        },
-        "command": {
-            "min": 1,
-            "max": 32767
+        "elbeland": {
+            "coords": [53, 226]
         }
-    }
+    },
+    "reset_config": [
+        {
+            "reset_range": [0, 11],
+            "reset_level": 380,
+            "hunting_spots": {
+                "1": {
+                    "level_range": [1, 50],
+                    "maps": {
+                        "lorencia": {
+                            "map": "lorencia",
+                            "location": [128, 200]
+                        },
+                        "noria": {
+                            "map": "noria",
+                            "location": [157, 67]
+                        },
+                        "elbeland": {
+                            "map": "elbeland",
+                            "location": [114, 217]
+                        }
+                    }
+                },
+                "2": {
+                    "level_range": [51, 140],
+                    "map": "dungeon3",
+                    "location": [8, 68]
+                },
+                "3": {
+                    "level_range": [140, 400],
+                    "map": "tarkan",
+                    "location": [156, 161]
+                }
+            }
+        },
+        {
+            "reset_range": [12, 50],
+            "reset_level": 390,
+            "hunting_spots": {
+                "1": {
+                    "level_range": [1, 50],
+                    "maps": {
+                        "lorencia": {
+                            "map": "lorencia",
+                            "location": [128, 200]
+                        },
+                        "noria": {
+                            "map": "noria",
+                            "location": [157, 67]
+                        },
+                        "elbeland": {
+                            "map": "elbeland",
+                            "location": [114, 217]
+                        }
+                    }
+                },
+                "2": {
+                    "level_range": [51, 140],
+                    "map": "dungeon3",
+                    "location": [8, 68]
+                },
+                "3": {
+                    "level_range": [140, 400],
+                    "map": "tarkan",
+                    "location": [156, 161]
+                }
+            }
+        }
+    ]
 }

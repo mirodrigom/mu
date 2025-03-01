@@ -39,11 +39,7 @@ class Movement:
             'SW': (-self.STEP_SIZE, -self.STEP_SIZE)
         }
 
-    def load_map_data(self, map="lorencia"):
-        self.map_data = self.config.load_map_data(map_name=map)
 
-    def save_map_data(self, map="lorencia"):
-        self.config.save_map_data(map_name=map, data=self.map_data)
 
     def is_close_enough(self, current, target, tolerance=1):
         """
@@ -190,23 +186,99 @@ class Movement:
             return False
         return True
 
+    
+    def _ensure_config_locations_in_free_spaces(self, map_name):
+        """
+        Ensure all locations from config for this map are in free_spaces.
+        This is crucial for post-reset movement.
+        """
+        try:
+            if not self.config.file or not self.map_data:
+                return
+                
+            # Add locations from level_thresholds
+            if 'level_thresholds' in self.config.file:
+                for _, location_data in self.config.file['level_thresholds'].items():
+                    if isinstance(location_data, list):
+                        # Handle list of locations
+                        for loc in location_data:
+                            if loc.get('map') == map_name and 'location' in loc:
+                                x, y = loc['location']
+                                self._add_location_to_free_spaces(x, y)
+                    elif isinstance(location_data, dict) and location_data.get('map') == map_name:
+                        # Handle single location
+                        if 'location' in location_data:
+                            x, y = location_data['location']
+                            self._add_location_to_free_spaces(x, y)
+            
+            # Add locations from reset_config hunting spots
+            if 'reset_config' in self.config.file:
+                for reset_config in self.config.file['reset_config']:
+                    if 'hunting_spots' in reset_config:
+                        for _, spot in reset_config['hunting_spots'].items():
+                            # Check direct map/location
+                            if spot.get('map') == map_name and 'location' in spot:
+                                x, y = spot['location']
+                                self._add_location_to_free_spaces(x, y)
+                            # Check nested maps
+                            elif 'maps' in spot:
+                                for map_data in spot['maps'].values():
+                                    if map_data.get('map') == map_name and 'location' in map_data:
+                                        x, y = map_data['location']
+                                        self._add_location_to_free_spaces(x, y)
+            
+            # Add locations from starting_locations
+            if 'starting_locations' in self.config.file and map_name in self.config.file['starting_locations']:
+                location_data = self.config.file['starting_locations'][map_name]
+                if 'coords' in location_data:
+                    x, y = location_data['coords']
+                    self._add_location_to_free_spaces(x, y)
+                    
+        except Exception as e:
+            self.logging.error(f"Error ensuring config locations: {e}")
+
+    def _add_location_to_free_spaces(self, x, y):
+        """Add a location and surrounding grid to free_spaces"""
+        if not self.map_data or 'free_spaces' not in self.map_data:
+            return
+            
+        # Add the exact location
+        self.map_data['free_spaces'].add((x, y))
+        
+        # Add a 5x5 grid around the location for better pathfinding
+        for dx in range(-2, 3):
+            for dy in range(-2, 3):
+                self.map_data['free_spaces'].add((x + dx, y + dy))
+        
+        # Add a path from character start to this location
+        # Use a simplified grid with 10-unit spacing
+        current_x, current_y = self.get_current_coords_from_game()
+        
+        # Create a basic path grid between current location and target
+        min_x, max_x = min(current_x, x), max(current_x, x)
+        min_y, max_y = min(current_y, y), max(current_y, y)
+        
+        # Add grid points along the path
+        for grid_x in range(min_x, max_x + 1, 10):
+            for grid_y in range(min_y, max_y + 1, 10):
+                self.map_data['free_spaces'].add((grid_x, grid_y))
+        
+        self.logging.info(f"Added location ({x},{y}) to free_spaces")
+
     def walk_to(self, target_x, target_y):
         """
-        Move the bot to the target coordinates (x, y) using A* pathfinding and step-by-step movement.
-        :param target_x: Target X coordinate.
-        :param target_y: Target Y coordinate.
-        :return: True if the target is reached, False otherwise.
+        Enhanced walk_to with fallback direct movement if pathfinding fails.
+        This ensures the character can still move even without a valid path.
         """
-        while True:
-            # Find the best path using A*
-            path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
-            if not path:
-                self.logging.warning("No valid path to the target.")
-                return False
-
+        # First, make sure target location is in free_spaces
+        self.map_data['free_spaces'].add((target_x, target_y))
+        
+        # Try using A* pathfinding first
+        path = self.find_best_route_to_target(target_x=target_x, target_y=target_y)
+        
+        if path:
             self.logging.info(f"Found path to target: {path}")
-
-            # Move along the path step-by-step
+            # Use pathfinding with the existing code
             for step in path:
                 step_x, step_y = step
                 retries = 0
@@ -215,55 +287,155 @@ class Movement:
                 while not self.is_close_enough((current_x, current_y), (step_x, step_y), tolerance=1):
                     self.check_abrupt_movements()
                     self._execute_movement(step_x, step_y)
-                    time.sleep(self.MOVEMENT_DELAY)  # Adjust delay as needed
+                    time.sleep(self.MOVEMENT_DELAY)
                     current_x, current_y = self.get_current_coords_from_game()
 
                     if not self.validate_movement(step_x, step_y):
                         retries += 1
                         if retries >= self.MAX_RETRIES:
-                            self.logging.warning("Failed to reach step. Recalculating path...")
+                            self.logging.warning("Failed to reach step. Using direct movement...")
                             break
 
                 if retries >= self.MAX_RETRIES:
-                    break  # Exit the loop and recalculate the path
-
-            # Check if we reached the final target
+                    break
+        else:
+            self.logging.warning("No valid path found. Using direct movement approach...")
+            
+            # Fallback: Use direct movement without pathfinding
+            # This ensures we can move even without a proper path
+            max_attempts = 20
+            attempts = 0
+            
             current_x, current_y = self.get_current_coords_from_game()
-            if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=1):
-                self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
+            
+            while not self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=5) and attempts < max_attempts:
+                attempts += 1
+                
+                # Calculate the direction vector
+                dx = target_x - current_x
+                dy = target_y - current_y
+                
+                # Move in larger steps to prevent getting stuck
+                step_size = max(5, min(abs(dx), abs(dy), 20))
+                
+                # Normalize and scale the direction
+                total = abs(dx) + abs(dy)
+                if total > 0:
+                    step_x = current_x + int(dx * step_size / total) if dx != 0 else current_x
+                    step_y = current_y + int(dy * step_size / total) if dy != 0 else current_y
+                else:
+                    step_x, step_y = target_x, target_y
+                    
+                # Execute movement
+                self._execute_movement(step_x, step_y)
+                time.sleep(self.MOVEMENT_DELAY * 1.5)  # Longer delay for direct movement
+                
+                # Update position
+                current_x, current_y = self.get_current_coords_from_game()
+                
+                # Add this position to free_spaces
+                self.map_data['free_spaces'].add((current_x, current_y))
+                
+                self.logging.info(f"Direct movement: Now at ({current_x}, {current_y}), target: ({target_x}, {target_y})")
+                
+                # Add to free_spaces
+                self.map_data['free_spaces'].add((current_x, current_y))
+        
+        # Final position check
+        current_x, current_y = self.get_current_coords_from_game()
+        
+        # Save map data with the new free_spaces information
+        current_state = self.config.get_game_state()
+        current_map = current_state.get('current_map', 'lorencia')
+        self.config.save_map_data(map_name=current_map, data=self.map_data)
+        
+        # Use increased tolerance (5→10) for determining if we reached the target
+        if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10):
+            self.logging.info(f"Successfully reached the target: ({target_x}, {target_y})")
+            return True
+        else:
+            self.logging.warning(f"Failed to reach target. Current position: ({current_x}, {current_y}), Target: ({target_x}, {target_y})")
+            
+            # NEW: Right-click fallback when movement fails
+            self.logging.info("Performing right-click fallback for 3 seconds...")
+            self._perform_right_click_fallback(duration=3)
+            
+            # Check position again after right-click fallback
+            current_x, current_y = self.get_current_coords_from_game()
+            if self.is_close_enough((current_x, current_y), (target_x, target_y), tolerance=10):
+                self.logging.info(f"Right-click fallback successful! Now at target: ({target_x}, {target_y})")
                 return True
+            return False
 
-            # If we didn't reach the target, recalculate the path and try again
-            self.logging.info("Recalculating path to target...")
+    def load_map_data(self, map_name):
+        """
+        Load map data and ensure it has basic initialization.
+        This updated version ensures free_spaces are always available.
+        """
+        self.map_data = self.config.load_map_data(map_name=map_name)
+        
+        # Initialize free_spaces if empty
+        if not self.map_data.get('free_spaces'):
+            self.logging.info(f"Initializing empty free_spaces for map {map_name}")
+            self.map_data['free_spaces'] = set()
+            
+            # Add basic walkable grid as free_spaces
+            # This ensures we always have some default paths
+            for x in range(50, 250):
+                for y in range(50, 250):
+                    # Add a basic grid of points
+                    if x % 5 == 0 and y % 5 == 0:
+                        self.map_data['free_spaces'].add((x, y))
+            
+            # Save the initialized map data
+            self.config.save_map_data(map_name=map_name, data=self.map_data)
+        
+        # Ensure target locations from config are in free_spaces
+        self._ensure_config_locations_in_free_spaces(map_name)
+        
+        self.logging.info(f"Loaded map data for {map_name} with {len(self.map_data.get('free_spaces', []))} free spaces")
+
+    def save_map_data(self, map_name):
+        """Wrapper for config.save_map_data with consistent naming"""
+        self.config.save_map_data(map_name=map_name, data=self.map_data)
 
     def move_to_location(self, map_name: str, avoid_checks=False, stuck=False, do_not_open_stats=False):
-        if not avoid_checks:
-            current_state = self.config.get_game_state()
-            if map_name != current_state['current_map'] or stuck is True:
-                self.logging.info("Dentro de move to location")
-                self.logging.debug(f"map_name: {map_name}  != current_state_map: {current_state} ")
-                self.logging.info(current_state)
-                #self.save_map_data(map=map_name)
-                self.interface.set_mu_helper_status(False)
-                self.interface.command_move_to_map(map_name=map_name)
-                self.config.update_game_state({'current_map': map_name})
-                self.load_map_data(map=map_name)
-                self.save_respawn_zone()
-                self.last_movements.clear()
-            else:
-                self.logging.info(f"Character already in {map_name}. No need to move again")
-        else:
-            #self.save_map_data(map=current_state['current_map'])
+        """
+        Enhanced move_to_location that ensures map data is properly loaded
+        """
+        current_state = self.config.get_game_state()
+        needs_map_change = map_name != current_state.get('current_map', '') or stuck is True
+        
+        if not avoid_checks and needs_map_change:
+            self.logging.info(f"Moving to map: {map_name}")
+            self.interface.set_mu_helper_status(False)
+            self.interface.command_move_to_map(map_name=map_name)
+            self.config.update_game_state({'current_map': map_name})
+            
+            # Load map data after changing map
+            self.load_map_data(map_name=map_name)
+            self.save_respawn_zone()
+            self.last_movements.clear()
+        elif avoid_checks:
             self.logging.info(f"Character is moving to {map_name} without checking the current map.")
             self.interface.set_mu_helper_status(False)
             self.interface.command_move_to_map(map_name=map_name)
-            self.load_map_data(map=map_name)
+            
+            # Load map data after changing map
+            self.load_map_data(map_name=map_name)
             self.save_respawn_zone()
             self.last_movements.clear()
+        else:
+            # Make sure map data is loaded even if we're already in the right map
+            if not self.map_data or len(self.map_data.get('free_spaces', [])) == 0:
+                self.logging.info(f"Character already in {map_name}. Loading map data.")
+                self.load_map_data(map_name=map_name)
+            else:
+                self.logging.info(f"Character already in {map_name}. No need to move again")
         
         if not do_not_open_stats:
             self.interface.open_stats_window()
-        
+    
     def get_current_coords_from_game(self):
         try:
             x, y = self.memory.get_coordinates()

@@ -180,7 +180,8 @@ class Memory:
                 nonlocal scanned_size
                 scanned_size += size
                 progress = int((scanned_size / total_size) * 100)
-                self.logging.info(f"Progress: {progress}%", end='\r')
+                # Fixed line - removed the 'end' parameter
+                self.logging.info(f"Progress: {progress}%")
             
             matches = []
             with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
@@ -196,7 +197,7 @@ class Memory:
                     except Exception as e:
                         self.logging.error(f"Error processing region: {str(e)}")
             
-            self.logging.info(f"\nScan completed in {time.time() - start_time:.2f} seconds")
+            self.logging.info(f"Scan completed in {time.time() - start_time:.2f} seconds")
             
             # Filter addresses by pattern
             pattern_value = int(hex_suffix, 16)
@@ -212,7 +213,7 @@ class Memory:
             self.logging.info(f"Found {len(filtered_matches)} matches after pattern filtering")
             
             if filtered_matches:
-                self.logging.info("\nResults:")
+                self.logging.info("Results:")
                 for addr in filtered_matches:
                     current_value = self.get_value_of_memory(addr)
                     self.logging.info(f"Address: 0x{addr:X}, Current Value: {current_value}")
@@ -220,7 +221,7 @@ class Memory:
             return filtered_matches if filtered_matches else None
         except Exception as e:
             self.logging.error(f"Error during first scan: {str(e)}")
-    
+
     def reuse_scan(self, addresses: list, expected_value: int) -> list:
         """Scan specific memory addresses for a new value"""
         try:
